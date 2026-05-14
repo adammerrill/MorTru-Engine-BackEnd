@@ -54,23 +54,37 @@ impl FeeSection {
     /// Returns `MismoError::InvalidEnum` for unrecognised values.
     pub fn try_from_str(s: &str) -> crate::Result<Self> {
         match s.trim() {
-            "LoanCosts_OriginationCharges" | "SectionA" | "A" => Ok(Self::A),
+            "LoanCosts_OriginationCharges"
+            | "SectionA"
+            | "A"                               => Ok(Self::A),
 
-            "LoanCosts_ServicesNotShoppedFor" | "SectionB" | "B" => Ok(Self::B),
+            "LoanCosts_ServicesNotShoppedFor"
+            | "SectionB"
+            | "B"                               => Ok(Self::B),
 
-            "LoanCosts_ServicesShoppedFor" | "SectionC" | "C" => Ok(Self::C),
+            "LoanCosts_ServicesShoppedFor"
+            | "SectionC"
+            | "C"                               => Ok(Self::C),
 
-            "OtherCosts_TaxesAndGovernmentFees" | "SectionE" | "E" => Ok(Self::E),
+            "OtherCosts_TaxesAndGovernmentFees"
+            | "SectionE"
+            | "E"                               => Ok(Self::E),
 
-            "OtherCosts_Prepaids" | "SectionF" | "F" => Ok(Self::F),
+            "OtherCosts_Prepaids"
+            | "SectionF"
+            | "F"                               => Ok(Self::F),
 
-            "OtherCosts_InitialEscrowPayment" | "SectionG" | "G" => Ok(Self::G),
+            "OtherCosts_InitialEscrowPayment"
+            | "SectionG"
+            | "G"                               => Ok(Self::G),
 
-            "OtherCosts_Other" | "SectionH" | "H" => Ok(Self::H),
+            "OtherCosts_Other"
+            | "SectionH"
+            | "H"                               => Ok(Self::H),
 
             _ => Err(crate::MismoError::InvalidEnum {
                 element: "IntegratedDisclosureSectionType",
-                value: s.to_owned(),
+                value:   s.to_owned(),
             }),
         }
     }
@@ -127,12 +141,12 @@ impl FeePaidBy {
     pub fn try_from_str(s: &str) -> crate::Result<Self> {
         match s.trim() {
             "Borrower" | "BorrowerPaid" => Ok(Self::Borrower),
-            "Seller" | "SellerPaid" => Ok(Self::Seller),
-            "Lender" | "LenderPaid" => Ok(Self::Lender),
-            "Other" | "PaidByOther" => Ok(Self::Other),
+            "Seller"   | "SellerPaid"   => Ok(Self::Seller),
+            "Lender"   | "LenderPaid"   => Ok(Self::Lender),
+            "Other"    | "PaidByOther"  => Ok(Self::Other),
             _ => Err(crate::MismoError::InvalidEnum {
                 element: "FeePaymentPaidByType",
-                value: s.to_owned(),
+                value:   s.to_owned(),
             }),
         }
     }
@@ -161,12 +175,12 @@ impl FeeCalculationType {
     /// Returns `MismoError::InvalidEnum` for unrecognised values.
     pub fn try_from_str(s: &str) -> crate::Result<Self> {
         match s.trim() {
-            "Numerical" => Ok(Self::Numerical),
-            "Formula" => Ok(Self::Formula),
+            "Numerical"   => Ok(Self::Numerical),
+            "Formula"     => Ok(Self::Formula),
             "Unavailable" => Ok(Self::Unavailable),
             _ => Err(crate::MismoError::InvalidEnum {
                 element: "FeeCalculationType",
-                value: s.to_owned(),
+                value:   s.to_owned(),
             }),
         }
     }

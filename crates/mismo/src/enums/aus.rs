@@ -25,14 +25,14 @@ use types::AusType;
 /// Returns `MismoError::InvalidEnum` for unrecognised values.
 pub fn try_aus_type(s: &str) -> crate::Result<AusType> {
     match s.trim() {
-        "DesktopUnderwriter" => Ok(AusType::DesktopUnderwriter),
-        "LoanProductAdvisor" => Ok(AusType::LoanProductAdvisor),
-        "FHATotalScorecard" => Ok(AusType::Got),
-        "USDARuralHousingGUS" => Ok(AusType::Gus),
-        "Manual" => Ok(AusType::Manual),
+        "DesktopUnderwriter"      => Ok(AusType::DesktopUnderwriter),
+        "LoanProductAdvisor"      => Ok(AusType::LoanProductAdvisor),
+        "FHATotalScorecard"       => Ok(AusType::Got),
+        "USDARuralHousingGUS"     => Ok(AusType::Gus),
+        "Manual"                  => Ok(AusType::Manual),
         _ => Err(crate::MismoError::InvalidEnum {
             element: "AutomatedUnderwritingSystemType",
-            value: s.to_owned(),
+            value:   s.to_owned(),
         }),
     }
 }

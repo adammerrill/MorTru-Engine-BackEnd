@@ -51,16 +51,16 @@ impl VaFundingFeeTier {
     #[must_use]
     pub const fn rate_bps(self) -> BasisPoints {
         match self {
-            Self::FirstUseBelow5Pct => BasisPoints(215),
-            Self::FirstUse5To10Pct => BasisPoints(150),
-            Self::FirstUseAbove10Pct => BasisPoints(125),
-            Self::SubsequentBelow5Pct => BasisPoints(330),
-            Self::Subsequent5To10Pct => BasisPoints(150),
-            Self::SubsequentAbove10Pct => BasisPoints(125),
-            Self::CashOutRefiFirstUse => BasisPoints(215),
+            Self::FirstUseBelow5Pct     => BasisPoints(215),
+            Self::FirstUse5To10Pct      => BasisPoints(150),
+            Self::FirstUseAbove10Pct    => BasisPoints(125),
+            Self::SubsequentBelow5Pct   => BasisPoints(330),
+            Self::Subsequent5To10Pct    => BasisPoints(150),
+            Self::SubsequentAbove10Pct  => BasisPoints(125),
+            Self::CashOutRefiFirstUse   => BasisPoints(215),
             Self::CashOutRefiSubsequent => BasisPoints(330),
-            Self::Irrrl => BasisPoints(50),
-            Self::Exempt => BasisPoints(0),
+            Self::Irrrl                 => BasisPoints(50),
+            Self::Exempt                => BasisPoints(0),
         }
     }
 
@@ -74,43 +74,27 @@ impl VaFundingFeeTier {
     /// - `exempt` — true for 10%+ service-connected disability
     #[must_use]
     pub fn from_inputs(
-        first_use: bool,
-        ltv: LtvBasisPoints,
+        first_use:       bool,
+        ltv:             LtvBasisPoints,
         is_cash_out_refi: bool,
-        is_irrrl: bool,
-        exempt: bool,
+        is_irrrl:        bool,
+        exempt:          bool,
     ) -> Self {
-        if exempt {
-            return Self::Exempt;
-        }
-        if is_irrrl {
-            return Self::Irrrl;
-        }
+        if exempt        { return Self::Exempt; }
+        if is_irrrl      { return Self::Irrrl; }
         if is_cash_out_refi {
-            return if first_use {
-                Self::CashOutRefiFirstUse
-            } else {
-                Self::CashOutRefiSubsequent
-            };
+            return if first_use { Self::CashOutRefiFirstUse } else { Self::CashOutRefiSubsequent };
         }
         // LTV > 9500 bps (> 95%) = < 5% down
         // LTV 9001–9500 bps (90.01–95%) = 5–9.99% down
         // LTV <= 9000 bps (<= 90%) = >= 10% down
         if first_use {
-            if ltv.0 > 9500 {
-                Self::FirstUseBelow5Pct
-            } else if ltv.0 > 9000 {
-                Self::FirstUse5To10Pct
-            } else {
-                Self::FirstUseAbove10Pct
-            }
-        } else if ltv.0 > 9500 {
-            Self::SubsequentBelow5Pct
-        } else if ltv.0 > 9000 {
-            Self::Subsequent5To10Pct
-        } else {
-            Self::SubsequentAbove10Pct
-        }
+            if ltv.0 > 9500      { Self::FirstUseBelow5Pct }
+            else if ltv.0 > 9000 { Self::FirstUse5To10Pct }
+            else                 { Self::FirstUseAbove10Pct }
+        } else if ltv.0 > 9500   { Self::SubsequentBelow5Pct }
+        else if ltv.0 > 9000     { Self::Subsequent5To10Pct }
+        else                     { Self::SubsequentAbove10Pct }
     }
 }
 
@@ -140,13 +124,13 @@ impl AffordableLendingProgram {
     /// Returns `MismoError::InvalidEnum` for unrecognised values.
     pub fn try_from_str(s: &str) -> crate::Result<Self> {
         match s.trim() {
-            "HomeReady" => Ok(Self::HomeReady),
+            "HomeReady"    => Ok(Self::HomeReady),
             "HomePossible" => Ok(Self::HomePossible),
-            "HomeOne" => Ok(Self::HomeOne),
-            "None" | "" => Ok(Self::None),
+            "HomeOne"      => Ok(Self::HomeOne),
+            "None" | ""    => Ok(Self::None),
             _ => Err(crate::MismoError::InvalidEnum {
                 element: "AffordableLendingProgramType",
-                value: s.to_owned(),
+                value:   s.to_owned(),
             }),
         }
     }

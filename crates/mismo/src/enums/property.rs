@@ -38,16 +38,16 @@ use types::{Occupancy, PropertyType};
 /// Returns `MismoError::InvalidEnum` for any unrecognised value.
 pub fn try_property_type(s: &str) -> crate::Result<PropertyType> {
     match s.trim() {
-        "Detached" => Ok(PropertyType::SingleFamilyDetached),
-        "Attached" => Ok(PropertyType::SingleFamilyAttached),
-        "Townhouse" => Ok(PropertyType::Townhouse),
-        "Condominium" => Ok(PropertyType::Condominium),
-        "Cooperative" => Ok(PropertyType::Cooperative),
-        "PUD" => Ok(PropertyType::PlannedUnitDevelopment),
-        "ManufacturedHousing" => Ok(PropertyType::ManufacturedHome),
-        "2-Unit" => Ok(PropertyType::TwoUnit),
-        "3-Unit" => Ok(PropertyType::ThreeUnit),
-        "4-Unit" => Ok(PropertyType::FourUnit),
+        "Detached"             => Ok(PropertyType::SingleFamilyDetached),
+        "Attached"             => Ok(PropertyType::SingleFamilyAttached),
+        "Townhouse"            => Ok(PropertyType::Townhouse),
+        "Condominium"          => Ok(PropertyType::Condominium),
+        "Cooperative"          => Ok(PropertyType::Cooperative),
+        "PUD"                  => Ok(PropertyType::PlannedUnitDevelopment),
+        "ManufacturedHousing"  => Ok(PropertyType::ManufacturedHome),
+        "2-Unit"               => Ok(PropertyType::TwoUnit),
+        "3-Unit"               => Ok(PropertyType::ThreeUnit),
+        "4-Unit"               => Ok(PropertyType::FourUnit),
         _ => Err(crate::MismoError::InvalidEnum {
             element: "PropertyStructureType",
             value: s.to_owned(),
