@@ -1,7 +1,7 @@
 //! Task 2.4 gate tests — collateral/property schema.
 //!
-//! Verifies `SubjectProperty::parse()` against the spreadsheet FHA scenario:
-//!   Austin TX 78640, $459,000 appraised, PrimaryResidence, Detached SFR.
+//! Verifies `SubjectProperty::parse()` against the FHA purchase reference scenario:
+//!   Kyle TX 78640, $459,000 appraised, PrimaryResidence, Detached SFR, 6.375% 30yr.
 
 use mismo::{
     schema::collateral::{
@@ -13,7 +13,7 @@ use types::{BasisPoints, Cents, FipsCode, Occupancy, PropertyType, StateCode};
 
 // ── Test helpers ──────────────────────────────────────────────────────────────
 
-fn spreadsheet_address() -> MismoAddress {
+fn kyle_tx_address() -> MismoAddress {
     MismoAddress {
         street_number: Some("100".into()),
         street_dir_prefix: None,
@@ -31,19 +31,20 @@ fn spreadsheet_address() -> MismoAddress {
     }
 }
 
-fn spreadsheet_detail() -> PropertyDetail {
+fn sfr_primary_detail() -> PropertyDetail {
     PropertyDetail {
         property_structure_type: "Detached".into(),
         property_usage_type: "PrimaryResidence".into(),
         year_built: None,
         financed_unit_count: None,
+        gross_living_area: None,
     }
 }
 
-fn spreadsheet_subject_property() -> SubjectProperty {
+fn fha_purchase_subject_property() -> SubjectProperty {
     SubjectProperty {
-        address: spreadsheet_address(),
-        detail: spreadsheet_detail(),
+        address: kyle_tx_address(),
+        detail: sfr_primary_detail(),
         tax: None,
         hoa: None,
         estimated_value: Some("459000.00".into()),
@@ -57,13 +58,13 @@ fn spreadsheet_subject_property() -> SubjectProperty {
 
 #[test]
 fn test_texas_state_code_parses() {
-    let p = spreadsheet_subject_property().parse().unwrap();
+    let p = fha_purchase_subject_property().parse().unwrap();
     assert_eq!(p.state, StateCode::TX);
 }
 
 #[test]
 fn test_invalid_state_code_returns_error() {
-    let mut sp = spreadsheet_subject_property();
+    let mut sp = fha_purchase_subject_property();
     sp.address.state_code = "ZZ".into();
     let err = sp.parse().unwrap_err();
     assert!(matches!(
@@ -77,7 +78,7 @@ fn test_invalid_state_code_returns_error() {
 
 #[test]
 fn test_state_code_case_insensitive() {
-    let mut sp = spreadsheet_subject_property();
+    let mut sp = fha_purchase_subject_property();
     sp.address.state_code = "tx".into();
     let p = sp.parse().unwrap();
     assert_eq!(p.state, StateCode::TX);
@@ -87,7 +88,7 @@ fn test_state_code_case_insensitive() {
 
 #[test]
 fn test_fips_code_5digit_string_parses() {
-    let mut sp = spreadsheet_subject_property();
+    let mut sp = fha_purchase_subject_property();
     sp.address.fips_code = Some("48209".into()); // TX=48, Hays=209
     let p = sp.parse().unwrap();
     use std::str::FromStr;
@@ -96,13 +97,13 @@ fn test_fips_code_5digit_string_parses() {
 
 #[test]
 fn test_fips_code_absent_is_none() {
-    let p = spreadsheet_subject_property().parse().unwrap();
+    let p = fha_purchase_subject_property().parse().unwrap();
     assert!(p.fips_code.is_none());
 }
 
 #[test]
 fn test_fips_state_and_county_components_derive_fips() {
-    let mut sp = spreadsheet_subject_property();
+    let mut sp = fha_purchase_subject_property();
     sp.address.fips_state = Some("48".into());
     sp.address.fips_county = Some("209".into());
     let p = sp.parse().unwrap();
@@ -115,19 +116,19 @@ fn test_fips_state_and_county_components_derive_fips() {
 #[test]
 fn test_appraised_value_to_cents() {
     // $459,000.00 = 45,900,000 cents
-    let p = spreadsheet_subject_property().parse().unwrap();
+    let p = fha_purchase_subject_property().parse().unwrap();
     assert_eq!(p.appraised_value, Cents(45_900_000));
 }
 
 #[test]
 fn test_sales_contract_amount_to_cents() {
-    let p = spreadsheet_subject_property().parse().unwrap();
+    let p = fha_purchase_subject_property().parse().unwrap();
     assert_eq!(p.sales_price, Some(Cents(45_900_000)));
 }
 
 #[test]
 fn test_sales_price_absent_is_none() {
-    let mut sp = spreadsheet_subject_property();
+    let mut sp = fha_purchase_subject_property();
     sp.sales_contract_amount = None;
     let p = sp.parse().unwrap();
     assert!(p.sales_price.is_none());
@@ -135,7 +136,7 @@ fn test_sales_price_absent_is_none() {
 
 #[test]
 fn test_missing_appraised_value_returns_missing_element_error() {
-    let mut sp = spreadsheet_subject_property();
+    let mut sp = fha_purchase_subject_property();
     sp.estimated_value = None;
     let err = sp.parse().unwrap_err();
     assert!(matches!(
@@ -150,13 +151,13 @@ fn test_missing_appraised_value_returns_missing_element_error() {
 
 #[test]
 fn test_detached_single_family_property_type() {
-    let p = spreadsheet_subject_property().parse().unwrap();
+    let p = fha_purchase_subject_property().parse().unwrap();
     assert_eq!(p.property_type, PropertyType::SingleFamilyDetached);
 }
 
 #[test]
 fn test_attached_defaults_to_single_family_attached() {
-    let mut sp = spreadsheet_subject_property();
+    let mut sp = fha_purchase_subject_property();
     sp.detail.property_structure_type = "Attached".into();
     let p = sp.parse().unwrap();
     assert_eq!(p.property_type, PropertyType::SingleFamilyAttached);
@@ -164,7 +165,7 @@ fn test_attached_defaults_to_single_family_attached() {
 
 #[test]
 fn test_condominium_property_type() {
-    let mut sp = spreadsheet_subject_property();
+    let mut sp = fha_purchase_subject_property();
     sp.detail.property_structure_type = "Condominium".into();
     let p = sp.parse().unwrap();
     assert_eq!(p.property_type, PropertyType::Condominium);
@@ -172,7 +173,7 @@ fn test_condominium_property_type() {
 
 #[test]
 fn test_two_unit_property_type() {
-    let mut sp = spreadsheet_subject_property();
+    let mut sp = fha_purchase_subject_property();
     sp.detail.property_structure_type = "2-Unit".into();
     let p = sp.parse().unwrap();
     assert_eq!(p.property_type, PropertyType::TwoUnit);
@@ -180,7 +181,7 @@ fn test_two_unit_property_type() {
 
 #[test]
 fn test_invalid_property_type_returns_error() {
-    let mut sp = spreadsheet_subject_property();
+    let mut sp = fha_purchase_subject_property();
     sp.detail.property_structure_type = "Treehouse".into();
     let err = sp.parse().unwrap_err();
     assert!(matches!(
@@ -196,13 +197,13 @@ fn test_invalid_property_type_returns_error() {
 
 #[test]
 fn test_primary_residence_occupancy() {
-    let p = spreadsheet_subject_property().parse().unwrap();
+    let p = fha_purchase_subject_property().parse().unwrap();
     assert_eq!(p.occupancy, Occupancy::PrimaryResidence);
 }
 
 #[test]
 fn test_second_home_occupancy() {
-    let mut sp = spreadsheet_subject_property();
+    let mut sp = fha_purchase_subject_property();
     sp.detail.property_usage_type = "SecondHome".into();
     let p = sp.parse().unwrap();
     assert_eq!(p.occupancy, Occupancy::SecondHome);
@@ -210,7 +211,7 @@ fn test_second_home_occupancy() {
 
 #[test]
 fn test_investment_occupancy() {
-    let mut sp = spreadsheet_subject_property();
+    let mut sp = fha_purchase_subject_property();
     sp.detail.property_usage_type = "Investor".into();
     let p = sp.parse().unwrap();
     assert_eq!(p.occupancy, Occupancy::Investment);
@@ -220,13 +221,13 @@ fn test_investment_occupancy() {
 
 #[test]
 fn test_unit_count_defaults_to_one_when_absent() {
-    let p = spreadsheet_subject_property().parse().unwrap();
+    let p = fha_purchase_subject_property().parse().unwrap();
     assert_eq!(p.unit_count, 1);
 }
 
 #[test]
 fn test_unit_count_two_parses() {
-    let mut sp = spreadsheet_subject_property();
+    let mut sp = fha_purchase_subject_property();
     sp.detail.financed_unit_count = Some("2".into());
     let p = sp.parse().unwrap();
     assert_eq!(p.unit_count, 2);
@@ -234,7 +235,7 @@ fn test_unit_count_two_parses() {
 
 #[test]
 fn test_unit_count_zero_returns_error() {
-    let mut sp = spreadsheet_subject_property();
+    let mut sp = fha_purchase_subject_property();
     sp.detail.financed_unit_count = Some("0".into());
     let err = sp.parse().unwrap_err();
     assert!(matches!(
@@ -248,7 +249,7 @@ fn test_unit_count_zero_returns_error() {
 
 #[test]
 fn test_unit_count_five_returns_error() {
-    let mut sp = spreadsheet_subject_property();
+    let mut sp = fha_purchase_subject_property();
     sp.detail.financed_unit_count = Some("5".into());
     let err = sp.parse().unwrap_err();
     assert!(matches!(
@@ -264,7 +265,7 @@ fn test_unit_count_five_returns_error() {
 
 #[test]
 fn test_address_decomposed_components_preserved() {
-    let p = spreadsheet_subject_property().parse().unwrap();
+    let p = fha_purchase_subject_property().parse().unwrap();
     assert_eq!(p.city, "Kyle");
     assert_eq!(p.postal_code, "78640");
     assert_eq!(p.county_name.as_deref(), Some("Hays"));
@@ -275,7 +276,7 @@ fn test_address_decomposed_components_preserved() {
 
 #[test]
 fn test_display_line_from_components() {
-    let addr = spreadsheet_address();
+    let addr = kyle_tx_address();
     let line = addr.display_line();
     assert!(line.contains("100"), "should contain street number");
     assert!(line.contains("Mockingbird"), "should contain street name");
@@ -283,7 +284,7 @@ fn test_display_line_from_components() {
 
 #[test]
 fn test_display_line_falls_back_to_address_line_field() {
-    let mut addr = spreadsheet_address();
+    let mut addr = kyle_tx_address();
     addr.street_number = None;
     addr.street_name = None;
     addr.address_line = Some("123 Oak St".into());
@@ -294,7 +295,7 @@ fn test_display_line_falls_back_to_address_line_field() {
 
 #[test]
 fn test_annual_tax_to_cents() {
-    let mut sp = spreadsheet_subject_property();
+    let mut sp = fha_purchase_subject_property();
     sp.tax = Some(PropertyTaxDetail {
         annual_amount: Some("10523.40".into()),
         tax_rate: None,
@@ -309,7 +310,7 @@ fn test_annual_tax_to_cents() {
 
 #[test]
 fn test_tax_rate_to_basis_points() {
-    let mut sp = spreadsheet_subject_property();
+    let mut sp = fha_purchase_subject_property();
     sp.tax = Some(PropertyTaxDetail {
         annual_amount: None,
         tax_rate: Some("1.9".into()),
@@ -324,14 +325,14 @@ fn test_tax_rate_to_basis_points() {
 
 #[test]
 fn test_taxes_in_arrears_defaults_false_when_no_tax_block() {
-    let p = spreadsheet_subject_property().parse().unwrap();
+    let p = fha_purchase_subject_property().parse().unwrap();
     assert!(!p.taxes_in_arrears);
     assert!(p.annual_tax.is_none());
 }
 
 #[test]
 fn test_seller_tax_arrears_to_cents() {
-    let mut sp = spreadsheet_subject_property();
+    let mut sp = fha_purchase_subject_property();
     sp.tax = Some(PropertyTaxDetail {
         annual_amount: None,
         tax_rate: None,
@@ -347,7 +348,7 @@ fn test_seller_tax_arrears_to_cents() {
 
 #[test]
 fn test_annual_hoi_to_cents() {
-    let mut sp = spreadsheet_subject_property();
+    let mut sp = fha_purchase_subject_property();
     sp.annual_hoi = Some("1840.00".into());
     let p = sp.parse().unwrap();
     assert_eq!(p.annual_hoi, Some(Cents(184_000)));
@@ -355,7 +356,7 @@ fn test_annual_hoi_to_cents() {
 
 #[test]
 fn test_annual_hoi_absent_is_none() {
-    let p = spreadsheet_subject_property().parse().unwrap();
+    let p = fha_purchase_subject_property().parse().unwrap();
     assert!(p.annual_hoi.is_none());
 }
 
@@ -363,7 +364,7 @@ fn test_annual_hoi_absent_is_none() {
 
 #[test]
 fn test_hoa_not_present_returns_defaults() {
-    let p = spreadsheet_subject_property().parse().unwrap();
+    let p = fha_purchase_subject_property().parse().unwrap();
     assert!(!p.hoa_yn);
     assert!(p.hoa_monthly.is_none());
     assert!(p.hoa_annual.is_none());
@@ -373,7 +374,7 @@ fn test_hoa_not_present_returns_defaults() {
 
 #[test]
 fn test_hoa_monthly_to_cents() {
-    let mut sp = spreadsheet_subject_property();
+    let mut sp = fha_purchase_subject_property();
     sp.hoa = Some(HoaDetail {
         hoa_yn: Some("true".into()),
         monthly_fee: Some("250.00".into()),
@@ -389,7 +390,7 @@ fn test_hoa_monthly_to_cents() {
 
 #[test]
 fn test_hoa_annual_computed_from_monthly() {
-    let mut sp = spreadsheet_subject_property();
+    let mut sp = fha_purchase_subject_property();
     sp.hoa = Some(HoaDetail {
         hoa_yn: Some("true".into()),
         monthly_fee: Some("250.00".into()),
@@ -405,7 +406,7 @@ fn test_hoa_annual_computed_from_monthly() {
 
 #[test]
 fn test_hoa_annual_explicit_overrides_monthly_calculation() {
-    let mut sp = spreadsheet_subject_property();
+    let mut sp = fha_purchase_subject_property();
     sp.hoa = Some(HoaDetail {
         hoa_yn: Some("true".into()),
         monthly_fee: Some("250.00".into()),
@@ -420,7 +421,7 @@ fn test_hoa_annual_explicit_overrides_monthly_calculation() {
 
 #[test]
 fn test_hoa_transfer_fee_to_cents() {
-    let mut sp = spreadsheet_subject_property();
+    let mut sp = fha_purchase_subject_property();
     sp.hoa = Some(HoaDetail {
         hoa_yn: Some("true".into()),
         monthly_fee: None,
@@ -438,7 +439,7 @@ fn test_hoa_transfer_fee_to_cents() {
 
 #[test]
 fn test_subject_property_xml_roundtrip() {
-    let mut sp = spreadsheet_subject_property();
+    let mut sp = fha_purchase_subject_property();
     sp.tax = Some(PropertyTaxDetail {
         annual_amount: Some("10523.40".into()),
         tax_rate: Some("1.9".into()),
@@ -509,4 +510,36 @@ fn test_parse_subject_property_from_xml_string() {
     assert!(!p.hoa_yn);
     // FIPS from "48209"
     assert!(p.fips_code.is_some());
+}
+
+// ── Task 2.4 addendum: sqft, year_built, list_price ──────────────────────────
+
+#[test]
+fn test_gross_living_area_parses_to_sqft() {
+    let mut sp = fha_purchase_subject_property();
+    sp.detail.gross_living_area = Some("2150".into());
+    let p = sp.parse().unwrap();
+    assert_eq!(p.sqft, Some(2150));
+}
+
+#[test]
+fn test_gross_living_area_absent_is_none() {
+    let p = fha_purchase_subject_property().parse().unwrap();
+    assert!(p.sqft.is_none());
+}
+
+#[test]
+fn test_year_built_parses() {
+    let mut sp = fha_purchase_subject_property();
+    sp.detail.year_built = Some("1998".into());
+    let p = sp.parse().unwrap();
+    assert_eq!(p.year_built, Some(1998u16));
+}
+
+#[test]
+fn test_list_price_mirrors_sales_price_from_mismo() {
+    // At MISMO-parse time list_price = sales_price; ingest overwrites from RESO
+    let p = fha_purchase_subject_property().parse().unwrap();
+    assert_eq!(p.list_price, p.sales_price);
+    assert_eq!(p.list_price, Some(Cents(45_900_000)));
 }

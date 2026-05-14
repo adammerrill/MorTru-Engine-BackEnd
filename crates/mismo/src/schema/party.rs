@@ -12,10 +12,10 @@
 //!         └── BORROWER_DETAIL  ← BorrowerDetail
 //! ```
 //!
-//! # Reference values (FHA purchase, spreadsheet scenario)
+//! # Reference values — FHA purchase, Kyle TX, single borrower, credit 720
 //!
 //! Single borrower, credit score 720, primary residence purchase.
-//! No VA/USDA flags. No HOA. No budget constraints in spreadsheet.
+//! No VA/USDA flags. No HOA. No budget constraints.
 
 use rust_decimal::Decimal;
 use std::str::FromStr;

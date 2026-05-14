@@ -13,7 +13,7 @@
 //!   └── AMORTIZATION     ← Amortization
 //! ```
 //!
-//! # Reference values (FHA purchase, spreadsheet scenario)
+//! # Reference values — FHA purchase, Kyle TX, $434,443 base loan, 6.375%, 30yr fixed
 //!
 //! | Field | XML value | Parsed value |
 //! |---|---|---|

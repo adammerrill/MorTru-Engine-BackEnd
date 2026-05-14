@@ -4,7 +4,7 @@
 //! XML strings, that the `parse()` method produces exact domain-typed values,
 //! and that the round-trip through serialization is lossless.
 //!
-//! All reference values are from the spreadsheet scenario:
+//! All reference values are from the FHA purchase reference scenario:
 //!   FHA purchase, $459,000 price, $434,443 base loan, 6.375% note rate,
 //!   360-month term, $10,000 seller credit.
 
@@ -18,8 +18,9 @@ use types::{
 
 // ── Test helpers ──────────────────────────────────────────────────────────────
 
-/// Build the spreadsheet FHA scenario MortgageTerms directly (no XML round-trip).
-fn spreadsheet_terms() -> MortgageTerms {
+/// Build the FHA purchase MortgageTerms directly (no XML round-trip).
+/// Kyle TX, $434,443 base loan, 6.375% note rate, 30yr fixed, first lien.
+fn fha_purchase_terms() -> MortgageTerms {
     MortgageTerms {
         base_loan_amount: "434443.00".into(),
         loan_amount_with_financed_mi: Some("442046.00".into()),
@@ -45,11 +46,11 @@ fn fixed_amort() -> Amortization {
     }
 }
 
-// ── Core parse: spreadsheet values ───────────────────────────────────────────
+// ── Core parse: FHA purchase reference values ────────────────────────────────
 
 #[test]
 fn test_fha_loan_terms_parse_to_typed() {
-    let parsed = spreadsheet_terms().parse(&fixed_amort()).unwrap();
+    let parsed = fha_purchase_terms().parse(&fixed_amort()).unwrap();
 
     assert_eq!(parsed.program, ProgramCode::Fha);
     assert_eq!(parsed.purpose, LoanPurpose::Purchase);
@@ -60,28 +61,28 @@ fn test_fha_loan_terms_parse_to_typed() {
 #[test]
 fn test_base_loan_amount_cents_precision() {
     // $434,443.00 = 43,444,300 cents
-    let parsed = spreadsheet_terms().parse(&fixed_amort()).unwrap();
+    let parsed = fha_purchase_terms().parse(&fixed_amort()).unwrap();
     assert_eq!(parsed.base_loan_amount, Cents(43_444_300));
 }
 
 #[test]
 fn test_adjusted_loan_amount_with_ufmip() {
     // $442,046.00 = 44,204,600 cents (base + UFMIP financed)
-    let parsed = spreadsheet_terms().parse(&fixed_amort()).unwrap();
+    let parsed = fha_purchase_terms().parse(&fixed_amort()).unwrap();
     assert_eq!(parsed.adjusted_loan_amount, Some(Cents(44_204_600)));
 }
 
 #[test]
 fn test_note_rate_to_basis_points_6_375() {
     // 6.375% → BasisPoints(6375)
-    let parsed = spreadsheet_terms().parse(&fixed_amort()).unwrap();
+    let parsed = fha_purchase_terms().parse(&fixed_amort()).unwrap();
     assert_eq!(parsed.note_rate, BasisPoints(6375));
 }
 
 #[test]
 fn test_note_rate_percent_sign_accepted() {
     // MISMO sometimes includes the % symbol
-    let mut t = spreadsheet_terms();
+    let mut t = fha_purchase_terms();
     t.note_rate_percent = "6.375%".into();
     let parsed = t.parse(&fixed_amort()).unwrap();
     assert_eq!(parsed.note_rate, BasisPoints(6375));
@@ -89,13 +90,13 @@ fn test_note_rate_percent_sign_accepted() {
 
 #[test]
 fn test_term_months_360_valid() {
-    let parsed = spreadsheet_terms().parse(&fixed_amort()).unwrap();
+    let parsed = fha_purchase_terms().parse(&fixed_amort()).unwrap();
     assert_eq!(parsed.term, TermMonths::new(360).unwrap());
 }
 
 #[test]
 fn test_term_months_180_valid() {
-    let mut t = spreadsheet_terms();
+    let mut t = fha_purchase_terms();
     t.loan_term_months_count = "180".into();
     let parsed = t.parse(&fixed_amort()).unwrap();
     assert_eq!(parsed.term, TermMonths::new(180).unwrap());
@@ -104,13 +105,13 @@ fn test_term_months_180_valid() {
 #[test]
 fn test_seller_concession_to_cents() {
     // $10,000.00 = 1,000,000 cents
-    let parsed = spreadsheet_terms().parse(&fixed_amort()).unwrap();
+    let parsed = fha_purchase_terms().parse(&fixed_amort()).unwrap();
     assert_eq!(parsed.seller_concession, Some(Cents(1_000_000)));
 }
 
 #[test]
 fn test_seller_pays_title_true() {
-    let parsed = spreadsheet_terms().parse(&fixed_amort()).unwrap();
+    let parsed = fha_purchase_terms().parse(&fixed_amort()).unwrap();
     assert!(parsed.seller_pays_title);
 }
 
@@ -118,7 +119,7 @@ fn test_seller_pays_title_true() {
 
 #[test]
 fn test_adjusted_loan_amount_absent_is_none() {
-    let mut t = spreadsheet_terms();
+    let mut t = fha_purchase_terms();
     t.loan_amount_with_financed_mi = None;
     let parsed = t.parse(&fixed_amort()).unwrap();
     assert!(parsed.adjusted_loan_amount.is_none());
@@ -126,7 +127,7 @@ fn test_adjusted_loan_amount_absent_is_none() {
 
 #[test]
 fn test_seller_concession_absent_is_none() {
-    let mut t = spreadsheet_terms();
+    let mut t = fha_purchase_terms();
     t.seller_concession_amount = None;
     let parsed = t.parse(&fixed_amort()).unwrap();
     assert!(parsed.seller_concession.is_none());
@@ -134,13 +135,13 @@ fn test_seller_concession_absent_is_none() {
 
 #[test]
 fn test_waive_escrow_defaults_false_when_absent() {
-    let parsed = spreadsheet_terms().parse(&fixed_amort()).unwrap();
+    let parsed = fha_purchase_terms().parse(&fixed_amort()).unwrap();
     assert!(!parsed.waive_escrow);
 }
 
 #[test]
 fn test_waive_escrow_true_when_set() {
-    let mut t = spreadsheet_terms();
+    let mut t = fha_purchase_terms();
     t.waive_escrow = Some("true".into());
     let parsed = t.parse(&fixed_amort()).unwrap();
     assert!(parsed.waive_escrow);
@@ -148,7 +149,7 @@ fn test_waive_escrow_true_when_set() {
 
 #[test]
 fn test_high_balance_flag_parses() {
-    let mut t = spreadsheet_terms();
+    let mut t = fha_purchase_terms();
     t.high_balance = Some("true".into());
     let parsed = t.parse(&fixed_amort()).unwrap();
     assert!(parsed.is_high_balance);
@@ -156,7 +157,7 @@ fn test_high_balance_flag_parses() {
 
 #[test]
 fn test_days_until_closing_optional_parses() {
-    let mut t = spreadsheet_terms();
+    let mut t = fha_purchase_terms();
     t.days_until_closing = Some("6".into()); // 6 days to first payment
     let parsed = t.parse(&fixed_amort()).unwrap();
     assert_eq!(parsed.days_until_closing, Some(6));
@@ -164,7 +165,7 @@ fn test_days_until_closing_optional_parses() {
 
 #[test]
 fn test_holding_period_months_optional_parses() {
-    let mut t = spreadsheet_terms();
+    let mut t = fha_purchase_terms();
     t.holding_period_months = Some("60".into()); // 5-year hold
     let parsed = t.parse(&fixed_amort()).unwrap();
     assert_eq!(parsed.holding_period_months, Some(60));
@@ -174,7 +175,7 @@ fn test_holding_period_months_optional_parses() {
 
 #[test]
 fn test_invalid_mortgage_type_returns_invalid_enum_error() {
-    let mut t = spreadsheet_terms();
+    let mut t = fha_purchase_terms();
     t.mortgage_type = "SubprimeMortgage".into();
     let err = t.parse(&fixed_amort()).unwrap_err();
     assert!(
@@ -191,7 +192,7 @@ fn test_invalid_mortgage_type_returns_invalid_enum_error() {
 
 #[test]
 fn test_invalid_lien_priority_returns_error() {
-    let mut t = spreadsheet_terms();
+    let mut t = fha_purchase_terms();
     t.lien_priority_type = "FifthLien".into();
     let err = t.parse(&fixed_amort()).unwrap_err();
     assert!(matches!(
@@ -205,7 +206,7 @@ fn test_invalid_lien_priority_returns_error() {
 
 #[test]
 fn test_invalid_loan_purpose_returns_error() {
-    let mut t = spreadsheet_terms();
+    let mut t = fha_purchase_terms();
     t.loan_purpose_type = "Speculation".into();
     let err = t.parse(&fixed_amort()).unwrap_err();
     assert!(matches!(
@@ -219,7 +220,7 @@ fn test_invalid_loan_purpose_returns_error() {
 
 #[test]
 fn test_term_months_out_of_range_returns_error() {
-    let mut t = spreadsheet_terms();
+    let mut t = fha_purchase_terms();
     t.loan_term_months_count = "60".into(); // below 120 minimum
     let err = t.parse(&fixed_amort()).unwrap_err();
     assert!(matches!(
@@ -233,7 +234,7 @@ fn test_term_months_out_of_range_returns_error() {
 
 #[test]
 fn test_non_numeric_amount_returns_error() {
-    let mut t = spreadsheet_terms();
+    let mut t = fha_purchase_terms();
     t.base_loan_amount = "four hundred thousand".into();
     let err = t.parse(&fixed_amort()).unwrap_err();
     assert!(matches!(
@@ -247,7 +248,7 @@ fn test_non_numeric_amount_returns_error() {
 
 #[test]
 fn test_invalid_amortization_type_returns_error() {
-    let t = spreadsheet_terms();
+    let t = fha_purchase_terms();
     let bad_amort = Amortization {
         amortization_type: "Balloon".into(),
     };
@@ -265,7 +266,7 @@ fn test_invalid_amortization_type_returns_error() {
 
 #[test]
 fn test_va_program_parses() {
-    let mut t = spreadsheet_terms();
+    let mut t = fha_purchase_terms();
     t.mortgage_type = "VA".into();
     let parsed = t.parse(&fixed_amort()).unwrap();
     assert_eq!(parsed.program, ProgramCode::Va);
@@ -273,7 +274,7 @@ fn test_va_program_parses() {
 
 #[test]
 fn test_usda_program_parses() {
-    let mut t = spreadsheet_terms();
+    let mut t = fha_purchase_terms();
     t.mortgage_type = "USDARuralDevelopment".into();
     let parsed = t.parse(&fixed_amort()).unwrap();
     assert_eq!(parsed.program, ProgramCode::Usda);
@@ -281,7 +282,7 @@ fn test_usda_program_parses() {
 
 #[test]
 fn test_conventional_program_parses() {
-    let mut t = spreadsheet_terms();
+    let mut t = fha_purchase_terms();
     t.mortgage_type = "Conventional".into();
     let parsed = t.parse(&fixed_amort()).unwrap();
     assert_eq!(parsed.program, ProgramCode::Conventional);
@@ -291,7 +292,7 @@ fn test_conventional_program_parses() {
 
 #[test]
 fn test_mortgage_terms_xml_roundtrip() {
-    let original = spreadsheet_terms();
+    let original = fha_purchase_terms();
     let xml = mismo::xml::serialize::to_xml(&original).unwrap();
 
     assert!(
@@ -350,7 +351,7 @@ fn test_parse_mortgage_terms_from_xml_string() {
     let amort: Amortization = mismo::xml::parse::from_xml(amort_xml).unwrap();
     let parsed: LoanTermsParsed = terms.parse(&amort).unwrap();
 
-    // Verify all spreadsheet reference values
+    // Verify all FHA purchase reference values
     assert_eq!(parsed.base_loan_amount, Cents(43_444_300));
     assert_eq!(parsed.adjusted_loan_amount, Some(Cents(44_204_600)));
     assert_eq!(parsed.note_rate, BasisPoints(6375));
@@ -369,7 +370,7 @@ fn test_parse_mortgage_terms_from_xml_string() {
 fn test_non_numeric_term_months_returns_out_of_range_error() {
     // Exercises the parse::<u16>() failure path in parse_term_months,
     // distinct from the TermMonths::new() out-of-range path tested above.
-    let mut t = spreadsheet_terms();
+    let mut t = fha_purchase_terms();
     t.loan_term_months_count = "thirty-years".into();
     let err = t.parse(&fixed_amort()).unwrap_err();
     assert!(matches!(
@@ -385,7 +386,7 @@ fn test_non_numeric_term_months_returns_out_of_range_error() {
 fn test_invalid_optional_u32_returns_error() {
     // Exercises the map_err branch in parse_optional_u32 when the
     // string is non-empty but not a valid unsigned integer.
-    let mut t = spreadsheet_terms();
+    let mut t = fha_purchase_terms();
     t.holding_period_months = Some("not-a-number".into());
     let err = t.parse(&fixed_amort()).unwrap_err();
     assert!(matches!(
@@ -401,7 +402,7 @@ fn test_invalid_optional_u32_returns_error() {
 fn test_invalid_optional_cents_on_optional_field_returns_error() {
     // Exercises the parse_cents error path when called via parse_optional_cents
     // with a non-empty, non-numeric string.
-    let mut t = spreadsheet_terms();
+    let mut t = fha_purchase_terms();
     t.seller_concession_amount = Some("bad-amount".into());
     let err = t.parse(&fixed_amort()).unwrap_err();
     assert!(matches!(
@@ -417,7 +418,7 @@ fn test_invalid_optional_cents_on_optional_field_returns_error() {
 fn test_bool_indicator_some_non_truthy_string_is_false() {
     // Exercises the Some(s) → matches!(...) → false branch in
     // parse_bool_indicator, distinct from the None → unwrap_or(false) path.
-    let mut t = spreadsheet_terms();
+    let mut t = fha_purchase_terms();
     t.waive_escrow = Some("false".into()); // non-truthy Some value
     let parsed = t.parse(&fixed_amort()).unwrap();
     assert!(!parsed.waive_escrow);
@@ -426,7 +427,7 @@ fn test_bool_indicator_some_non_truthy_string_is_false() {
 #[test]
 fn test_invalid_note_rate_string_returns_error() {
     // Exercises the parse_rate_bps error branch.
-    let mut t = spreadsheet_terms();
+    let mut t = fha_purchase_terms();
     t.note_rate_percent = "not-a-rate".into();
     let err = t.parse(&fixed_amort()).unwrap_err();
     assert!(matches!(
@@ -441,7 +442,7 @@ fn test_invalid_note_rate_string_returns_error() {
 #[test]
 fn test_empty_string_optional_cents_treated_as_none() {
     // Exercises the Some("") arm of parse_optional_cents.
-    let mut t = spreadsheet_terms();
+    let mut t = fha_purchase_terms();
     t.seller_concession_amount = Some("".into());
     let parsed = t.parse(&fixed_amort()).unwrap();
     assert!(parsed.seller_concession.is_none());
@@ -450,7 +451,7 @@ fn test_empty_string_optional_cents_treated_as_none() {
 #[test]
 fn test_empty_string_optional_u32_treated_as_none() {
     // Exercises the Some("") arm of parse_optional_u32.
-    let mut t = spreadsheet_terms();
+    let mut t = fha_purchase_terms();
     t.holding_period_months = Some("".into());
     let parsed = t.parse(&fixed_amort()).unwrap();
     assert!(parsed.holding_period_months.is_none());

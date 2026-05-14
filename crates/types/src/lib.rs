@@ -5,7 +5,7 @@
 //! [`DtiBasisPoints`], [`CreditScore`]
 //!
 //! # Identifier types (Task 1.3)
-//! [`FipsCode`], [`StateCode`], [`MlsListingKey`], [`LenderId`],
+//! [`CbsaCode`], [`FipsCode`], [`StateCode`], [`MlsListingKey`], [`LenderId`],
 //! [`LoanCasefileId`], [`ScenarioId`], [`AnalysisId`]
 //!
 //! # Error hierarchy (Task 1.4)
@@ -34,6 +34,7 @@ mod price_ticks;
 
 // ── Task 1.3: Identifier types ────────────────────────────────────────────────
 mod analysis_id;
+mod cbsa_code;
 mod fips_code;
 mod lender_id;
 mod loan_casefile_id;
@@ -68,6 +69,7 @@ pub use price_ticks::PriceTicks;
 
 // ── Re-exports: identifiers ───────────────────────────────────────────────────
 pub use analysis_id::AnalysisId;
+pub use cbsa_code::CbsaCode;
 pub use fips_code::FipsCode;
 pub use lender_id::LenderId;
 pub use loan_casefile_id::LoanCasefileId;

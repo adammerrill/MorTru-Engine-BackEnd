@@ -76,7 +76,7 @@ impl MismoMiProgramType {
 /// The renewal type determines which balance figure is used as the premium
 /// base in the amortization engine.
 ///
-/// The spreadsheet scenario uses `Declining` (FHA MIP recalculated on the
+/// The FHA purchase reference scenario uses `Declining` (FHA MIP recalculated on the
 /// declining remaining balance each year).
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum MiRenewalType {

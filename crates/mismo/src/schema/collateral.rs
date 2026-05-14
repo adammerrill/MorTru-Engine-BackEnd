@@ -12,7 +12,7 @@
 //!         └── HOA_DETAIL              ← HoaDetail (optional)
 //! ```
 //!
-//! # Reference values (FHA purchase, spreadsheet scenario)
+//! # Reference values — FHA purchase, Kyle TX, $459k, 6.375%, 30yr fixed
 //!
 //! | Field | XML value | Parsed value |
 //! |---|---|---|
@@ -250,6 +250,14 @@ pub struct PropertyDetail {
     /// Number of units (1–4). Absent implies 1.
     #[serde(rename = "FinancedUnitCount", skip_serializing_if = "Option::is_none")]
     pub financed_unit_count: Option<String>,
+
+    /// Gross living area in square feet. e.g. `"2150"`.
+    /// Used for manufactured home minimum size rules and condo project limits.
+    #[serde(
+        rename = "GrossLivingAreaAmount",
+        skip_serializing_if = "Option::is_none"
+    )]
+    pub gross_living_area: Option<String>,
 }
 
 // ── PROPERTY_TAX ─────────────────────────────────────────────────────────────
@@ -425,6 +433,14 @@ pub struct CollateralParsed {
     pub appraised_value: Cents,
     /// Sales contract price (purchase only).
     pub sales_price: Option<Cents>,
+    /// List price from RESO feed (set in ingest; None when parsed from MISMO only).
+    pub list_price: Option<Cents>,
+
+    // ── Physical characteristics ───────────────────────────────────────────────
+    /// Gross living area in square feet.
+    pub sqft: Option<u32>,
+    /// Year the structure was built.
+    pub year_built: Option<u16>,
 
     // ── Taxes ─────────────────────────────────────────────────────────────────
     /// Annual property tax amount.
@@ -508,6 +524,37 @@ impl SubjectProperty {
                 element: "PropertyEstimatedValueAmount",
             })?;
         let sales_price = parse_optional_cents(&self.sales_contract_amount, "SalesContractAmount")?;
+        // list_price mirrors sales_price from MISMO; the ingest layer (Epic 6)
+        // overwrites it with the RESO currentPrice when available.
+        let list_price = sales_price;
+
+        // ── Physical characteristics ─────────────────────────────────────────
+        let sqft = match detail.gross_living_area.as_deref() {
+            None | Some("") => None,
+            Some(s) => {
+                Some(
+                    s.trim()
+                        .parse::<u32>()
+                        .map_err(|_| crate::MismoError::OutOfRange {
+                            element: "GrossLivingAreaAmount",
+                            detail: format!("'{s}' is not a valid square-footage integer"),
+                        })?,
+                )
+            }
+        };
+        let year_built = match detail.year_built.as_deref() {
+            None | Some("") => None,
+            Some(s) => {
+                Some(
+                    s.trim()
+                        .parse::<u16>()
+                        .map_err(|_| crate::MismoError::OutOfRange {
+                            element: "PropertyStructureBuiltYear",
+                            detail: format!("'{s}' is not a valid year"),
+                        })?,
+                )
+            }
+        };
 
         // ── Taxes ───────────────────────────────────────────────────────────
         let (annual_tax, tax_rate, tax_year, taxes_in_arrears, seller_tax_arrears) =
@@ -567,6 +614,9 @@ impl SubjectProperty {
             unit_count,
             appraised_value,
             sales_price,
+            list_price,
+            sqft,
+            year_built,
             annual_tax,
             tax_rate,
             tax_year,

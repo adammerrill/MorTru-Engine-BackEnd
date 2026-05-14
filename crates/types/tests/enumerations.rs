@@ -141,9 +141,11 @@ fn test_all_enums_have_exhaustive_match() {
         PropertyType::Cooperative => 5,
         PropertyType::PlannedUnitDevelopment => 6,
         PropertyType::ManufacturedHome => 7,
-        PropertyType::TwoUnit => 8,
-        PropertyType::ThreeUnit => 9,
-        PropertyType::FourUnit => 10,
+        PropertyType::Modular => 8,
+        PropertyType::MobileHome => 9,
+        PropertyType::TwoUnit => 10,
+        PropertyType::ThreeUnit => 11,
+        PropertyType::FourUnit => 12,
     };
 
     // Occupancy

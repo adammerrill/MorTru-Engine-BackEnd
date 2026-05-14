@@ -17,7 +17,15 @@ pub enum PropertyType {
     Condominium,
     Cooperative,
     PlannedUnitDevelopment,
+    /// Factory-built on a permanent chassis, HUD-code post-1976.
+    /// Eligible for FHA, VA, USDA, and conventional (with restrictions).
     ManufacturedHome,
+    /// Factory-built in sections, placed on a permanent foundation.
+    /// Treated as site-built for most agency purposes; eligible for all programs.
+    Modular,
+    /// Pre-HUD (pre-1976) or title not converted to real property.
+    /// Ineligible for conventional, FHA, VA, and USDA as real property.
+    MobileHome,
     TwoUnit,
     ThreeUnit,
     FourUnit,
@@ -35,6 +43,8 @@ impl PropertyType {
             Self::Cooperative => "Stock Cooperative",
             Self::PlannedUnitDevelopment => "Planned Unit Development",
             Self::ManufacturedHome => "Manufactured Home",
+            Self::Modular => "Modular",
+            Self::MobileHome => "Mobile Home",
             Self::TwoUnit => "Duplex",
             Self::ThreeUnit => "Triplex",
             Self::FourUnit => "Quadruplex",
@@ -44,13 +54,20 @@ impl PropertyType {
     /// Parse from a RESO 2.0 `PropertySubType` lookup string.
     pub fn from_reso_lookup(s: &str) -> Result<Self, ParseError> {
         match s.trim() {
+            // Standard RESO 2.0 strings
             "Single Family Residence" => Ok(Self::SingleFamilyDetached),
+            // ABOR / Austin Board of Realtors feed uses this exact string
+            "Single Family Resi" => Ok(Self::SingleFamilyDetached),
             "Single Family Attached" => Ok(Self::SingleFamilyAttached),
             "Townhouse" | "Town House" => Ok(Self::Townhouse),
             "Condominium" | "Condo" => Ok(Self::Condominium),
             "Stock Cooperative" | "Cooperative" => Ok(Self::Cooperative),
             "Planned Unit Development" | "PUD" => Ok(Self::PlannedUnitDevelopment),
             "Manufactured Home" | "Manufactured Housing" => Ok(Self::ManufacturedHome),
+            // Factory-built on permanent foundation — treated as site-built
+            "Modular" | "Modular Home" => Ok(Self::Modular),
+            // Pre-HUD or personal property title — universally ineligible
+            "Mobile Home" => Ok(Self::MobileHome),
             "Duplex" => Ok(Self::TwoUnit),
             "Triplex" => Ok(Self::ThreeUnit),
             "Quadruplex" | "Fourplex" => Ok(Self::FourUnit),
@@ -72,6 +89,10 @@ impl PropertyType {
             Self::Cooperative => "Cooperative",
             Self::PlannedUnitDevelopment => "PUD",
             Self::ManufacturedHome => "ManufacturedHousing",
+            // MISMO treats modular as site-built; no dedicated code
+            Self::Modular => "Detached",
+            // No standard MISMO code; ineligible flag set in eligibility crate
+            Self::MobileHome => "ManufacturedHousing",
             Self::TwoUnit => "2-Unit",
             Self::ThreeUnit => "3-Unit",
             Self::FourUnit => "4-Unit",
@@ -86,9 +107,21 @@ impl PropertyType {
 
     /// True if this property type is eligible for standard conventional pricing.
     /// Co-ops are not accepted by Fannie/Freddie outside NYC co-op programs.
+    /// Mobile homes are ineligible as personal property.
     #[must_use]
     pub const fn is_conventional_eligible(self) -> bool {
-        !matches!(self, Self::Cooperative)
+        !matches!(self, Self::Cooperative | Self::MobileHome)
+    }
+
+    /// True if this type is ineligible for ALL agency programs (conventional,
+    /// FHA, VA, USDA) when titled as personal property.
+    ///
+    /// Mobile homes pre-dating the 1976 HUD Manufactured Housing Standards, or
+    /// any unit whose title has not been converted to real property, are always
+    /// ineligible. This flag triggers a hard rejection in the eligibility crate.
+    #[must_use]
+    pub const fn is_ineligible_personal_property(self) -> bool {
+        matches!(self, Self::MobileHome)
     }
 }
 
@@ -115,6 +148,8 @@ mod tests {
             PropertyType::PlannedUnitDevelopment.to_reso_lookup(),
             "Planned Unit Development"
         );
+        assert_eq!(PropertyType::Modular.to_reso_lookup(), "Modular");
+        assert_eq!(PropertyType::MobileHome.to_reso_lookup(), "Mobile Home");
     }
 
     #[test]
@@ -147,6 +182,51 @@ mod tests {
     }
 
     #[test]
+    fn test_property_type_abor_single_family_resi_string() {
+        // ABOR (Austin Board of Realtors) feed uses "Single Family Resi"
+        assert_eq!(
+            PropertyType::from_reso_lookup("Single Family Resi").unwrap(),
+            PropertyType::SingleFamilyDetached
+        );
+    }
+
+    #[test]
+    fn test_property_type_modular_from_reso() {
+        assert_eq!(
+            PropertyType::from_reso_lookup("Modular").unwrap(),
+            PropertyType::Modular
+        );
+        assert_eq!(
+            PropertyType::from_reso_lookup("Modular Home").unwrap(),
+            PropertyType::Modular
+        );
+    }
+
+    #[test]
+    fn test_property_type_mobile_home_from_reso() {
+        assert_eq!(
+            PropertyType::from_reso_lookup("Mobile Home").unwrap(),
+            PropertyType::MobileHome
+        );
+    }
+
+    #[test]
+    fn test_property_type_mobile_home_is_ineligible() {
+        assert!(PropertyType::MobileHome.is_ineligible_personal_property());
+        assert!(!PropertyType::ManufacturedHome.is_ineligible_personal_property());
+        assert!(!PropertyType::Modular.is_ineligible_personal_property());
+        assert!(!PropertyType::SingleFamilyDetached.is_ineligible_personal_property());
+    }
+
+    #[test]
+    fn test_property_type_modular_is_conventional_eligible() {
+        // Modular treated as site-built — eligible for all programs
+        assert!(PropertyType::Modular.is_conventional_eligible());
+        // Mobile home ineligible as personal property
+        assert!(!PropertyType::MobileHome.is_conventional_eligible());
+    }
+
+    #[test]
     fn test_property_type_to_mismo() {
         assert_eq!(PropertyType::SingleFamilyDetached.to_mismo(), "Detached");
         assert_eq!(PropertyType::Condominium.to_mismo(), "Condominium");
@@ -155,6 +235,8 @@ mod tests {
             PropertyType::ManufacturedHome.to_mismo(),
             "ManufacturedHousing"
         );
+        // Modular → Detached (MISMO has no distinct modular code)
+        assert_eq!(PropertyType::Modular.to_mismo(), "Detached");
     }
 
     #[test]
@@ -173,5 +255,21 @@ mod tests {
         assert_eq!(json, "\"single_family_detached\"");
         let back: PropertyType = serde_json::from_str(&json).unwrap();
         assert_eq!(back, pt);
+    }
+
+    #[test]
+    fn test_property_type_modular_serde_json() {
+        let json = serde_json::to_string(&PropertyType::Modular).unwrap();
+        assert_eq!(json, "\"modular\"");
+        let back: PropertyType = serde_json::from_str(&json).unwrap();
+        assert_eq!(back, PropertyType::Modular);
+    }
+
+    #[test]
+    fn test_property_type_mobile_home_serde_json() {
+        let json = serde_json::to_string(&PropertyType::MobileHome).unwrap();
+        assert_eq!(json, "\"mobile_home\"");
+        let back: PropertyType = serde_json::from_str(&json).unwrap();
+        assert_eq!(back, PropertyType::MobileHome);
     }
 }
