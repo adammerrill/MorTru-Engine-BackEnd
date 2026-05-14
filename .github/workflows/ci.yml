@@ -7,7 +7,7 @@ name: CI
 #   coverage  — ≥100% line coverage on non-stub crates (llvm-cov)
 #   bench     — criterion benchmarks must compile and run successfully
 #   deny      — license, advisory, ban, and source policy (cargo-deny)
-#   audit     — RUSTSEC advisory database scan (cargo-audit)
+#   deny      includes RUSTSEC advisory scan (replaces cargo-audit; supports CVSS 4.0)
 #
 # Gate ownership: every gate has a named "owner" comment. The owner is
 # responsible for triaging failures and keeping the gate green.
@@ -146,19 +146,11 @@ jobs:
           command: check
           arguments: --all-features
 
-  # ── RUSTSEC vulnerability scan ─────────────────────────────────────────────
-  # Owner: security
-  # Failure: a dependency has a published security advisory.
-  #   Update or replace the vulnerable crate, then re-run CI.
-  # Note: rustsec/audit-check is unmaintained; we install cargo-audit directly.
-  audit:
-    name: cargo-audit (RUSTSEC)
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
-      - uses: Swatinem/rust-cache@v2
-      - name: Install cargo-audit
-        run: cargo install cargo-audit --version 0.21.1 --locked
-      - name: Run cargo audit
-        run: cargo audit
+  # ── RUSTSEC advisory scan via cargo-deny ─────────────────────────────────
+  # RUSTSEC advisories are now enforced by the cargo-deny job above.
+  # cargo-deny-action@v2 ships cargo-deny 0.16+ which supports CVSS 4.0.
+  # A separate cargo-audit job is not needed and has been removed because:
+  #   - cargo-audit 0.21.x cannot parse CVSS 4.0 advisories (requires 1.85+)
+  #   - cargo-audit 0.22+ requires rustc 1.85, incompatible with our 1.75 pin
+  #   - cargo-deny covers the same advisory DB with full CVSS 4.0 support
+  # When the toolchain is upgraded past 1.85, cargo-audit can be re-added.

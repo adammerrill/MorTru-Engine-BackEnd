@@ -1,8 +1,8 @@
-# cargo-deny configuration for the Meridian Mortgage Engine workspace.
-# Compatible with cargo-deny 0.16+ (cargo-deny-action@v2).
+# cargo-deny configuration — compatible with cargo-deny 0.16+ (cargo-deny-action@v2).
 #
-# Policy: only OSI-approved permissive licenses are permitted.
-# Copyleft licenses (GPL, LGPL, AGPL) are hard-denied.
+# Policy: only OSI-approved permissive licenses permitted.
+# GPL/LGPL/AGPL are hard-denied. RUSTSEC advisories enforced via [advisories].
+# cargo-deny-action@v2 uses a version of cargo-deny that supports CVSS 4.0.
 
 [graph]
 targets = []
@@ -12,7 +12,7 @@ no-default-features = false
 # ── License policy ──────────────────────────────────────────────────────────
 
 [licenses]
-# Explicitly allowed permissive licenses in our dependency tree.
+# Explicitly allowed permissive licenses found in our dependency tree.
 allow = [
     "MIT",
     "Apache-2.0",
@@ -30,35 +30,38 @@ allow = [
     "OpenSSL",
 ]
 
-# Unrecognised licences are an error.
-unlicensed = "deny"
-
-# Exceptions for crates with non-standard or multiple licence expressions
-# (add as needed after legal review).
-exceptions = []
+# Copyleft licenses are hard-denied — any crate carrying one of these
+# licences will fail CI. Anything not in the allow list above is also
+# denied by default.
+deny = [
+    "GPL-2.0",
+    "GPL-3.0",
+    "LGPL-2.0",
+    "LGPL-2.1",
+    "LGPL-3.0",
+    "AGPL-3.0",
+]
 
 # ── Ban policy ───────────────────────────────────────────────────────────────
 
 [bans]
-# Warn on duplicated versions of foundational crates.
 multiple-versions = "warn"
-
-# Wildcard version requirements in dependency specs are forbidden.
 wildcards = "deny"
 
-# Deny known-problematic crates.
 deny = [
-    # OpenSSL's Rust bindings require native libssl; we use rustls instead.
+    # OpenSSL's Rust bindings require native libssl; we use rustls.
     { crate = "openssl" },
     { crate = "openssl-sys" },
 ]
 
 # ── Advisory policy (RUSTSEC) ────────────────────────────────────────────────
-# cargo-deny 0.16+ uses a single `[advisories]` block without top-level
-# severity keys. It supports CVSS 4.0 advisories correctly.
+# cargo-deny-action@v2 ships cargo-deny 0.16+ which supports CVSS 4.0.
+# This replaces the separate cargo-audit job which could not handle CVSS 4.0
+# on the Rust 1.75 toolchain.
 
 [advisories]
-# Ignore advisories that would block the build only when explicitly listed.
+# Ignore specific advisories only after explicit review. Add entries here
+# as: ignore = ["RUSTSEC-YYYY-NNNN"]
 ignore = []
 
 # ── Source policy ────────────────────────────────────────────────────────────
