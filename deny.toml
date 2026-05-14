@@ -38,6 +38,10 @@ allow = [
 [bans]
 multiple-versions = "warn"
 wildcards         = "deny"
+# Workspace-internal path dependencies have no version number by design.
+# allow-wildcard-paths permits these while still denying * specifiers in
+# external dependencies.
+allow-wildcard-paths = true
 deny = [
     { crate = "openssl" },
     { crate = "openssl-sys" },

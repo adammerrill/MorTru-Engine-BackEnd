@@ -43,7 +43,9 @@ fn test_result_type_alias_is_correct() {
     // Verify Ok variant carries the value through.
     let ok: Result<u32> = Ok(42);
     assert!(ok.is_ok());
-    if let Ok(v) = ok { assert_eq!(v, 42); }
+    if let Ok(v) = ok {
+        assert_eq!(v, 42);
+    }
 
     let err: Result<u32> = Err(MismoError::MissingElement { element: "TEST" });
     assert!(err.is_err());
@@ -53,7 +55,9 @@ fn test_result_type_alias_is_correct() {
 
 #[test]
 fn test_missing_element_display_contains_element_name() {
-    let e = MismoError::MissingElement { element: "MORTGAGE_TERMS" };
+    let e = MismoError::MissingElement {
+        element: "MORTGAGE_TERMS",
+    };
     let msg = e.to_string();
     assert!(
         msg.contains("MORTGAGE_TERMS"),
@@ -220,10 +224,19 @@ fn test_to_xml_produces_valid_xml_string() {
     };
 
     let xml = mismo::xml::serialize::to_xml(&loan).unwrap();
-    assert!(xml.contains("434443.00"), "serialized XML should contain amount");
-    assert!(xml.contains("6.375"),     "serialized XML should contain rate");
-    assert!(xml.contains("LOAN"),      "serialized XML should have root element");
-    assert!(xml.contains("Amount"),    "serialized XML should have Amount element");
+    assert!(
+        xml.contains("434443.00"),
+        "serialized XML should contain amount"
+    );
+    assert!(xml.contains("6.375"), "serialized XML should contain rate");
+    assert!(
+        xml.contains("LOAN"),
+        "serialized XML should have root element"
+    );
+    assert!(
+        xml.contains("Amount"),
+        "serialized XML should have Amount element"
+    );
 }
 
 #[test]
@@ -237,9 +250,15 @@ fn test_to_xml_omits_none_optional_fields() {
         notes: Option<String>,
     }
 
-    let loan = Loan { amount: "434443.00".to_string(), notes: None };
+    let loan = Loan {
+        amount: "434443.00".to_string(),
+        notes: None,
+    };
     let xml = mismo::xml::serialize::to_xml(&loan).unwrap();
-    assert!(!xml.contains("Notes"), "None field with skip_serializing_if should be absent");
+    assert!(
+        !xml.contains("Notes"),
+        "None field with skip_serializing_if should be absent"
+    );
 }
 
 // ── Round-trip ────────────────────────────────────────────────────────────────
@@ -258,14 +277,17 @@ fn test_parse_serialize_parse_roundtrip() {
     }
 
     let original = MortgageTerms {
-        base_loan_amount:  "434443.00".to_string(),
+        base_loan_amount: "434443.00".to_string(),
         note_rate_percent: "6.375".to_string(),
-        loan_term_months:  "360".to_string(),
+        loan_term_months: "360".to_string(),
     };
 
-    let xml    = mismo::xml::serialize::to_xml(&original).unwrap();
+    let xml = mismo::xml::serialize::to_xml(&original).unwrap();
     let parsed = mismo::xml::parse::from_xml::<MortgageTerms>(&xml).unwrap();
-    assert_eq!(parsed, original, "round-trip should preserve all field values");
+    assert_eq!(
+        parsed, original,
+        "round-trip should preserve all field values"
+    );
 }
 
 // ── Module accessibility ──────────────────────────────────────────────────────
@@ -282,7 +304,7 @@ fn test_xml_module_paths_are_accessible() {
     }
 
     // Both directions should work end-to-end.
-    let xml    = mismo::xml::serialize::to_xml(&Probe { v: "probe".into() }).unwrap();
+    let xml = mismo::xml::serialize::to_xml(&Probe { v: "probe".into() }).unwrap();
     let parsed = mismo::xml::parse::from_xml::<Probe>(&xml).unwrap();
     assert_eq!(parsed.v, "probe");
 }

@@ -4,13 +4,29 @@
 //!
 //! | Module | Contents |
 //! |---|---|
-//! | `loan_type` | `MismoLoanPurpose`, `MismoAmortizationType`, `MismoLienPriority`, `MismoProgramCode` |
-//! | `property`  | `MismoPropertyUsage`, `MismoPropertyType`, `MismoPropertyEstate` |
-//! | `party`     | `VaFundingFeeTier`, `AffordableLendingProgram`, VA benefit flags |
+//! | `loan_type` | `LoanPurpose`, `AmortizationType`, `LienPriority`, `ProgramCode` parse/serialize |
+//! | `property`  | `PropertyType`, `Occupancy` parse/serialize |
+//! | `party`     | `VaFundingFeeTier`, `AffordableLendingProgram` |
 //! | `mi`        | `MismoMiProgramType`, `MiRenewalType`, `MiFirstPremiumType` |
-//! | `aus`       | `AusRecommendation` |
+//! | `aus`       | `AusType` parse, `AusRecommendation` |
 //! | `fee`       | `FeeSection`, `FeePaidBy`, `FeeCalculationType` |
 //! | `comp`      | `CompType`, `CompDisclosure` |
 //!
-//! These submodules are introduced in Task 2.2.
-// Task 2.2 lands here.
+//! # Usage pattern
+//!
+//! XML schema structs (Tasks 2.3–2.9) hold raw `String` fields. The enum
+//! modules convert those strings to typed domain values:
+//!
+//! ```ignore
+//! use mismo::enums::loan_type;
+//!
+//! let purpose = loan_type::try_loan_purpose(&mortgage_terms.loan_purpose_type)?;
+//! ```
+
+pub mod aus;
+pub mod comp;
+pub mod fee;
+pub mod loan_type;
+pub mod mi;
+pub mod party;
+pub mod property;
