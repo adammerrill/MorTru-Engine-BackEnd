@@ -78,12 +78,14 @@ impl AusRecommendation {
     /// Returns `MismoError::InvalidEnum` for unrecognised values.
     pub fn try_from_str(s: &str) -> crate::Result<Self> {
         match s.trim() {
-            // DU approval
-            "Approve"          |
-            "ApproveEligible"  |
+            // DU approval — slash form used in live MISMO XML
+            "Approve/Eligible"  |
+            // DU approval — camelCase form
+            "Approve"           |
+            "ApproveEligible"   |
             // LPA approval
-            "Accept"           |
-            "AcceptEligible"   => Ok(Self::ApproveEligible),
+            "Accept"            |
+            "AcceptEligible"    => Ok(Self::ApproveEligible),
 
             "ApproveIneligible" => Ok(Self::ApproveIneligible),
 

@@ -13,10 +13,11 @@
 //! | `aus` | `AUTOMATED_UNDERWRITING_SYSTEM` | 2.8 |
 //! | `message` | `MESSAGE/DEAL_SETS/DEAL_SET/DEALS/DEAL` root | 2.9 |
 
+pub mod aus;
 pub mod closing_cost;
 pub mod collateral;
 pub mod lender_comp;
 pub mod loan_terms;
 pub mod mi;
 pub mod party;
-// Tasks 2.9 lands below as it is delivered.
+// Task 2.10 (message root) lands below as it is delivered.
