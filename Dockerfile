@@ -50,7 +50,8 @@ RUN cargo build --release --workspace 2>/dev/null || true
 # Now copy real source
 COPY crates/ crates/
 COPY deny.toml deny.toml
-
+COPY .github/ .github/
+COPY docs/ docs/
 # Full release build
 RUN cargo build --release --workspace
 
