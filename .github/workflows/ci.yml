@@ -84,10 +84,17 @@ jobs:
         # Running 'rustup default 1.85.0' relinks every proxy binary in
         # ~/.cargo/bin/ to the correct toolchain regardless of cache state.
       - name: Relink Rust 1.85.0 toolchain after cache restore
+        # Swatinem/rust-cache restores $CARGO_HOME/bin, which can leave the
+        # cargo proxy pointing at the wrong binary (on macOS the Homebrew
+        # cargo shim/rustup-init wins if PATH isn't clean).
+        # 'rustup toolchain install --no-self-update' re-links all proxies.
+        # Using the full path $HOME/.cargo/bin/cargo in the test step below
+        # bypasses PATH resolution entirely as a belt-and-suspenders guard.
         run: |
+          rustup toolchain install 1.85.0 --no-self-update --profile minimal
           rustup default 1.85.0
           echo "$HOME/.cargo/bin" >> "$GITHUB_PATH"
-      - run: cargo test --workspace --all-features --no-fail-fast
+      - run: $HOME/.cargo/bin/cargo test --workspace --all-features --no-fail-fast
 
   # ── Coverage gate (≥100% on non-stub crates) ───────────────────────────────
   # Owner: types crate maintainer

@@ -260,7 +260,7 @@ pub enum FeeType {
 
 impl FeeType {
     /// Parse from a string matching the enum variant name (PascalCase).
-    pub fn from_str(s: &str) -> Option<Self> {
+    pub fn parse_fee_type(s: &str) -> Option<Self> {
         serde_json::from_value(serde_json::Value::String(s.to_owned())).ok()
     }
 }
@@ -314,13 +314,6 @@ pub struct FeeRulesRegistry {
 impl FeeRulesRegistry {
     /// The JSON bundled at compile time via `include_str!`.
     const EMBEDDED_JSON: &'static str = include_str!("../../data/fee_rules.json");
-
-    /// Load from the compile-time embedded `data/fee_rules.json`.
-    ///
-    /// Always succeeds — the embedded JSON is validated at test time.
-    pub fn default() -> Self {
-        Self::from_json(Self::EMBEDDED_JSON).expect("embedded fee_rules.json must be valid")
-    }
 
     /// Load from a JSON string. Used for runtime override via API.
     pub fn from_json(json: &str) -> crate::Result<Self> {
@@ -394,6 +387,15 @@ impl FeeRulesRegistry {
         let mut rules: Vec<&FeeTypeRules> = self.rules.values().collect();
         rules.sort_by_key(|r| format!("{:?}{}", r.default_section, r.display_name));
         rules
+    }
+}
+
+impl Default for FeeRulesRegistry {
+    /// Load from the compile-time embedded `data/fee_rules.json`.
+    ///
+    /// Always succeeds — the embedded JSON is validated at test time.
+    fn default() -> Self {
+        Self::from_json(Self::EMBEDDED_JSON).expect("embedded fee_rules.json must be valid")
     }
 }
 
@@ -720,7 +722,7 @@ impl MismoClosingCostFee {
         let fee_type = self
             .fee_type_code
             .as_deref()
-            .and_then(FeeType::from_str)
+            .and_then(FeeType::parse_fee_type)
             .unwrap_or(FeeType::Other);
 
         let borrower_amount = parse_optional_cents(
