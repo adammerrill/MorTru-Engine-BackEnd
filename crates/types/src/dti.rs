@@ -129,10 +129,7 @@ mod tests {
 
     #[test]
     fn test_dti_repr_transparent() {
-        assert_eq!(
-            std::mem::size_of::<DtiBasisPoints>(),
-            std::mem::size_of::<u32>()
-        );
+        assert_eq!(size_of::<DtiBasisPoints>(), size_of::<u32>());
     }
 
     #[test]

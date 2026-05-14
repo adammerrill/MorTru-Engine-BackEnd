@@ -184,10 +184,7 @@ mod tests {
 
     #[test]
     fn test_credit_score_repr_transparent() {
-        assert_eq!(
-            std::mem::size_of::<CreditScore>(),
-            std::mem::size_of::<u16>()
-        );
+        assert_eq!(size_of::<CreditScore>(), size_of::<u16>());
     }
 
     #[test]

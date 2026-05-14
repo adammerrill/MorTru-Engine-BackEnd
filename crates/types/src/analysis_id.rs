@@ -126,7 +126,7 @@ mod tests {
 
     #[test]
     fn test_analysis_id_size() {
-        assert_eq!(std::mem::size_of::<AnalysisId>(), 16);
+        assert_eq!(size_of::<AnalysisId>(), 16);
     }
 
     #[test]

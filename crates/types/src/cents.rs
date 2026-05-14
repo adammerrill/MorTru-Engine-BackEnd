@@ -393,8 +393,8 @@ mod tests {
 
     #[test]
     fn test_cents_repr_transparent_zero_overhead() {
-        assert_eq!(std::mem::size_of::<Cents>(), std::mem::size_of::<i64>());
-        assert_eq!(std::mem::align_of::<Cents>(), std::mem::align_of::<i64>());
+        assert_eq!(size_of::<Cents>(), size_of::<i64>());
+        assert_eq!(align_of::<Cents>(), align_of::<i64>());
     }
 
     #[test]

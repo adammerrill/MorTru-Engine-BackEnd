@@ -258,9 +258,6 @@ mod tests {
 
     #[test]
     fn test_price_ticks_repr_transparent() {
-        assert_eq!(
-            std::mem::size_of::<PriceTicks>(),
-            std::mem::size_of::<i32>()
-        );
+        assert_eq!(size_of::<PriceTicks>(), size_of::<i32>());
     }
 }

@@ -258,7 +258,7 @@ mod tests {
 
     #[test]
     fn test_fips_code_repr_transparent() {
-        assert_eq!(std::mem::size_of::<FipsCode>(), std::mem::size_of::<u32>());
+        assert_eq!(size_of::<FipsCode>(), size_of::<u32>());
     }
 
     #[test]

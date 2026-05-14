@@ -315,7 +315,7 @@ mod task_1_2 {
         assert_eq!(Cents(-100).abs(), Cents(100));
 
         // Zero-overhead repr
-        assert_eq!(std::mem::size_of::<Cents>(), std::mem::size_of::<i64>());
+        assert_eq!(size_of::<Cents>(), size_of::<i64>());
     }
 
     // ── BasisPoints ───────────────────────────────────────────────────────────
@@ -389,10 +389,7 @@ mod task_1_2 {
         );
 
         // Zero overhead
-        assert_eq!(
-            std::mem::size_of::<PriceTicks>(),
-            std::mem::size_of::<i32>()
-        );
+        assert_eq!(size_of::<PriceTicks>(), size_of::<i32>());
     }
 
     // ── LtvBasisPoints ────────────────────────────────────────────────────────
@@ -624,7 +621,7 @@ mod task_1_3 {
         assert_eq!(back, la);
 
         // Zero overhead
-        assert_eq!(std::mem::size_of::<FipsCode>(), std::mem::size_of::<u32>());
+        assert_eq!(size_of::<FipsCode>(), size_of::<u32>());
     }
 
     // ── LenderId ──────────────────────────────────────────────────────────────
@@ -772,7 +769,7 @@ mod task_1_3 {
         );
 
         // Zero overhead — same size as Uuid (16 bytes)
-        assert_eq!(std::mem::size_of::<ScenarioId>(), 16);
+        assert_eq!(size_of::<ScenarioId>(), 16);
     }
 
     // ── AnalysisId ────────────────────────────────────────────────────────────

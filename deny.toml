@@ -1,18 +1,21 @@
 # cargo-deny configuration — compatible with cargo-deny 0.16+ (cargo-deny-action@v2).
 #
-# Policy: only OSI-approved permissive licenses permitted.
-# GPL/LGPL/AGPL are hard-denied. RUSTSEC advisories enforced via [advisories].
-# cargo-deny-action@v2 uses a version of cargo-deny that supports CVSS 4.0.
+# Licence policy: only OSI-approved permissive licences are allowed.
+# In cargo-deny v2 the explicit `deny = [...]` key was removed from [licenses].
+# Blocking is now achieved by omission: any licence not in the `allow` list
+# below is implicitly denied. This covers GPL-2.0, GPL-3.0, LGPL-*, AGPL-3.0
+# and all other copyleft licences without needing an explicit deny entry.
 
 [graph]
 targets = []
 all-features = false
 no-default-features = false
 
-# ── License policy ──────────────────────────────────────────────────────────
+# ── Licence policy ──────────────────────────────────────────────────────────
 
 [licenses]
-# Explicitly allowed permissive licenses found in our dependency tree.
+# Every licence in our dependency tree must appear here.
+# Anything else — including GPL-2.0, GPL-3.0, LGPL, AGPL — is denied.
 allow = [
     "MIT",
     "Apache-2.0",
@@ -30,38 +33,21 @@ allow = [
     "OpenSSL",
 ]
 
-# Copyleft licenses are hard-denied — any crate carrying one of these
-# licences will fail CI. Anything not in the allow list above is also
-# denied by default.
-deny = [
-    "GPL-2.0",
-    "GPL-3.0",
-    "LGPL-2.0",
-    "LGPL-2.1",
-    "LGPL-3.0",
-    "AGPL-3.0",
-]
-
 # ── Ban policy ───────────────────────────────────────────────────────────────
 
 [bans]
 multiple-versions = "warn"
-wildcards = "deny"
-
+wildcards         = "deny"
 deny = [
-    # OpenSSL's Rust bindings require native libssl; we use rustls.
     { crate = "openssl" },
     { crate = "openssl-sys" },
 ]
 
 # ── Advisory policy (RUSTSEC) ────────────────────────────────────────────────
-# cargo-deny-action@v2 ships cargo-deny 0.16+ which supports CVSS 4.0.
-# This replaces the separate cargo-audit job which could not handle CVSS 4.0
-# on the Rust 1.75 toolchain.
+# cargo-deny-action@v2 ships cargo-deny 0.16+ with CVSS 4.0 support.
+# This replaces the separate cargo-audit job.
 
 [advisories]
-# Ignore specific advisories only after explicit review. Add entries here
-# as: ignore = ["RUSTSEC-YYYY-NNNN"]
 ignore = []
 
 # ── Source policy ────────────────────────────────────────────────────────────

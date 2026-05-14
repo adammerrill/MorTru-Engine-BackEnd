@@ -114,8 +114,8 @@ impl BasisPoints {
         }
         // Use Decimal for the final rounding step to avoid f64 precision loss
         // at the rounding boundary.
-        let d = rust_decimal::Decimal::from_f64_retain(rate)?;
-        let scaled = (d * rust_decimal::Decimal::from(100_000))
+        let d = Decimal::from_f64_retain(rate)?;
+        let scaled = (d * Decimal::from(100_000))
             .round_dp_with_strategy(0, RoundingStrategy::MidpointAwayFromZero);
         let bps = scaled.to_u32()?;
         Some(BasisPoints(bps))
@@ -308,10 +308,7 @@ mod tests {
 
     #[test]
     fn test_basis_points_repr_transparent() {
-        assert_eq!(
-            std::mem::size_of::<BasisPoints>(),
-            std::mem::size_of::<u32>()
-        );
+        assert_eq!(size_of::<BasisPoints>(), size_of::<u32>());
     }
 
     #[test]

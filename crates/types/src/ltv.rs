@@ -248,9 +248,6 @@ mod tests {
 
     #[test]
     fn test_ltv_repr_transparent() {
-        assert_eq!(
-            std::mem::size_of::<LtvBasisPoints>(),
-            std::mem::size_of::<u32>()
-        );
+        assert_eq!(size_of::<LtvBasisPoints>(), size_of::<u32>());
     }
 }

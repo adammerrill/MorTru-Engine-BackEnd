@@ -103,10 +103,13 @@ fn test_deny_toml_has_required_sections() {
         contents.contains("[sources]"),
         "deny.toml must contain [sources] section"
     );
-    // Copyleft licenses must be denied
+    // In cargo-deny v2, copyleft licences (GPL-2.0, GPL-3.0, LGPL, AGPL) are
+    // blocked by omission from the allow list. The deny.toml documents this
+    // policy in a comment so that the intent is clear to reviewers.
     assert!(
         contents.contains("GPL-2.0") || contents.contains("GPL-3.0"),
-        "deny.toml must explicitly deny GPL licences"
+        "deny.toml must document that GPL licences are blocked \
+         (either in a comment or an explicit deny list)"
     );
 }
 

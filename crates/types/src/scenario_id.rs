@@ -159,7 +159,7 @@ mod tests {
     #[test]
     fn test_scenario_id_size() {
         // UUID is 16 bytes; transparent wrapper adds no overhead
-        assert_eq!(std::mem::size_of::<ScenarioId>(), 16);
+        assert_eq!(size_of::<ScenarioId>(), 16);
     }
 
     #[test]

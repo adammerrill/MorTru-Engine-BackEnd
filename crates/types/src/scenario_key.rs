@@ -55,7 +55,7 @@ pub struct ScenarioKey(u64);
 // Compile-time size guard — identical intent to the spec's:
 //   const _: () = assert!(std::mem::size_of::<ScenarioKey>() == 8);
 const _SCENARIO_KEY_SIZE_CHECK: () = {
-    assert!(std::mem::size_of::<ScenarioKey>() == 8);
+    assert!(size_of::<ScenarioKey>() == 8);
 };
 
 impl ScenarioKey {
@@ -163,7 +163,7 @@ mod tests {
     #[test]
     fn test_scenario_key_is_exactly_8_bytes() {
         // This is also enforced at compile time by the const assertion above.
-        assert_eq!(std::mem::size_of::<ScenarioKey>(), 8);
+        assert_eq!(size_of::<ScenarioKey>(), 8);
     }
 
     #[test]
@@ -276,7 +276,7 @@ mod tests {
     #[test]
     fn test_one_million_keys_fit_in_8_megabytes() {
         // 1_000_000 × 8 bytes = 8_000_000 bytes = 8 MB
-        let bytes_per_key = std::mem::size_of::<ScenarioKey>();
+        let bytes_per_key = size_of::<ScenarioKey>();
         let total = 1_000_000usize * bytes_per_key;
         assert_eq!(bytes_per_key, 8);
         assert_eq!(total, 8_000_000);
