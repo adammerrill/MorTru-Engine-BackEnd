@@ -13,5 +13,6 @@
 //! | `aus` | `AUTOMATED_UNDERWRITING_SYSTEM` | 2.8 |
 //! | `message` | `MESSAGE/DEAL_SETS/DEAL_SET/DEALS/DEAL` root | 2.9 |
 
+pub mod collateral;
 pub mod loan_terms;
-// Tasks 2.4–2.9 land below as they are delivered.
+// Tasks 2.5–2.9 land below as they are delivered.
