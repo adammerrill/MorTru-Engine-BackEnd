@@ -11,7 +11,7 @@
 # ─────────────────────────────────────────────────────────────────────────────
 
 # ── Stage 1: Rust build environment ─────────────────────────────────────────
-FROM rust:1.75-slim-bookworm AS builder
+FROM rust:1.85-slim-bookworm AS builder
 
 # System dependencies for linking
 RUN apt-get update && apt-get install -y --no-install-recommends \
