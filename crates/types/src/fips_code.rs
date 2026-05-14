@@ -44,7 +44,9 @@ impl FipsCode {
         StateCode::from_fips(state_fips).ok_or_else(|| {
             ParseError::InvalidFipsCode(format!("{state_fips:02}{county_fips:03}"))
         })?;
-        Ok(FipsCode(u32::from(state_fips) * 1000 + u32::from(county_fips)))
+        Ok(FipsCode(
+            u32::from(state_fips) * 1000 + u32::from(county_fips),
+        ))
     }
 
     /// Return the 2-digit state FIPS portion (0..=99 in principle, in
@@ -67,8 +69,7 @@ impl FipsCode {
     /// allowlist.
     #[must_use]
     pub fn state_code(self) -> StateCode {
-        StateCode::from_fips(self.state_fips())
-            .expect("FIPS state validated at construction")
+        StateCode::from_fips(self.state_fips()).expect("FIPS state validated at construction")
     }
 
     /// Underlying u32 representation. Mostly useful for compact serialization
@@ -92,8 +93,8 @@ impl FromStr for FipsCode {
         let n: u32 = trimmed
             .parse()
             .map_err(|_| ParseError::InvalidFipsCode(s.to_string()))?;
-        let state_fips = u8::try_from(n / 1000)
-            .map_err(|_| ParseError::InvalidFipsCode(s.to_string()))?;
+        let state_fips =
+            u8::try_from(n / 1000).map_err(|_| ParseError::InvalidFipsCode(s.to_string()))?;
         let county_fips = (n % 1000) as u16;
         Self::new(state_fips, county_fips)
     }
@@ -149,8 +150,8 @@ mod tests {
     fn test_fips_code_rejects_unassigned_state() {
         // State FIPS 03 is unassigned (was American Samoa, now uses 60)
         assert!("03001".parse::<FipsCode>().is_err());
-        assert!("07001".parse::<FipsCode>().is_err());  // gap between CO(8) and CT(9)
-        assert!("99001".parse::<FipsCode>().is_err());  // beyond all valid states
+        assert!("07001".parse::<FipsCode>().is_err()); // gap between CO(8) and CT(9)
+        assert!("99001".parse::<FipsCode>().is_err()); // beyond all valid states
 
         // Error variant should give the offending string back
         match "99001".parse::<FipsCode>() {
@@ -178,7 +179,7 @@ mod tests {
 
     #[test]
     fn test_fips_code_state_and_county_components() {
-        let code = FipsCode::new(48, 201).unwrap();  // Harris County, TX
+        let code = FipsCode::new(48, 201).unwrap(); // Harris County, TX
         assert_eq!(code.state_fips(), 48);
         assert_eq!(code.county_fips(), 201);
 

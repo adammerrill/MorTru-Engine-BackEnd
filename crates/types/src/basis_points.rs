@@ -308,7 +308,10 @@ mod tests {
 
     #[test]
     fn test_basis_points_repr_transparent() {
-        assert_eq!(std::mem::size_of::<BasisPoints>(), std::mem::size_of::<u32>());
+        assert_eq!(
+            std::mem::size_of::<BasisPoints>(),
+            std::mem::size_of::<u32>()
+        );
     }
 
     #[test]

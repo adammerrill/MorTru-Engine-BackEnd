@@ -644,7 +644,10 @@ impl GoalMask {
             return None;
         }
         let b = goal.bits();
-        GOAL_TABLE.iter().find(|g| g.bits == b).map(|g| g.short_name)
+        GOAL_TABLE
+            .iter()
+            .find(|g| g.bits == b)
+            .map(|g| g.short_name)
     }
 
     /// One-sentence description for a single-bit goal mask.
@@ -655,7 +658,10 @@ impl GoalMask {
             return None;
         }
         let b = goal.bits();
-        GOAL_TABLE.iter().find(|g| g.bits == b).map(|g| g.description)
+        GOAL_TABLE
+            .iter()
+            .find(|g| g.bits == b)
+            .map(|g| g.description)
     }
 
     /// Persona for a single-bit goal mask.
@@ -799,9 +805,17 @@ mod tests {
 
     #[test]
     fn test_name_of_and_description_of() {
-        assert_eq!(GoalMask::name_of(GoalMask::LOWEST_RATE), Some("Lowest Rate"));
-        assert_eq!(GoalMask::name_of(GoalMask::LOWEST_PAYMENT), Some("Lowest Payment"));
-        assert!(GoalMask::description_of(GoalMask::LOWEST_RATE).unwrap().contains("note rate"));
+        assert_eq!(
+            GoalMask::name_of(GoalMask::LOWEST_RATE),
+            Some("Lowest Rate")
+        );
+        assert_eq!(
+            GoalMask::name_of(GoalMask::LOWEST_PAYMENT),
+            Some("Lowest Payment")
+        );
+        assert!(GoalMask::description_of(GoalMask::LOWEST_RATE)
+            .unwrap()
+            .contains("note rate"));
         // Composite mask returns None
         assert!(GoalMask::name_of(GoalMask::DEFAULT_CONSUMER).is_none());
         // Empty returns None
@@ -810,7 +824,10 @@ mod tests {
 
     #[test]
     fn test_persona_of() {
-        assert_eq!(GoalMask::persona_of(GoalMask::LOWEST_RATE), Some(GoalPersona::Consumer));
+        assert_eq!(
+            GoalMask::persona_of(GoalMask::LOWEST_RATE),
+            Some(GoalPersona::Consumer)
+        );
         assert_eq!(
             GoalMask::persona_of(GoalMask::HIGHEST_CASH_ON_CASH_RETURN),
             Some(GoalPersona::Investor)
@@ -847,7 +864,10 @@ mod tests {
         for (i, a) in investor_goals.iter().enumerate() {
             for (j, b) in investor_goals.iter().enumerate() {
                 if i != j {
-                    assert!((*a & *b).is_empty(), "investor goals {i} and {j} share a bit");
+                    assert!(
+                        (*a & *b).is_empty(),
+                        "investor goals {i} and {j} share a bit"
+                    );
                 }
             }
         }
@@ -859,17 +879,31 @@ mod tests {
             .map(|i| GoalMask::from_bits(1u64 << i).expect("all 34 bits must be valid"))
             .collect();
         for (i, g) in all_individual.iter().enumerate() {
-            assert_eq!(g.active_count(), 1, "bit {i} must have exactly 1 active goal");
+            assert_eq!(
+                g.active_count(),
+                1,
+                "bit {i} must have exactly 1 active goal"
+            );
         }
-        let union = all_individual.iter().fold(GoalMask::empty(), |acc, &g| acc | g);
+        let union = all_individual
+            .iter()
+            .fold(GoalMask::empty(), |acc, &g| acc | g);
         assert_eq!(union.active_count(), 34);
     }
 
     #[test]
     fn test_goal_table_covers_all_34_bits() {
-        assert_eq!(GOAL_TABLE.len(), 34, "GOAL_TABLE must have one entry per assigned goal");
+        assert_eq!(
+            GOAL_TABLE.len(),
+            34,
+            "GOAL_TABLE must have one entry per assigned goal"
+        );
         for (i, info) in GOAL_TABLE.iter().enumerate() {
-            assert_eq!(info.bits, 1u64 << i, "GOAL_TABLE entry {i} has wrong bit value");
+            assert_eq!(
+                info.bits,
+                1u64 << i,
+                "GOAL_TABLE entry {i} has wrong bit value"
+            );
             assert!(!info.short_name.is_empty());
             assert!(!info.description.is_empty());
         }
@@ -877,10 +911,9 @@ mod tests {
 
     #[test]
     fn test_goal_mask_u64_storage_all_34_bits() {
-        let all_current = (0u32..34)
-            .fold(GoalMask::empty(), |acc, i| {
-                acc | GoalMask::from_bits_truncate(1u64 << i)
-            });
+        let all_current = (0u32..34).fold(GoalMask::empty(), |acc, i| {
+            acc | GoalMask::from_bits_truncate(1u64 << i)
+        });
         assert_eq!(all_current.active_count(), 34);
     }
 

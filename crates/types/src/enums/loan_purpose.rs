@@ -76,7 +76,10 @@ mod tests {
 
     #[test]
     fn test_loan_purpose_from_mismo_known() {
-        assert_eq!(LoanPurpose::from_mismo("Purchase").unwrap(), LoanPurpose::Purchase);
+        assert_eq!(
+            LoanPurpose::from_mismo("Purchase").unwrap(),
+            LoanPurpose::Purchase
+        );
         assert_eq!(
             LoanPurpose::from_mismo("Refinance").unwrap(),
             LoanPurpose::RateAndTermRefinance

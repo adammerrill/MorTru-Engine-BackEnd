@@ -107,7 +107,10 @@ mod tests {
         assert_eq!(PropertyType::TwoUnit.to_reso_lookup(), "Duplex");
         assert_eq!(PropertyType::ThreeUnit.to_reso_lookup(), "Triplex");
         assert_eq!(PropertyType::FourUnit.to_reso_lookup(), "Quadruplex");
-        assert_eq!(PropertyType::ManufacturedHome.to_reso_lookup(), "Manufactured Home");
+        assert_eq!(
+            PropertyType::ManufacturedHome.to_reso_lookup(),
+            "Manufactured Home"
+        );
         assert_eq!(
             PropertyType::PlannedUnitDevelopment.to_reso_lookup(),
             "Planned Unit Development"
@@ -124,10 +127,22 @@ mod tests {
             PropertyType::from_reso_lookup("Condominium").unwrap(),
             PropertyType::Condominium
         );
-        assert_eq!(PropertyType::from_reso_lookup("Condo").unwrap(), PropertyType::Condominium);
-        assert_eq!(PropertyType::from_reso_lookup("PUD").unwrap(), PropertyType::PlannedUnitDevelopment);
-        assert_eq!(PropertyType::from_reso_lookup("Duplex").unwrap(), PropertyType::TwoUnit);
-        assert_eq!(PropertyType::from_reso_lookup("Fourplex").unwrap(), PropertyType::FourUnit);
+        assert_eq!(
+            PropertyType::from_reso_lookup("Condo").unwrap(),
+            PropertyType::Condominium
+        );
+        assert_eq!(
+            PropertyType::from_reso_lookup("PUD").unwrap(),
+            PropertyType::PlannedUnitDevelopment
+        );
+        assert_eq!(
+            PropertyType::from_reso_lookup("Duplex").unwrap(),
+            PropertyType::TwoUnit
+        );
+        assert_eq!(
+            PropertyType::from_reso_lookup("Fourplex").unwrap(),
+            PropertyType::FourUnit
+        );
         assert!(PropertyType::from_reso_lookup("Spaceship").is_err());
     }
 
@@ -136,7 +151,10 @@ mod tests {
         assert_eq!(PropertyType::SingleFamilyDetached.to_mismo(), "Detached");
         assert_eq!(PropertyType::Condominium.to_mismo(), "Condominium");
         assert_eq!(PropertyType::TwoUnit.to_mismo(), "2-Unit");
-        assert_eq!(PropertyType::ManufacturedHome.to_mismo(), "ManufacturedHousing");
+        assert_eq!(
+            PropertyType::ManufacturedHome.to_mismo(),
+            "ManufacturedHousing"
+        );
     }
 
     #[test]

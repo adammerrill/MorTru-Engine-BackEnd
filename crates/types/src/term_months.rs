@@ -75,7 +75,7 @@ impl TermMonths {
     #[must_use]
     pub fn band_for_conv(self) -> Option<TermBand> {
         match self.0 {
-            96..=120  => Some(TermBand::Band8To10),
+            96..=120 => Some(TermBand::Band8To10),
             121..=180 => Some(TermBand::Band11To15),
             181..=240 => Some(TermBand::Band16To20),
             241..=360 => Some(TermBand::Band21To30),
@@ -89,7 +89,7 @@ impl TermMonths {
     #[must_use]
     pub fn band_for_govt(self) -> Option<TermBand> {
         match self.0 {
-            96..=180  => Some(TermBand::GovtBand8To15),
+            96..=180 => Some(TermBand::GovtBand8To15),
             181..=360 => Some(TermBand::GovtBand16To30),
             _ => None,
         }
@@ -155,7 +155,7 @@ mod tests {
         assert_eq!(TermMonths::from_years(15), Some(TermMonths(180)));
         assert_eq!(TermMonths::from_years(20), Some(TermMonths(240)));
         assert_eq!(TermMonths::from_years(30), Some(TermMonths(360)));
-        assert_eq!(TermMonths::from_years(9), None);  // 108 < 120
+        assert_eq!(TermMonths::from_years(9), None); // 108 < 120
         assert_eq!(TermMonths::from_years(31), None); // 372 > 360
     }
 
@@ -200,10 +200,22 @@ mod tests {
 
     #[test]
     fn test_term_months_band_for_govt_boundaries() {
-        assert_eq!(TermMonths(120).band_for_govt(), Some(TermBand::GovtBand8To15));
-        assert_eq!(TermMonths(180).band_for_govt(), Some(TermBand::GovtBand8To15));
-        assert_eq!(TermMonths(181).band_for_govt(), Some(TermBand::GovtBand16To30));
-        assert_eq!(TermMonths(360).band_for_govt(), Some(TermBand::GovtBand16To30));
+        assert_eq!(
+            TermMonths(120).band_for_govt(),
+            Some(TermBand::GovtBand8To15)
+        );
+        assert_eq!(
+            TermMonths(180).band_for_govt(),
+            Some(TermBand::GovtBand8To15)
+        );
+        assert_eq!(
+            TermMonths(181).band_for_govt(),
+            Some(TermBand::GovtBand16To30)
+        );
+        assert_eq!(
+            TermMonths(360).band_for_govt(),
+            Some(TermBand::GovtBand16To30)
+        );
     }
 
     #[test]
@@ -244,6 +256,9 @@ mod tests {
 
     #[test]
     fn test_term_months_repr_transparent() {
-        assert_eq!(std::mem::size_of::<TermMonths>(), std::mem::size_of::<u16>());
+        assert_eq!(
+            std::mem::size_of::<TermMonths>(),
+            std::mem::size_of::<u16>()
+        );
     }
 }

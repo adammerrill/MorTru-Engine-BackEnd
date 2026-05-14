@@ -29,16 +29,11 @@ pub enum SolverError {
         "APR iteration did not converge after {iterations} steps \
          (last residual = {last_residual:.6e}); check for degenerate cash flows"
     )]
-    AprIterationLimitExceeded {
-        iterations: u32,
-        last_residual: f64,
-    },
+    AprIterationLimitExceeded { iterations: u32, last_residual: f64 },
 
     /// Construction of an amortisation schedule failed. `term_months` is
     /// the requested term; `reason` gives the underlying cause.
-    #[error(
-        "amortisation schedule failed for {term_months}-month term: {reason}"
-    )]
+    #[error("amortisation schedule failed for {term_months}-month term: {reason}")]
     AmortizationFailed { term_months: u32, reason: String },
 
     /// The scenario passed to the solver was internally inconsistent and

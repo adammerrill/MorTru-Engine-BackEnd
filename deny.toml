@@ -1,10 +1,8 @@
 # cargo-deny configuration for the Meridian Mortgage Engine workspace.
-#
-# Enforced in CI via: cargo deny check
+# Compatible with cargo-deny 0.16+ (cargo-deny-action@v2).
 #
 # Policy: only OSI-approved permissive licenses are permitted.
-# Copyleft licenses (GPL, LGPL, AGPL) are hard-denied to protect the ability
-# to ship this code as a commercial product.
+# Copyleft licenses (GPL, LGPL, AGPL) are hard-denied.
 
 [graph]
 targets = []
@@ -14,7 +12,7 @@ no-default-features = false
 # ── License policy ──────────────────────────────────────────────────────────
 
 [licenses]
-# Explicitly allowed permissive licenses found in our dependency tree.
+# Explicitly allowed permissive licenses in our dependency tree.
 allow = [
     "MIT",
     "Apache-2.0",
@@ -32,67 +30,40 @@ allow = [
     "OpenSSL",
 ]
 
-# Copyleft licenses are hard-denied.
-deny = [
-    "GPL-2.0",
-    "GPL-3.0",
-    "LGPL-2.0",
-    "LGPL-2.1",
-    "LGPL-3.0",
-    "AGPL-3.0",
-]
+# Unrecognised licences are an error.
+unlicensed = "deny"
 
-# Treat any unrecognised SPDX expression as an error rather than silently
-# allowing it.
-copyleft        = "deny"
-allow-osi-fsf-free = "neither"
-default         = "deny"
-
-# Confidence required before we trust a licence detected via file scan
-# (rather than from the Cargo.toml `license` field).
-confidence-threshold = 0.8
+# Exceptions for crates with non-standard or multiple licence expressions
+# (add as needed after legal review).
+exceptions = []
 
 # ── Ban policy ───────────────────────────────────────────────────────────────
 
 [bans]
-# Warn on duplicated versions; the types crate must not pull in two
-# incompatible copies of serde or other foundational crates.
+# Warn on duplicated versions of foundational crates.
 multiple-versions = "warn"
 
 # Wildcard version requirements in dependency specs are forbidden.
-# All versions in this workspace must be pinned or semver-constrained.
 wildcards = "deny"
 
 # Deny known-problematic crates.
 deny = [
     # OpenSSL's Rust bindings require native libssl; we use rustls instead.
-    { name = "openssl" },
-    { name = "openssl-sys" },
+    { crate = "openssl" },
+    { crate = "openssl-sys" },
 ]
 
 # ── Advisory policy (RUSTSEC) ────────────────────────────────────────────────
+# cargo-deny 0.16+ uses a single `[advisories]` block without top-level
+# severity keys. It supports CVSS 4.0 advisories correctly.
 
 [advisories]
-# Known security vulnerabilities are a hard CI failure.
-vulnerability = "deny"
-
-# Unmaintained crates are a soft warning; operator must triage.
-unmaintained = "warn"
-
-# Yanked crates should not be used.
-yanked = "deny"
-
-# Informational advisories are surfaced but do not block CI.
-notice = "warn"
-
-# Severity threshold: deny High and Critical advisories.
+# Ignore advisories that would block the build only when explicitly listed.
 ignore = []
 
 # ── Source policy ────────────────────────────────────────────────────────────
 
 [sources]
-# Only allow crates.io as a registry; disallow unknown registries or
-# pinned-to-git-commit dependencies in production code.
 unknown-registry = "deny"
 unknown-git      = "deny"
 allow-registry   = ["https://github.com/rust-lang/crates.io-index"]

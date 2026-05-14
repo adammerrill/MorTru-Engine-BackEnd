@@ -9,7 +9,6 @@ use thiserror::Error;
 #[derive(Debug, Error, PartialEq, Eq, Clone)]
 pub enum ParseError {
     // ----- Task 1.2 errors -----
-
     /// LTV exceeded the plausible maximum of 110.00% (11000 basis points).
     /// VA loans can finance the funding fee into the loan and go slightly
     /// above 100% LTV; anything above 110% is almost certainly a data error.
@@ -41,7 +40,6 @@ pub enum ParseError {
     ZeroPropertyValue,
 
     // ----- Task 1.3 errors -----
-
     /// FIPS code could not be parsed. Must be exactly 5 ASCII digits and the
     /// state portion (first two digits) must correspond to a real US state or
     /// territory.
@@ -84,7 +82,6 @@ pub enum ParseError {
     },
 
     // ----- Task 1.6 errors -----
-
     /// A term expressed in months was outside the valid engine range of
     /// 120..=360 (10-year minimum through 30-year maximum).
     #[error("term {0} months is outside the valid engine range 120..=360")]

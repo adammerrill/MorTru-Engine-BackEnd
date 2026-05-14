@@ -70,10 +70,7 @@ impl ProgramCode {
     pub const fn is_agency(self) -> bool {
         matches!(
             self,
-            Self::Conventional
-                | Self::HomeReady
-                | Self::HomePossible
-                | Self::HomeOne
+            Self::Conventional | Self::HomeReady | Self::HomePossible | Self::HomeOne
         )
     }
 
@@ -93,16 +90,28 @@ mod tests {
 
     #[test]
     fn test_program_code_to_mismo_mortgage_type() {
-        assert_eq!(ProgramCode::Conventional.to_mismo_mortgage_type(), "Conventional");
-        assert_eq!(ProgramCode::HomeReady.to_mismo_mortgage_type(), "Conventional");
-        assert_eq!(ProgramCode::HomePossible.to_mismo_mortgage_type(), "Conventional");
+        assert_eq!(
+            ProgramCode::Conventional.to_mismo_mortgage_type(),
+            "Conventional"
+        );
+        assert_eq!(
+            ProgramCode::HomeReady.to_mismo_mortgage_type(),
+            "Conventional"
+        );
+        assert_eq!(
+            ProgramCode::HomePossible.to_mismo_mortgage_type(),
+            "Conventional"
+        );
         assert_eq!(ProgramCode::Jumbo.to_mismo_mortgage_type(), "Conventional");
         assert_eq!(ProgramCode::NonQm.to_mismo_mortgage_type(), "Conventional");
         assert_eq!(ProgramCode::Fha.to_mismo_mortgage_type(), "FHA");
         assert_eq!(ProgramCode::FhaDpa.to_mismo_mortgage_type(), "FHA");
         assert_eq!(ProgramCode::Va.to_mismo_mortgage_type(), "VA");
         assert_eq!(ProgramCode::VaJumbo.to_mismo_mortgage_type(), "VA");
-        assert_eq!(ProgramCode::Usda.to_mismo_mortgage_type(), "USDARuralDevelopment");
+        assert_eq!(
+            ProgramCode::Usda.to_mismo_mortgage_type(),
+            "USDARuralDevelopment"
+        );
         assert_eq!(ProgramCode::Bond.to_mismo_mortgage_type(), "Conventional");
     }
 

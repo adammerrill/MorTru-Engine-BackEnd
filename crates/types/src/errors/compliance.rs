@@ -64,9 +64,7 @@ pub enum ComplianceError {
     /// The lender is not licensed to originate in the property's state, or a
     /// state-specific product restriction prohibits this loan. `state` is the
     /// 2-letter postal code; `requirement` describes the unmet condition.
-    #[error(
-        "state licensing requirement not met in {state}: {requirement}"
-    )]
+    #[error("state licensing requirement not met in {state}: {requirement}")]
     StateLicensingRequirementNotMet { state: String, requirement: String },
 
     /// The property is in a Special Flood Hazard Area and the required flood

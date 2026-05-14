@@ -35,8 +35,7 @@ fn workspace_root() -> PathBuf {
 
 fn workspace_toml() -> Value {
     let path = workspace_root().join("Cargo.toml");
-    let contents =
-        std::fs::read_to_string(path).expect("workspace Cargo.toml must be readable");
+    let contents = std::fs::read_to_string(path).expect("workspace Cargo.toml must be readable");
     toml::from_str(&contents).expect("workspace Cargo.toml must be valid TOML")
 }
 
@@ -52,9 +51,7 @@ fn test_workspace_compiles_clean() {
         .and_then(|w| w.get("lints"))
         .expect("workspace.lints table required to enforce strict compilation");
 
-    let rust_lints = lints
-        .get("rust")
-        .expect("workspace.lints.rust required");
+    let rust_lints = lints.get("rust").expect("workspace.lints.rust required");
 
     let unsafe_code = rust_lints
         .get("unsafe_code")
@@ -145,12 +142,10 @@ fn test_every_member_crate_inherits_workspace_lints() {
 
     for package in metadata.workspace_packages() {
         let manifest_path = package.manifest_path.as_std_path();
-        let contents = std::fs::read_to_string(manifest_path).unwrap_or_else(|e| {
-            panic!("could not read manifest for `{}`: {e}", package.name)
-        });
-        let parsed: Value = toml::from_str(&contents).unwrap_or_else(|e| {
-            panic!("could not parse manifest for `{}`: {e}", package.name)
-        });
+        let contents = std::fs::read_to_string(manifest_path)
+            .unwrap_or_else(|e| panic!("could not read manifest for `{}`: {e}", package.name));
+        let parsed: Value = toml::from_str(&contents)
+            .unwrap_or_else(|e| panic!("could not parse manifest for `{}`: {e}", package.name));
 
         // Either [lints] workspace = true, OR the crate is the workspace
         // root (which has its own [workspace.lints] section). Member crates

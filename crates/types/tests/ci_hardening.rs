@@ -68,7 +68,10 @@ fn types_tests() -> PathBuf {
 #[test]
 fn test_ci_workflow_exists() {
     let ci = workspace_root().join(".github/workflows/ci.yml");
-    assert!(ci.exists(), ".github/workflows/ci.yml must exist — this file drives all CI gates");
+    assert!(
+        ci.exists(),
+        ".github/workflows/ci.yml must exist — this file drives all CI gates"
+    );
 }
 
 #[test]
@@ -83,12 +86,23 @@ fn test_deny_toml_exists() {
 #[test]
 fn test_deny_toml_has_required_sections() {
     let deny = workspace_root().join("deny.toml");
-    let contents = std::fs::read_to_string(deny)
-        .expect("deny.toml must be readable");
-    assert!(contents.contains("[licenses]"), "deny.toml must contain [licenses] section");
-    assert!(contents.contains("[advisories]"), "deny.toml must contain [advisories] section");
-    assert!(contents.contains("[bans]"), "deny.toml must contain [bans] section");
-    assert!(contents.contains("[sources]"), "deny.toml must contain [sources] section");
+    let contents = std::fs::read_to_string(deny).expect("deny.toml must be readable");
+    assert!(
+        contents.contains("[licenses]"),
+        "deny.toml must contain [licenses] section"
+    );
+    assert!(
+        contents.contains("[advisories]"),
+        "deny.toml must contain [advisories] section"
+    );
+    assert!(
+        contents.contains("[bans]"),
+        "deny.toml must contain [bans] section"
+    );
+    assert!(
+        contents.contains("[sources]"),
+        "deny.toml must contain [sources] section"
+    );
     // Copyleft licenses must be denied
     assert!(
         contents.contains("GPL-2.0") || contents.contains("GPL-3.0"),
@@ -98,8 +112,7 @@ fn test_deny_toml_has_required_sections() {
 
 #[test]
 fn test_benchmark_file_exists() {
-    let bench = Path::new(env!("CARGO_MANIFEST_DIR"))
-        .join("benches/money_arithmetic.rs");
+    let bench = Path::new(env!("CARGO_MANIFEST_DIR")).join("benches/money_arithmetic.rs");
     assert!(
         bench.exists(),
         "benches/money_arithmetic.rs must exist — the CI bench gate compiles and runs it"
@@ -124,7 +137,10 @@ fn test_all_task_1_2_source_files_exist() {
         "credit_score.rs",
     ];
     for f in required {
-        assert!(src.join(f).exists(), "Task 1.2 source file missing: src/{f}");
+        assert!(
+            src.join(f).exists(),
+            "Task 1.2 source file missing: src/{f}"
+        );
     }
 }
 
@@ -142,7 +158,10 @@ fn test_all_task_1_3_source_files_exist() {
         "state_code.rs",
     ];
     for f in required {
-        assert!(src.join(f).exists(), "Task 1.3 source file missing: src/{f}");
+        assert!(
+            src.join(f).exists(),
+            "Task 1.3 source file missing: src/{f}"
+        );
     }
 }
 
@@ -150,10 +169,24 @@ fn test_all_task_1_3_source_files_exist() {
 fn test_all_task_1_4_source_files_exist() {
     // Task 1.4: Error hierarchy
     let src = types_src();
-    assert!(src.join("errors.rs").exists(), "Task 1.4: errors.rs missing");
-    assert!(src.join("errors").is_dir(), "Task 1.4: errors/ directory missing");
-    for f in ["ingestion.rs", "eligibility.rs", "solver.rs", "compliance.rs"] {
-        assert!(src.join("errors").join(f).exists(), "Task 1.4: errors/{f} missing");
+    assert!(
+        src.join("errors.rs").exists(),
+        "Task 1.4: errors.rs missing"
+    );
+    assert!(
+        src.join("errors").is_dir(),
+        "Task 1.4: errors/ directory missing"
+    );
+    for f in [
+        "ingestion.rs",
+        "eligibility.rs",
+        "solver.rs",
+        "compliance.rs",
+    ] {
+        assert!(
+            src.join("errors").join(f).exists(),
+            "Task 1.4: errors/{f} missing"
+        );
     }
 }
 
@@ -162,12 +195,23 @@ fn test_all_task_1_5_source_files_exist() {
     // Task 1.5: Common enumerations
     let src = types_src();
     assert!(src.join("enums.rs").exists(), "Task 1.5: enums.rs missing");
-    assert!(src.join("enums").is_dir(), "Task 1.5: enums/ directory missing");
+    assert!(
+        src.join("enums").is_dir(),
+        "Task 1.5: enums/ directory missing"
+    );
     for f in [
-        "program_code.rs", "loan_product.rs", "property_type.rs",
-        "occupancy.rs", "loan_purpose.rs", "amortization_type.rs", "misc.rs",
+        "program_code.rs",
+        "loan_product.rs",
+        "property_type.rs",
+        "occupancy.rs",
+        "loan_purpose.rs",
+        "amortization_type.rs",
+        "misc.rs",
     ] {
-        assert!(src.join("enums").join(f).exists(), "Task 1.5: enums/{f} missing");
+        assert!(
+            src.join("enums").join(f).exists(),
+            "Task 1.5: enums/{f} missing"
+        );
     }
 }
 
@@ -175,16 +219,28 @@ fn test_all_task_1_5_source_files_exist() {
 fn test_all_task_1_6_source_files_exist() {
     // Task 1.6: Term primitives
     let src = types_src();
-    assert!(src.join("term_band.rs").exists(), "Task 1.6: term_band.rs missing");
-    assert!(src.join("term_months.rs").exists(), "Task 1.6: term_months.rs missing");
+    assert!(
+        src.join("term_band.rs").exists(),
+        "Task 1.6: term_band.rs missing"
+    );
+    assert!(
+        src.join("term_months.rs").exists(),
+        "Task 1.6: term_months.rs missing"
+    );
 }
 
 #[test]
 fn test_all_task_1_7_source_files_exist() {
     // Task 1.7: Scenario primitives
     let src = types_src();
-    assert!(src.join("scenario_key.rs").exists(), "Task 1.7: scenario_key.rs missing");
-    assert!(src.join("goal_mask.rs").exists(), "Task 1.7/1.9: goal_mask.rs missing");
+    assert!(
+        src.join("scenario_key.rs").exists(),
+        "Task 1.7: scenario_key.rs missing"
+    );
+    assert!(
+        src.join("goal_mask.rs").exists(),
+        "Task 1.7/1.9: goal_mask.rs missing"
+    );
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -195,17 +251,20 @@ fn test_all_task_1_7_source_files_exist() {
 fn test_all_integration_test_files_exist() {
     let tests = types_tests();
     let required = [
-        "properties.rs",           // Task 1.2 property tests
+        "properties.rs",            // Task 1.2 property tests
         "identifier_properties.rs", // Task 1.3 property tests
-        "error_hierarchy.rs",      // Task 1.4 integration tests
-        "enumerations.rs",         // Task 1.5 integration tests
-        "term_band_and_months.rs", // Task 1.6 integration tests
-        "decimal_conversions.rs",  // Task 1.8 integration tests
-        "epic_1_gate.rs",          // Epic 1 deployment gate
-        "ci_hardening.rs",         // Task 1.10 (this file)
+        "error_hierarchy.rs",       // Task 1.4 integration tests
+        "enumerations.rs",          // Task 1.5 integration tests
+        "term_band_and_months.rs",  // Task 1.6 integration tests
+        "decimal_conversions.rs",   // Task 1.8 integration tests
+        "epic_1_gate.rs",           // Epic 1 deployment gate
+        "ci_hardening.rs",          // Task 1.10 (this file)
     ];
     for f in required {
-        assert!(tests.join(f).exists(), "integration test file missing: tests/{f}");
+        assert!(
+            tests.join(f).exists(),
+            "integration test file missing: tests/{f}"
+        );
     }
 }
 
@@ -242,27 +301,49 @@ fn test_developer_docs_exist() {
 #[test]
 fn test_lib_rs_re_exports_all_public_types() {
     let lib_rs = types_src().join("lib.rs");
-    let contents = std::fs::read_to_string(lib_rs)
-        .expect("src/lib.rs must be readable");
+    let contents = std::fs::read_to_string(lib_rs).expect("src/lib.rs must be readable");
 
     let expected_reexports = [
         // Task 1.2
-        "BasisPoints", "Cents", "CreditScore", "DtiBasisPoints",
-        "LtvBasisPoints", "PriceTicks",
+        "BasisPoints",
+        "Cents",
+        "CreditScore",
+        "DtiBasisPoints",
+        "LtvBasisPoints",
+        "PriceTicks",
         // Task 1.3
-        "AnalysisId", "FipsCode", "LenderId", "LoanCasefileId",
-        "MlsListingKey", "ScenarioId", "StateCode",
+        "AnalysisId",
+        "FipsCode",
+        "LenderId",
+        "LoanCasefileId",
+        "MlsListingKey",
+        "ScenarioId",
+        "StateCode",
         // Task 1.4
-        "ParseError", "ComplianceError", "EligibilityError",
-        "IngestionError", "SolverError",
+        "ParseError",
+        "ComplianceError",
+        "EligibilityError",
+        "IngestionError",
+        "SolverError",
         // Task 1.5
-        "AmortizationType", "AusType", "BalanceType", "LienPriority",
-        "LoanProduct", "LoanPurpose", "LockPeriod", "MiCoverageType",
-        "Occupancy", "ProgramCode", "PropertyType", "Tier",
+        "AmortizationType",
+        "AusType",
+        "BalanceType",
+        "LienPriority",
+        "LoanProduct",
+        "LoanPurpose",
+        "LockPeriod",
+        "MiCoverageType",
+        "Occupancy",
+        "ProgramCode",
+        "PropertyType",
+        "Tier",
         // Task 1.6
-        "TermBand", "TermMonths",
+        "TermBand",
+        "TermMonths",
         // Task 1.7 / 1.9
-        "GoalMask", "ScenarioKey",
+        "GoalMask",
+        "ScenarioKey",
     ];
 
     for name in expected_reexports {
@@ -278,8 +359,8 @@ fn test_lib_rs_re_exports_all_public_types() {
 #[test]
 fn test_workspace_cargo_toml_has_lint_config() {
     let workspace_toml = workspace_root().join("Cargo.toml");
-    let contents = std::fs::read_to_string(workspace_toml)
-        .expect("workspace Cargo.toml must be readable");
+    let contents =
+        std::fs::read_to_string(workspace_toml).expect("workspace Cargo.toml must be readable");
     assert!(
         contents.contains("unsafe_code"),
         "workspace Cargo.toml must forbid unsafe_code"

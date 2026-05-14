@@ -67,9 +67,7 @@ pub enum EligibilityError {
 
     /// The property type is not on the approved list for this program
     /// (e.g., condotels and co-ops are ineligible for standard conventional).
-    #[error(
-        "property type `{property_type}` is ineligible under program `{program}`"
-    )]
+    #[error("property type `{property_type}` is ineligible under program `{program}`")]
     IneligiblePropertyType {
         property_type: String,
         program: String,
@@ -77,9 +75,7 @@ pub enum EligibilityError {
 
     /// The occupancy type is not permitted by the program
     /// (e.g., investment property in a first-time-homebuyer program).
-    #[error(
-        "occupancy type `{occupancy}` is ineligible under program `{program}`"
-    )]
+    #[error("occupancy type `{occupancy}` is ineligible under program `{program}`")]
     IneligibleOccupancy { occupancy: String, program: String },
 
     /// The borrower's post-closing liquid reserves are below the minimum
@@ -198,7 +194,9 @@ mod tests {
 
     #[test]
     fn test_eligibility_error_missing_field_display() {
-        let err = EligibilityError::MissingRequiredField { field: "county_fips" };
+        let err = EligibilityError::MissingRequiredField {
+            field: "county_fips",
+        };
         let msg = err.to_string();
         assert!(msg.contains("county_fips"), "{msg}");
     }

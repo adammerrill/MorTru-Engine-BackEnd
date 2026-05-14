@@ -102,11 +102,15 @@ mod tests {
     fn test_loan_casefile_id_empty_rejected() {
         assert!(matches!(
             LoanCasefileId::new(""),
-            Err(ParseError::IdentifierEmpty { kind: "LoanCasefileId" })
+            Err(ParseError::IdentifierEmpty {
+                kind: "LoanCasefileId"
+            })
         ));
         assert!(matches!(
             LoanCasefileId::new("   "),
-            Err(ParseError::IdentifierEmpty { kind: "LoanCasefileId" })
+            Err(ParseError::IdentifierEmpty {
+                kind: "LoanCasefileId"
+            })
         ));
     }
 

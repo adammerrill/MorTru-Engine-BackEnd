@@ -96,7 +96,7 @@ jobs:
             --lcov --output-path lcov.info \
             --fail-under-lines 100 \
             --ignore-filename-regex \
-              'crates/(mismo|reso|ingest|enrich|eligibility|compliance|scenarios|solver|amort|ml|orchestrator|api)/src/lib\.rs'
+              '(mismo|reso|ingest|enrich|eligibility|compliance|scenarios|solver|amort|ml|orchestrator|api)[/\\]src[/\\]lib\.rs'
       - name: Upload LCOV report
         uses: actions/upload-artifact@v4
         with:
@@ -141,7 +141,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: EmbarkStudios/cargo-deny-action@v1
+      - uses: EmbarkStudios/cargo-deny-action@v2
         with:
           command: check
           arguments: --all-features
@@ -159,6 +159,6 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2
       - name: Install cargo-audit
-        run: cargo install cargo-audit --locked
+        run: cargo install cargo-audit --version 0.21.1 --locked
       - name: Run cargo audit
         run: cargo audit

@@ -36,9 +36,7 @@ pub enum IngestionError {
     /// A rate-sheet cell block could not be mapped to any known rate-table
     /// header pattern. `row` and `col` are 0-based. `hint` is a best-guess
     /// about what the block might be, for human triage.
-    #[error(
-        "rate sheet block not recognized at row {row}, col {col}: {hint}"
-    )]
+    #[error("rate sheet block not recognized at row {row}, col {col}: {hint}")]
     UnrecognizedBlock {
         row: usize,
         col: usize,
@@ -160,10 +158,7 @@ mod tests {
 
     #[test]
     fn test_ingestion_error_io_display() {
-        let io_err = std::io::Error::new(
-            std::io::ErrorKind::NotFound,
-            "rate_sheet.xlsx not found",
-        );
+        let io_err = std::io::Error::new(std::io::ErrorKind::NotFound, "rate_sheet.xlsx not found");
         let err = IngestionError::Io(io_err);
         let msg = err.to_string();
         assert!(msg.contains("io error"), "{msg}");

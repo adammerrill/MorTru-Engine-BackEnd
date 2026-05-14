@@ -121,10 +121,7 @@ mod tests {
     #[test]
     fn test_scenario_id_from_str() {
         let id: ScenarioId = "550e8400-e29b-41d4-a716-446655440000".parse().unwrap();
-        assert_eq!(
-            id.to_string(),
-            "550e8400-e29b-41d4-a716-446655440000"
-        );
+        assert_eq!(id.to_string(), "550e8400-e29b-41d4-a716-446655440000");
 
         // Invalid UUID rejected
         assert!("not-a-uuid".parse::<ScenarioId>().is_err());
@@ -133,9 +130,8 @@ mod tests {
 
     #[test]
     fn test_scenario_id_serde_json() {
-        let id = ScenarioId::from_uuid(
-            Uuid::parse_str("550e8400-e29b-41d4-a716-446655440000").unwrap()
-        );
+        let id =
+            ScenarioId::from_uuid(Uuid::parse_str("550e8400-e29b-41d4-a716-446655440000").unwrap());
         let json = serde_json::to_string(&id).unwrap();
         assert_eq!(json, "\"550e8400-e29b-41d4-a716-446655440000\"");
 
@@ -146,7 +142,10 @@ mod tests {
     #[test]
     fn test_scenario_id_nil_sentinel() {
         assert_eq!(ScenarioId::NIL.as_uuid(), &Uuid::nil());
-        assert_eq!(ScenarioId::NIL.to_string(), "00000000-0000-0000-0000-000000000000");
+        assert_eq!(
+            ScenarioId::NIL.to_string(),
+            "00000000-0000-0000-0000-000000000000"
+        );
     }
 
     #[test]

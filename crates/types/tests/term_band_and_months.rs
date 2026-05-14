@@ -150,8 +150,7 @@ fn test_usda_30_only_contains_only_360() {
 fn test_total_term_count_120_to_360_is_241() {
     let count = TermMonths::all_valid().count();
     assert_eq!(
-        count,
-        241,
+        count, 241,
         "TermMonths::all_valid() (120..=360) must yield 241 terms; \
          the engine analyses every one of these individually within each band"
     );
@@ -228,13 +227,19 @@ fn test_govt_bands_partition_96_to_360() {
 #[test]
 fn test_all_band_labels_non_empty() {
     let all_bands = [
-        TermBand::Band8To10, TermBand::Band11To15,
-        TermBand::Band16To20, TermBand::Band21To30,
-        TermBand::GovtBand8To15, TermBand::GovtBand16To30,
+        TermBand::Band8To10,
+        TermBand::Band11To15,
+        TermBand::Band16To20,
+        TermBand::Band21To30,
+        TermBand::GovtBand8To15,
+        TermBand::GovtBand16To30,
         TermBand::Usda30Only,
     ];
     for b in all_bands {
-        assert!(!b.rate_sheet_label().is_empty(), "label must not be empty for {b:?}");
+        assert!(
+            !b.rate_sheet_label().is_empty(),
+            "label must not be empty for {b:?}"
+        );
     }
 }
 

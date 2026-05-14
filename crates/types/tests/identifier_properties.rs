@@ -5,9 +5,7 @@ use std::collections::HashSet;
 use proptest::prelude::*;
 use uuid::Uuid;
 
-use types::{
-    AnalysisId, FipsCode, LenderId, LoanCasefileId, MlsListingKey, ScenarioId, StateCode,
-};
+use types::{AnalysisId, FipsCode, LenderId, LoanCasefileId, MlsListingKey, ScenarioId, StateCode};
 
 // ----- FipsCode -----
 

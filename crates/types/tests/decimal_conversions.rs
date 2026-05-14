@@ -65,7 +65,10 @@ fn test_decimal_to_cents_no_loss() {
     let c = Cents::from_decimal_dollars(d).unwrap();
     assert_eq!(c, Cents(12345));
     let back = c.to_decimal_dollars();
-    assert_eq!(back, d, "Decimal → Cents → Decimal must be lossless for exact cent values");
+    assert_eq!(
+        back, d,
+        "Decimal → Cents → Decimal must be lossless for exact cent values"
+    );
 
     // A few more exact values
     let pairs: &[(Decimal, Cents)] = &[
@@ -86,7 +89,13 @@ fn test_decimal_to_cents_no_loss() {
 fn test_cents_to_decimal_dollars_and_from_are_inverses() {
     // to_decimal_dollars and from_decimal_dollars are strict inverses for
     // any integer number of cents.
-    let values = [Cents(0), Cents(1), Cents(-1), Cents(12345), Cents(-99_999_999)];
+    let values = [
+        Cents(0),
+        Cents(1),
+        Cents(-1),
+        Cents(12345),
+        Cents(-99_999_999),
+    ];
     for c in values {
         let d = c.to_decimal_dollars();
         let back = Cents::from_decimal_dollars(d).unwrap();
@@ -101,8 +110,8 @@ fn test_cents_as_f64_dollars_precision() {
     assert_eq!(Cents(12345).as_f64_dollars(), 123.45_f64);
     assert_eq!(Cents(-150).as_f64_dollars(), -1.5_f64);
     // Large values — f64 has ~15 significant digits, enough for any mortgage
-    assert_eq!(Cents(1_000_000_000).as_f64_dollars(), 10_000_000.0_f64);    // $10M
-    assert_eq!(Cents(10_000_000_000).as_f64_dollars(), 100_000_000.0_f64);  // $100M
+    assert_eq!(Cents(1_000_000_000).as_f64_dollars(), 10_000_000.0_f64); // $10M
+    assert_eq!(Cents(10_000_000_000).as_f64_dollars(), 100_000_000.0_f64); // $100M
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -144,9 +153,15 @@ fn test_basis_points_from_decimal_rate_is_inverse_of_to_decimal_rate() {
 #[test]
 fn test_basis_points_from_decimal_rate_specific_values() {
     // 0.06875 → BasisPoints(6875)
-    assert_eq!(BasisPoints::from_decimal_rate(dec!(0.06875)).unwrap(), BasisPoints(6875));
+    assert_eq!(
+        BasisPoints::from_decimal_rate(dec!(0.06875)).unwrap(),
+        BasisPoints(6875)
+    );
     // 0.07 → BasisPoints(7000)
-    assert_eq!(BasisPoints::from_decimal_rate(dec!(0.07)).unwrap(), BasisPoints(7000));
+    assert_eq!(
+        BasisPoints::from_decimal_rate(dec!(0.07)).unwrap(),
+        BasisPoints(7000)
+    );
     // Half-up rounding at the 0.001% boundary
     assert_eq!(
         BasisPoints::from_decimal_rate(dec!(0.068755)).unwrap(), // 6875.5 → round up
@@ -181,12 +196,21 @@ fn test_apr_round_to_nearest_basis_point() {
 
     // Exact half: 6.8755% — the f64 representation of 0.068755 is slightly
     // less than the mathematical value (0.068754999...), so it rounds DOWN.
-    assert_eq!(BasisPoints::from_apr_f64(0.068755).unwrap(), BasisPoints(6875));
+    assert_eq!(
+        BasisPoints::from_apr_f64(0.068755).unwrap(),
+        BasisPoints(6875)
+    );
 
     // Clearly above the boundary: 6.876%
-    assert_eq!(BasisPoints::from_apr_f64(0.06876).unwrap(), BasisPoints(6876));
+    assert_eq!(
+        BasisPoints::from_apr_f64(0.06876).unwrap(),
+        BasisPoints(6876)
+    );
     // Clearly below: 6.874%
-    assert_eq!(BasisPoints::from_apr_f64(0.06874).unwrap(), BasisPoints(6874));
+    assert_eq!(
+        BasisPoints::from_apr_f64(0.06874).unwrap(),
+        BasisPoints(6874)
+    );
 
     // Zero
     assert_eq!(BasisPoints::from_apr_f64(0.0).unwrap(), BasisPoints(0));
@@ -207,7 +231,11 @@ fn test_basis_points_as_f64_rate() {
     for bps in [6875u32, 7000, 5500, 10_000, 1] {
         let rate_f64 = BasisPoints(bps).as_f64_rate();
         let back = BasisPoints::from_apr_f64(rate_f64).unwrap();
-        assert_eq!(back, BasisPoints(bps), "f64 roundtrip failed for BasisPoints({bps})");
+        assert_eq!(
+            back,
+            BasisPoints(bps),
+            "f64 roundtrip failed for BasisPoints({bps})"
+        );
     }
 }
 

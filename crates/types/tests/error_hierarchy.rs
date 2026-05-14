@@ -49,7 +49,10 @@ fn test_error_display_includes_context() {
     let msg = eligibility.to_string();
     assert!(msg.contains("619"), "score must appear; got: {msg}");
     assert!(msg.contains("620"), "minimum must appear; got: {msg}");
-    assert!(msg.contains("HomeReady 97 LTV"), "program must appear; got: {msg}");
+    assert!(
+        msg.contains("HomeReady 97 LTV"),
+        "program must appear; got: {msg}"
+    );
 
     // SolverError — no rate found must include the scenario key
     let solver = SolverError::RateNotFound {
@@ -70,7 +73,10 @@ fn test_error_display_includes_context() {
     };
     let msg = compliance.to_string();
     assert!(msg.contains("14000"), "APR bps must appear; got: {msg}");
-    assert!(msg.contains("13125"), "threshold bps must appear; got: {msg}");
+    assert!(
+        msg.contains("13125"),
+        "threshold bps must appear; got: {msg}"
+    );
     assert!(
         msg.contains("1026.32"),
         "regulatory citation must appear; got: {msg}"
@@ -220,9 +226,16 @@ fn test_every_ingestion_error_display_is_non_empty() {
         }),
         Box::new(IngestionError::Io(io_err)),
     ];
-    assert_eq!(variants.len(), 8, "test must cover all 8 IngestionError variants");
+    assert_eq!(
+        variants.len(),
+        8,
+        "test must cover all 8 IngestionError variants"
+    );
     for v in &variants {
-        assert!(!v.to_string().is_empty(), "Display must not be empty: {v:?}");
+        assert!(
+            !v.to_string().is_empty(),
+            "Display must not be empty: {v:?}"
+        );
     }
 }
 
@@ -269,9 +282,16 @@ fn test_every_eligibility_error_display_is_non_empty() {
         }),
         Box::new(EligibilityError::MissingRequiredField { field: "ltv" }),
     ];
-    assert_eq!(variants.len(), 8, "test must cover all 8 EligibilityError variants");
+    assert_eq!(
+        variants.len(),
+        8,
+        "test must cover all 8 EligibilityError variants"
+    );
     for v in &variants {
-        assert!(!v.to_string().is_empty(), "Display must not be empty: {v:?}");
+        assert!(
+            !v.to_string().is_empty(),
+            "Display must not be empty: {v:?}"
+        );
     }
 }
 
@@ -296,9 +316,16 @@ fn test_every_solver_error_display_is_non_empty() {
             context: "c".to_string(),
         }),
     ];
-    assert_eq!(variants.len(), 5, "test must cover all 5 SolverError variants");
+    assert_eq!(
+        variants.len(),
+        5,
+        "test must cover all 5 SolverError variants"
+    );
     for v in &variants {
-        assert!(!v.to_string().is_empty(), "Display must not be empty: {v:?}");
+        assert!(
+            !v.to_string().is_empty(),
+            "Display must not be empty: {v:?}"
+        );
     }
 }
 
@@ -330,8 +357,15 @@ fn test_every_compliance_error_display_is_non_empty() {
             requirement: "r".to_string(),
         }),
     ];
-    assert_eq!(variants.len(), 6, "test must cover all 6 ComplianceError variants");
+    assert_eq!(
+        variants.len(),
+        6,
+        "test must cover all 6 ComplianceError variants"
+    );
     for v in &variants {
-        assert!(!v.to_string().is_empty(), "Display must not be empty: {v:?}");
+        assert!(
+            !v.to_string().is_empty(),
+            "Display must not be empty: {v:?}"
+        );
     }
 }

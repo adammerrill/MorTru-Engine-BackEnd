@@ -245,16 +245,27 @@ mod tests {
         macro_rules! serde_rt {
             ($val:expr, $expected_json:expr) => {{
                 let json = serde_json::to_string(&$val).unwrap();
-                assert_eq!(json, $expected_json, "serialization mismatch for {:?}", $val);
+                assert_eq!(
+                    json, $expected_json,
+                    "serialization mismatch for {:?}",
+                    $val
+                );
                 let back = serde_json::from_str(&json).unwrap();
-                assert_eq!($val, back, "deserialization roundtrip failed for {:?}", $val);
+                assert_eq!(
+                    $val, back,
+                    "deserialization roundtrip failed for {:?}",
+                    $val
+                );
             }};
         }
         serde_rt!(LockPeriod::Day30, "\"day30\"");
         serde_rt!(LienPriority::First, "\"first\"");
         serde_rt!(BalanceType::HighBalance, "\"high_balance\"");
         serde_rt!(Tier::Elite, "\"elite\"");
-        serde_rt!(MiCoverageType::BorrowerPaidMonthly, "\"borrower_paid_monthly\"");
+        serde_rt!(
+            MiCoverageType::BorrowerPaidMonthly,
+            "\"borrower_paid_monthly\""
+        );
         serde_rt!(AusType::DesktopUnderwriter, "\"desktop_underwriter\"");
     }
 }

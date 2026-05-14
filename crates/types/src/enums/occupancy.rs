@@ -62,21 +62,38 @@ mod tests {
             Occupancy::Investment,
         ] {
             let mismo = occ.to_mismo();
-            let back = Occupancy::from_mismo(mismo).unwrap_or_else(|_| {
-                panic!("from_mismo failed for {mismo} (from {occ:?})")
-            });
+            let back = Occupancy::from_mismo(mismo)
+                .unwrap_or_else(|_| panic!("from_mismo failed for {mismo} (from {occ:?})"));
             assert_eq!(back, occ, "MISMO roundtrip failed for {occ:?}");
         }
     }
 
     #[test]
     fn test_occupancy_from_mismo_known() {
-        assert_eq!(Occupancy::from_mismo("PrimaryResidence").unwrap(), Occupancy::PrimaryResidence);
-        assert_eq!(Occupancy::from_mismo("SecondHome").unwrap(), Occupancy::SecondHome);
-        assert_eq!(Occupancy::from_mismo("Second Home").unwrap(), Occupancy::SecondHome);
-        assert_eq!(Occupancy::from_mismo("Investor").unwrap(), Occupancy::Investment);
-        assert_eq!(Occupancy::from_mismo("Investment").unwrap(), Occupancy::Investment);
-        assert_eq!(Occupancy::from_mismo("NonOwnerOccupied").unwrap(), Occupancy::Investment);
+        assert_eq!(
+            Occupancy::from_mismo("PrimaryResidence").unwrap(),
+            Occupancy::PrimaryResidence
+        );
+        assert_eq!(
+            Occupancy::from_mismo("SecondHome").unwrap(),
+            Occupancy::SecondHome
+        );
+        assert_eq!(
+            Occupancy::from_mismo("Second Home").unwrap(),
+            Occupancy::SecondHome
+        );
+        assert_eq!(
+            Occupancy::from_mismo("Investor").unwrap(),
+            Occupancy::Investment
+        );
+        assert_eq!(
+            Occupancy::from_mismo("Investment").unwrap(),
+            Occupancy::Investment
+        );
+        assert_eq!(
+            Occupancy::from_mismo("NonOwnerOccupied").unwrap(),
+            Occupancy::Investment
+        );
     }
 
     #[test]

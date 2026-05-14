@@ -111,9 +111,8 @@ mod tests {
 
     #[test]
     fn test_analysis_id_serde_json() {
-        let id = AnalysisId::from_uuid(
-            Uuid::parse_str("550e8400-e29b-41d4-a716-446655440000").unwrap()
-        );
+        let id =
+            AnalysisId::from_uuid(Uuid::parse_str("550e8400-e29b-41d4-a716-446655440000").unwrap());
         let json = serde_json::to_string(&id).unwrap();
         assert_eq!(json, "\"550e8400-e29b-41d4-a716-446655440000\"");
         let back: AnalysisId = serde_json::from_str(&json).unwrap();

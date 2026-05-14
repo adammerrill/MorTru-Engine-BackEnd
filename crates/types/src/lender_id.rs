@@ -86,7 +86,10 @@ mod tests {
     fn test_lender_id_valid() {
         assert_eq!(LenderId::new("UWM").unwrap().as_str(), "UWM");
         assert_eq!(LenderId::new("ROCKET").unwrap().as_str(), "ROCKET");
-        assert_eq!(LenderId::new("WELLS_FARGO").unwrap().as_str(), "WELLS_FARGO");
+        assert_eq!(
+            LenderId::new("WELLS_FARGO").unwrap().as_str(),
+            "WELLS_FARGO"
+        );
         assert_eq!(LenderId::new("LENDER-123").unwrap().as_str(), "LENDER-123");
         assert_eq!(LenderId::new("a").unwrap().as_str(), "a");
     }

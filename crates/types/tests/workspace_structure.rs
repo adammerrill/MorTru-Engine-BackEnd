@@ -21,7 +21,7 @@ use std::path::Path;
 use cargo_metadata::MetadataCommand;
 
 /// The complete, authoritative list of crates that must exist in the
-/// workspace per the MorTru Engine architecture. Adding a crate
+/// workspace per the Meridian Mortgage Engine architecture. Adding a crate
 /// to the workspace without adding it here is a deliberate failure mode: a
 /// new crate is a structural change that the test enforces a deliberate
 /// update for.

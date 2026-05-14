@@ -200,8 +200,8 @@ impl FromStr for Cents {
         if cleaned.is_empty() {
             return Err(ParseError::InvalidMoneyString(s.to_string()));
         }
-        let decimal =
-            Decimal::from_str(cleaned).map_err(|_| ParseError::InvalidMoneyString(s.to_string()))?;
+        let decimal = Decimal::from_str(cleaned)
+            .map_err(|_| ParseError::InvalidMoneyString(s.to_string()))?;
         Cents::from_decimal_round_half_up(decimal)
     }
 }
@@ -232,7 +232,10 @@ mod tests {
         assert_eq!(Cents(150).checked_add(Cents(50)), Some(Cents(200)));
         assert_eq!(Cents(0).checked_add(Cents(100)), Some(Cents(100)));
         assert_eq!(Cents(-150).checked_add(Cents(50)), Some(Cents(-100)));
-        assert_eq!(Cents(123_456).checked_add(Cents(54_321)), Some(Cents(177_777)));
+        assert_eq!(
+            Cents(123_456).checked_add(Cents(54_321)),
+            Some(Cents(177_777))
+        );
     }
 
     #[test]

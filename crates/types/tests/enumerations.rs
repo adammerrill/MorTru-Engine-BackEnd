@@ -20,13 +20,22 @@ use types::{
 
 #[test]
 fn test_program_code_to_mismo_mortgage_type() {
-    assert_eq!(ProgramCode::Conventional.to_mismo_mortgage_type(), "Conventional");
-    assert_eq!(ProgramCode::HomeReady.to_mismo_mortgage_type(), "Conventional");
+    assert_eq!(
+        ProgramCode::Conventional.to_mismo_mortgage_type(),
+        "Conventional"
+    );
+    assert_eq!(
+        ProgramCode::HomeReady.to_mismo_mortgage_type(),
+        "Conventional"
+    );
     assert_eq!(ProgramCode::Fha.to_mismo_mortgage_type(), "FHA");
     assert_eq!(ProgramCode::FhaDpa.to_mismo_mortgage_type(), "FHA");
     assert_eq!(ProgramCode::Va.to_mismo_mortgage_type(), "VA");
     assert_eq!(ProgramCode::VaJumbo.to_mismo_mortgage_type(), "VA");
-    assert_eq!(ProgramCode::Usda.to_mismo_mortgage_type(), "USDARuralDevelopment");
+    assert_eq!(
+        ProgramCode::Usda.to_mismo_mortgage_type(),
+        "USDARuralDevelopment"
+    );
 }
 
 #[test]
@@ -47,8 +56,14 @@ fn test_property_type_to_reso_lookup() {
     assert_eq!(PropertyType::Condominium.to_reso_lookup(), "Condominium");
     assert_eq!(PropertyType::TwoUnit.to_reso_lookup(), "Duplex");
     assert_eq!(PropertyType::FourUnit.to_reso_lookup(), "Quadruplex");
-    assert_eq!(PropertyType::ManufacturedHome.to_reso_lookup(), "Manufactured Home");
-    assert_eq!(PropertyType::Cooperative.to_reso_lookup(), "Stock Cooperative");
+    assert_eq!(
+        PropertyType::ManufacturedHome.to_reso_lookup(),
+        "Manufactured Home"
+    );
+    assert_eq!(
+        PropertyType::Cooperative.to_reso_lookup(),
+        "Stock Cooperative"
+    );
     assert_eq!(
         PropertyType::PlannedUnitDevelopment.to_reso_lookup(),
         "Planned Unit Development"
@@ -251,59 +266,107 @@ fn prop_serde_roundtrip_all_enums() {
     }
 
     rt_all!(
-        ProgramCode::Conventional, ProgramCode::HomeReady, ProgramCode::HomePossible,
-        ProgramCode::HomeOne, ProgramCode::Fha, ProgramCode::FhaDpa,
-        ProgramCode::Va, ProgramCode::VaJumbo, ProgramCode::Usda,
-        ProgramCode::Bond, ProgramCode::Jumbo, ProgramCode::NonQm,
+        ProgramCode::Conventional,
+        ProgramCode::HomeReady,
+        ProgramCode::HomePossible,
+        ProgramCode::HomeOne,
+        ProgramCode::Fha,
+        ProgramCode::FhaDpa,
+        ProgramCode::Va,
+        ProgramCode::VaJumbo,
+        ProgramCode::Usda,
+        ProgramCode::Bond,
+        ProgramCode::Jumbo,
+        ProgramCode::NonQm,
     );
     rt_all!(
-        LoanProduct::FixedConv8To10, LoanProduct::FixedConv11To15,
-        LoanProduct::FixedConv16To20, LoanProduct::FixedConv21To30,
-        LoanProduct::FixedFha8To15, LoanProduct::FixedFha16To30,
-        LoanProduct::FixedVa8To15, LoanProduct::FixedVa16To30,
+        LoanProduct::FixedConv8To10,
+        LoanProduct::FixedConv11To15,
+        LoanProduct::FixedConv16To20,
+        LoanProduct::FixedConv21To30,
+        LoanProduct::FixedFha8To15,
+        LoanProduct::FixedFha16To30,
+        LoanProduct::FixedVa8To15,
+        LoanProduct::FixedVa16To30,
         LoanProduct::FixedUsda30,
-        LoanProduct::Arm5_6Sofr, LoanProduct::Arm7_6Sofr, LoanProduct::Arm10_6Sofr,
-        LoanProduct::Arm5_1, LoanProduct::Arm7_1, LoanProduct::Arm10_1,
-        LoanProduct::OtcConv30, LoanProduct::OtcConv15,
-        LoanProduct::OtcVa30, LoanProduct::OtcVaJumbo30,
+        LoanProduct::Arm5_6Sofr,
+        LoanProduct::Arm7_6Sofr,
+        LoanProduct::Arm10_6Sofr,
+        LoanProduct::Arm5_1,
+        LoanProduct::Arm7_1,
+        LoanProduct::Arm10_1,
+        LoanProduct::OtcConv30,
+        LoanProduct::OtcConv15,
+        LoanProduct::OtcVa30,
+        LoanProduct::OtcVaJumbo30,
     );
     rt_all!(
-        PropertyType::SingleFamilyDetached, PropertyType::SingleFamilyAttached,
-        PropertyType::Townhouse, PropertyType::Condominium, PropertyType::Cooperative,
-        PropertyType::PlannedUnitDevelopment, PropertyType::ManufacturedHome,
-        PropertyType::TwoUnit, PropertyType::ThreeUnit, PropertyType::FourUnit,
+        PropertyType::SingleFamilyDetached,
+        PropertyType::SingleFamilyAttached,
+        PropertyType::Townhouse,
+        PropertyType::Condominium,
+        PropertyType::Cooperative,
+        PropertyType::PlannedUnitDevelopment,
+        PropertyType::ManufacturedHome,
+        PropertyType::TwoUnit,
+        PropertyType::ThreeUnit,
+        PropertyType::FourUnit,
     );
     rt_all!(
-        Occupancy::PrimaryResidence, Occupancy::SecondHome, Occupancy::Investment,
+        Occupancy::PrimaryResidence,
+        Occupancy::SecondHome,
+        Occupancy::Investment,
     );
     rt_all!(
-        LoanPurpose::Purchase, LoanPurpose::RateAndTermRefinance,
-        LoanPurpose::CashOutRefinance, LoanPurpose::Construction,
+        LoanPurpose::Purchase,
+        LoanPurpose::RateAndTermRefinance,
+        LoanPurpose::CashOutRefinance,
+        LoanPurpose::Construction,
         LoanPurpose::ConstructionToPermanent,
     );
     rt_all!(
-        AmortizationType::Fixed, AmortizationType::Arm,
-        AmortizationType::InterestOnly, AmortizationType::GraduatedPayment,
+        AmortizationType::Fixed,
+        AmortizationType::Arm,
+        AmortizationType::InterestOnly,
+        AmortizationType::GraduatedPayment,
         AmortizationType::PaymentOption,
     );
     rt_all!(
-        LockPeriod::Day15, LockPeriod::Day21, LockPeriod::Day30,
-        LockPeriod::Day45, LockPeriod::Day60, LockPeriod::Day75, LockPeriod::Day90,
+        LockPeriod::Day15,
+        LockPeriod::Day21,
+        LockPeriod::Day30,
+        LockPeriod::Day45,
+        LockPeriod::Day60,
+        LockPeriod::Day75,
+        LockPeriod::Day90,
     );
-    rt_all!(LienPriority::First, LienPriority::Second, LienPriority::Third);
     rt_all!(
-        BalanceType::Conforming, BalanceType::HighBalance,
-        BalanceType::SuperConforming, BalanceType::Jumbo,
+        LienPriority::First,
+        LienPriority::Second,
+        LienPriority::Third
+    );
+    rt_all!(
+        BalanceType::Conforming,
+        BalanceType::HighBalance,
+        BalanceType::SuperConforming,
+        BalanceType::Jumbo,
     );
     rt_all!(Tier::Elite, Tier::Standard);
     rt_all!(
-        MiCoverageType::None, MiCoverageType::LenderPaid,
-        MiCoverageType::BorrowerPaidMonthly, MiCoverageType::BorrowerPaidSingle,
-        MiCoverageType::BorrowerPaidSplit, MiCoverageType::FhaUpfrontAndAnnual,
-        MiCoverageType::VaFundingFee, MiCoverageType::UsdaUpfrontAndAnnual,
+        MiCoverageType::None,
+        MiCoverageType::LenderPaid,
+        MiCoverageType::BorrowerPaidMonthly,
+        MiCoverageType::BorrowerPaidSingle,
+        MiCoverageType::BorrowerPaidSplit,
+        MiCoverageType::FhaUpfrontAndAnnual,
+        MiCoverageType::VaFundingFee,
+        MiCoverageType::UsdaUpfrontAndAnnual,
     );
     rt_all!(
-        AusType::DesktopUnderwriter, AusType::LoanProductAdvisor,
-        AusType::Got, AusType::Gus, AusType::Manual,
+        AusType::DesktopUnderwriter,
+        AusType::LoanProductAdvisor,
+        AusType::Got,
+        AusType::Gus,
+        AusType::Manual,
     );
 }

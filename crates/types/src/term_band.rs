@@ -58,13 +58,13 @@ impl TermBand {
     #[must_use]
     pub const fn range(self) -> (u16, u16) {
         match self {
-            Self::Band8To10      => (96,  120),
-            Self::Band11To15     => (121, 180),
-            Self::Band16To20     => (181, 240),
-            Self::Band21To30     => (241, 360),
-            Self::GovtBand8To15  => (96,  180),
+            Self::Band8To10 => (96, 120),
+            Self::Band11To15 => (121, 180),
+            Self::Band16To20 => (181, 240),
+            Self::Band21To30 => (241, 360),
+            Self::GovtBand8To15 => (96, 180),
             Self::GovtBand16To30 => (181, 360),
-            Self::Usda30Only     => (360, 360),
+            Self::Usda30Only => (360, 360),
         }
     }
 
@@ -94,13 +94,13 @@ impl TermBand {
     #[must_use]
     pub const fn rate_sheet_label(self) -> &'static str {
         match self {
-            Self::Band8To10      => "8-10 YEAR",
-            Self::Band11To15     => "10 Year 1 Month-15 YEAR",
-            Self::Band16To20     => "15 Year 1 Month-20 YEAR",
-            Self::Band21To30     => "20 Year 1 Month-30 YEAR",
-            Self::GovtBand8To15  => "8-15 YEAR",
+            Self::Band8To10 => "8-10 YEAR",
+            Self::Band11To15 => "10 Year 1 Month-15 YEAR",
+            Self::Band16To20 => "15 Year 1 Month-20 YEAR",
+            Self::Band21To30 => "20 Year 1 Month-30 YEAR",
+            Self::GovtBand8To15 => "8-15 YEAR",
             Self::GovtBand16To30 => "15 Year 1 Month-30 YEAR",
-            Self::Usda30Only     => "30 YEAR",
+            Self::Usda30Only => "30 YEAR",
         }
     }
 }
@@ -127,16 +127,32 @@ mod tests {
         let (lo11, hi11) = TermBand::Band11To15.range();
         let (lo16, hi16) = TermBand::Band16To20.range();
         let (lo21, _) = TermBand::Band21To30.range();
-        assert_eq!(hi8 + 1, lo11, "Band11To15 must start one month after Band8To10 ends");
-        assert_eq!(hi11 + 1, lo16, "Band16To20 must start one month after Band11To15 ends");
-        assert_eq!(hi16 + 1, lo21, "Band21To30 must start one month after Band16To20 ends");
+        assert_eq!(
+            hi8 + 1,
+            lo11,
+            "Band11To15 must start one month after Band8To10 ends"
+        );
+        assert_eq!(
+            hi11 + 1,
+            lo16,
+            "Band16To20 must start one month after Band11To15 ends"
+        );
+        assert_eq!(
+            hi16 + 1,
+            lo21,
+            "Band21To30 must start one month after Band16To20 ends"
+        );
     }
 
     #[test]
     fn test_govt_bands_are_contiguous() {
         let (_, hi8) = TermBand::GovtBand8To15.range();
         let (lo16, _) = TermBand::GovtBand16To30.range();
-        assert_eq!(hi8 + 1, lo16, "GovtBand16To30 must start one month after GovtBand8To15 ends");
+        assert_eq!(
+            hi8 + 1,
+            lo16,
+            "GovtBand16To30 must start one month after GovtBand8To15 ends"
+        );
     }
 
     #[test]
@@ -159,11 +175,11 @@ mod tests {
 
     #[test]
     fn test_band_month_count() {
-        assert_eq!(TermBand::Band8To10.month_count(), 25);   // 96–120
-        assert_eq!(TermBand::Band11To15.month_count(), 60);  // 121–180
-        assert_eq!(TermBand::Band16To20.month_count(), 60);  // 181–240
+        assert_eq!(TermBand::Band8To10.month_count(), 25); // 96–120
+        assert_eq!(TermBand::Band11To15.month_count(), 60); // 121–180
+        assert_eq!(TermBand::Band16To20.month_count(), 60); // 181–240
         assert_eq!(TermBand::Band21To30.month_count(), 120); // 241–360
-        assert_eq!(TermBand::GovtBand8To15.month_count(), 85);  // 96–180
+        assert_eq!(TermBand::GovtBand8To15.month_count(), 85); // 96–180
         assert_eq!(TermBand::GovtBand16To30.month_count(), 180); // 181–360
         assert_eq!(TermBand::Usda30Only.month_count(), 1);
     }
@@ -189,10 +205,7 @@ mod tests {
 
         // Must be ascending
         conv8.sort_unstable_by_key(|t| t.0);
-        assert_eq!(
-            conv8,
-            TermBand::Band8To10.all_months().collect::<Vec<_>>()
-        );
+        assert_eq!(conv8, TermBand::Band8To10.all_months().collect::<Vec<_>>());
     }
 
     #[test]

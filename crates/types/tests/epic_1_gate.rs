@@ -59,8 +59,7 @@ fn workspace_root() -> PathBuf {
 
 fn workspace_toml() -> Value {
     let path = workspace_root().join("Cargo.toml");
-    let src = std::fs::read_to_string(path)
-        .expect("workspace Cargo.toml must be readable");
+    let src = std::fs::read_to_string(path).expect("workspace Cargo.toml must be readable");
     toml::from_str(&src).expect("workspace Cargo.toml must be valid TOML")
 }
 
@@ -85,9 +84,19 @@ mod task_1_1 {
     use super::*;
 
     const EXPECTED_CRATES: &[&str] = &[
-        "types", "mismo", "reso", "ingest", "enrich",
-        "eligibility", "compliance", "scenarios", "solver",
-        "amort", "ml", "orchestrator", "api",
+        "types",
+        "mismo",
+        "reso",
+        "ingest",
+        "enrich",
+        "eligibility",
+        "compliance",
+        "scenarios",
+        "solver",
+        "amort",
+        "ml",
+        "orchestrator",
+        "api",
     ];
 
     #[test]
@@ -380,7 +389,10 @@ mod task_1_2 {
         );
 
         // Zero overhead
-        assert_eq!(std::mem::size_of::<PriceTicks>(), std::mem::size_of::<i32>());
+        assert_eq!(
+            std::mem::size_of::<PriceTicks>(),
+            std::mem::size_of::<i32>()
+        );
     }
 
     // ── LtvBasisPoints ────────────────────────────────────────────────────────
@@ -411,7 +423,10 @@ mod task_1_2 {
         let original = LtvBasisPoints::new(9700).unwrap();
         let json = serde_json::to_string(&original).unwrap();
         assert_eq!(json, "9700");
-        assert_eq!(serde_json::from_str::<LtvBasisPoints>("9700").unwrap(), original);
+        assert_eq!(
+            serde_json::from_str::<LtvBasisPoints>("9700").unwrap(),
+            original
+        );
     }
 
     // ── DtiBasisPoints ────────────────────────────────────────────────────────
@@ -530,11 +545,7 @@ mod task_1_3 {
 
     #[test]
     fn t1_3_identifier_properties_test_file_exists() {
-        assert_file_exists(
-            &types_crate()
-                .join("tests")
-                .join("identifier_properties.rs"),
-        );
+        assert_file_exists(&types_crate().join("tests").join("identifier_properties.rs"));
     }
 
     // ── StateCode ─────────────────────────────────────────────────────────────
@@ -575,7 +586,10 @@ mod task_1_3 {
         // Serde — canonical uppercase representation
         let json = serde_json::to_string(&StateCode::CA).unwrap();
         assert_eq!(json, "\"CA\"");
-        assert_eq!(serde_json::from_str::<StateCode>("\"CA\"").unwrap(), StateCode::CA);
+        assert_eq!(
+            serde_json::from_str::<StateCode>("\"CA\"").unwrap(),
+            StateCode::CA
+        );
     }
 
     // ── FipsCode ──────────────────────────────────────────────────────────────
@@ -642,7 +656,10 @@ mod task_1_3 {
         // Invalid chars rejected
         assert!(matches!(
             LenderId::new("UWM!"),
-            Err(ParseError::IdentifierInvalidChars { kind: "LenderId", .. })
+            Err(ParseError::IdentifierInvalidChars {
+                kind: "LenderId",
+                ..
+            })
         ));
 
         // Display + serde
@@ -663,7 +680,10 @@ mod task_1_3 {
         assert!(MlsListingKey::new("A".repeat(128)).is_ok());
         assert!(matches!(
             MlsListingKey::new("A".repeat(129)),
-            Err(ParseError::IdentifierTooLong { kind: "MlsListingKey", .. })
+            Err(ParseError::IdentifierTooLong {
+                kind: "MlsListingKey",
+                ..
+            })
         ));
         assert!(MlsListingKey::new("").is_err());
         // Non-printable ASCII rejected
@@ -690,7 +710,10 @@ mod task_1_3 {
         assert!(LoanCasefileId::new("A".repeat(64)).is_ok());
         assert!(matches!(
             LoanCasefileId::new("A".repeat(65)),
-            Err(ParseError::IdentifierTooLong { kind: "LoanCasefileId", .. })
+            Err(ParseError::IdentifierTooLong {
+                kind: "LoanCasefileId",
+                ..
+            })
         ));
         assert!(LoanCasefileId::new("").is_err());
         // Internal spaces rejected
@@ -742,7 +765,11 @@ mod task_1_3 {
 
         // 100-ID uniqueness sweep
         let ids: HashSet<ScenarioId> = (0..100).map(|_| ScenarioId::new()).collect();
-        assert_eq!(ids.len(), 100, "ScenarioId::new() must not produce duplicates");
+        assert_eq!(
+            ids.len(),
+            100,
+            "ScenarioId::new() must not produce duplicates"
+        );
 
         // Zero overhead — same size as Uuid (16 bytes)
         assert_eq!(std::mem::size_of::<ScenarioId>(), 16);
@@ -767,7 +794,11 @@ mod task_1_3 {
 
         // 100-ID uniqueness sweep
         let ids: HashSet<AnalysisId> = (0..100).map(|_| AnalysisId::new()).collect();
-        assert_eq!(ids.len(), 100, "AnalysisId::new() must not produce duplicates");
+        assert_eq!(
+            ids.len(),
+            100,
+            "AnalysisId::new() must not produce duplicates"
+        );
     }
 
     // ── ParseError Task 1.3 variants ──────────────────────────────────────────

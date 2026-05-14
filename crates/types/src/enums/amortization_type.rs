@@ -65,16 +65,34 @@ mod tests {
         assert_eq!(AmortizationType::Fixed.to_mismo(), "Fixed");
         assert_eq!(AmortizationType::Arm.to_mismo(), "AdjustableRate");
         assert_eq!(AmortizationType::InterestOnly.to_mismo(), "InterestOnly");
-        assert_eq!(AmortizationType::GraduatedPayment.to_mismo(), "GraduatedPayment");
-        assert_eq!(AmortizationType::PaymentOption.to_mismo(), "NegativeAmortization");
+        assert_eq!(
+            AmortizationType::GraduatedPayment.to_mismo(),
+            "GraduatedPayment"
+        );
+        assert_eq!(
+            AmortizationType::PaymentOption.to_mismo(),
+            "NegativeAmortization"
+        );
     }
 
     #[test]
     fn test_amortization_type_from_mismo() {
-        assert_eq!(AmortizationType::from_mismo("Fixed").unwrap(), AmortizationType::Fixed);
-        assert_eq!(AmortizationType::from_mismo("AdjustableRate").unwrap(), AmortizationType::Arm);
-        assert_eq!(AmortizationType::from_mismo("ARM").unwrap(), AmortizationType::Arm);
-        assert_eq!(AmortizationType::from_mismo("InterestOnly").unwrap(), AmortizationType::InterestOnly);
+        assert_eq!(
+            AmortizationType::from_mismo("Fixed").unwrap(),
+            AmortizationType::Fixed
+        );
+        assert_eq!(
+            AmortizationType::from_mismo("AdjustableRate").unwrap(),
+            AmortizationType::Arm
+        );
+        assert_eq!(
+            AmortizationType::from_mismo("ARM").unwrap(),
+            AmortizationType::Arm
+        );
+        assert_eq!(
+            AmortizationType::from_mismo("InterestOnly").unwrap(),
+            AmortizationType::InterestOnly
+        );
         assert_eq!(
             AmortizationType::from_mismo("NegativeAmortization").unwrap(),
             AmortizationType::PaymentOption

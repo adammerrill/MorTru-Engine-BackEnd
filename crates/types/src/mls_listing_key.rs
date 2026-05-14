@@ -103,11 +103,15 @@ mod tests {
     fn test_mls_listing_key_empty_rejected() {
         assert!(matches!(
             MlsListingKey::new(""),
-            Err(ParseError::IdentifierEmpty { kind: "MlsListingKey" })
+            Err(ParseError::IdentifierEmpty {
+                kind: "MlsListingKey"
+            })
         ));
         assert!(matches!(
             MlsListingKey::new("   "),
-            Err(ParseError::IdentifierEmpty { kind: "MlsListingKey" })
+            Err(ParseError::IdentifierEmpty {
+                kind: "MlsListingKey"
+            })
         ));
     }
 
