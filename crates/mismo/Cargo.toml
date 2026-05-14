@@ -1,6 +1,6 @@
 [package]
 name             = "mismo"
-description      = "MISMO 3.4 reference-model schema for the MorTru Engine."
+description      = "MISMO 3.4 reference-model schema for the Meridian Mortgage Engine."
 version.workspace      = true
 edition.workspace      = true
 authors.workspace      = true
@@ -13,6 +13,10 @@ publish.workspace      = true
 workspace = true
 
 [dependencies]
-# Stub: dependencies are introduced as Epic 2 tasks land.
+types     = { workspace = true }
+serde     = { workspace = true }
+thiserror = { workspace = true }
+quick-xml = { workspace = true }
 
 [dev-dependencies]
+serde = { workspace = true }

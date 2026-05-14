@@ -1,4 +1,4 @@
-# Workspace root for the MorTru Engine.
+# Workspace root for the Meridian Mortgage Engine.
 #
 # Every crate in this workspace inherits its package metadata and lint
 # configuration from this file via the `workspace = true` directives in the
@@ -12,9 +12,9 @@ members = ["crates/*"]
 [workspace.package]
 version    = "0.1.0"
 edition    = "2021"
-authors    = ["MorTru Engine Team"]
+authors    = ["Meridian Mortgage Engine Team"]
 license    = "MIT OR Apache-2.0"
-repository = "https://github.com/MorTru/engine"
+repository = "https://github.com/meridian-mortgage/engine"
 rust-version = "1.75"
 publish    = false
 
@@ -47,6 +47,9 @@ tower-http          = { version = "0.5", features = ["trace", "cors"] }
 # Observability
 tracing             = "0.1"
 tracing-subscriber  = { version = "0.3", features = ["env-filter", "json"] }
+
+# XML parsing — MISMO 3.4 and RESO schemas
+quick-xml           = { version = "0.36", features = ["serialize"] }
 
 # Ingestion
 calamine            = "0.24"
