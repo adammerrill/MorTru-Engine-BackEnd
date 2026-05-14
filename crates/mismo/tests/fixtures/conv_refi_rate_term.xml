@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Fixture: Conventional Rate/Term Refinance — Kyle TX, 80% LTV (no PMI)
+  Loan:    $320,000 / Appraised: $400,000 / LTV: 80.00%
+  Rate:    6.375% fixed 30yr (refinancing from 7.125%)
+  MI:      None (LTV at 80% threshold)
+  AUS:     LPA — Accept
+  Task:    2.11 canonical fixture
+-->
+<MESSAGE>
+  <DEAL_SETS>
+    <DEAL_SET>
+      <DEALS>
+        <DEAL>
+          <LOANS>
+            <LOAN>
+              <MORTGAGE_TERMS>
+                <BaseLoanAmount>320000.00</BaseLoanAmount>
+                <NoteRatePercent>6.375</NoteRatePercent>
+                <LoanTermMonthsCount>360</LoanTermMonthsCount>
+                <MortgageType>Conventional</MortgageType>
+                <LienPriorityType>FirstLien</LienPriorityType>
+                <LoanPurposeType>Refinance</LoanPurposeType>
+              </MORTGAGE_TERMS>
+              <AMORTIZATION>
+                <AmortizationType>Fixed</AmortizationType>
+              </AMORTIZATION>
+              <AUTOMATED_UNDERWRITING_SYSTEMS>
+                <AUTOMATED_UNDERWRITING_SYSTEM>
+                  <AutomatedUnderwritingSystemType>LoanProductAdvisor</AutomatedUnderwritingSystemType>
+                  <AUSRecommendationType>Accept</AUSRecommendationType>
+                  <AUSCaseIdentifier>LPA-2025-REFI-001</AUSCaseIdentifier>
+                </AUTOMATED_UNDERWRITING_SYSTEM>
+              </AUTOMATED_UNDERWRITING_SYSTEMS>
+              <QUALIFICATION>
+                <QualifyingRatePercent>6.375</QualifyingRatePercent>
+                <HousingExpenseRatio>24.20</HousingExpenseRatio>
+                <TotalDebtExpenseRatio>36.00</TotalDebtExpenseRatio>
+              </QUALIFICATION>
+            </LOAN>
+          </LOANS>
+          <PARTIES>
+            <PARTY>
+              <BORROWER_DETAIL>
+                <CreditScoreValue>750</CreditScoreValue>
+                <TotalMonthlyIncomeAmount>9000.00</TotalMonthlyIncomeAmount>
+              </BORROWER_DETAIL>
+            </PARTY>
+          </PARTIES>
+          <COLLATERALS>
+            <COLLATERAL>
+              <SUBJECT_PROPERTY>
+                <ADDRESS>
+                  <StreetNumberText>320</StreetNumberText>
+                  <StreetNameText>Redbud</StreetNameText>
+                  <StreetSuffixText>Ct</StreetSuffixText>
+                  <CityName>Kyle</CityName>
+                  <StateCode>TX</StateCode>
+                  <PostalCode>78640</PostalCode>
+                  <CountyName>Hays</CountyName>
+                  <FIPSCode>48209</FIPSCode>
+                </ADDRESS>
+                <PROPERTY_DETAIL>
+                  <GSEProjectClassificationType>Detached</GSEProjectClassificationType>
+                  <PropertyUsageType>PrimaryResidence</PropertyUsageType>
+                </PROPERTY_DETAIL>
+                <PropertyEstimatedValueAmount>400000.00</PropertyEstimatedValueAmount>
+              </SUBJECT_PROPERTY>
+            </COLLATERAL>
+          </COLLATERALS>
+        </DEAL>
+      </DEALS>
+    </DEAL_SET>
+  </DEAL_SETS>
+</MESSAGE>

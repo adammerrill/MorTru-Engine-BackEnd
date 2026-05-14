@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Fixture: Conventional Purchase — Kyle TX, 80% LTV (no PMI)
+  Loan:    $400,000 / Appraised: $500,000 / LTV: 80.00%
+  Rate:    6.500% fixed 30yr
+  MI:      None (LTV at 80% threshold — no coverage required)
+  AUS:     DU — Approve/Eligible
+  Task:    2.11 canonical fixture
+-->
+<MESSAGE>
+  <DEAL_SETS>
+    <DEAL_SET>
+      <DEALS>
+        <DEAL>
+          <LOANS>
+            <LOAN>
+              <MORTGAGE_TERMS>
+                <BaseLoanAmount>400000.00</BaseLoanAmount>
+                <NoteRatePercent>6.500</NoteRatePercent>
+                <LoanTermMonthsCount>360</LoanTermMonthsCount>
+                <MortgageType>Conventional</MortgageType>
+                <LienPriorityType>FirstLien</LienPriorityType>
+                <LoanPurposeType>Purchase</LoanPurposeType>
+              </MORTGAGE_TERMS>
+              <AMORTIZATION>
+                <AmortizationType>Fixed</AmortizationType>
+              </AMORTIZATION>
+              <ORIGINATION_FEE_DETAIL>
+                <CompensationAmount>4520.00</CompensationAmount>
+                <CompensationBasisPoints>113.00</CompensationBasisPoints>
+                <CompensationType>BorrowerPaid</CompensationType>
+                <DisclosedInSectionAIndicator>true</DisclosedInSectionAIndicator>
+              </ORIGINATION_FEE_DETAIL>
+              <AUTOMATED_UNDERWRITING_SYSTEMS>
+                <AUTOMATED_UNDERWRITING_SYSTEM>
+                  <AutomatedUnderwritingSystemType>DesktopUnderwriter</AutomatedUnderwritingSystemType>
+                  <AUSRecommendationType>Approve/Eligible</AUSRecommendationType>
+                  <AUSCaseIdentifier>DU-2025-CONV-001</AUSCaseIdentifier>
+                </AUTOMATED_UNDERWRITING_SYSTEM>
+              </AUTOMATED_UNDERWRITING_SYSTEMS>
+              <QUALIFICATION>
+                <QualifyingRatePercent>6.500</QualifyingRatePercent>
+                <HousingExpenseRatio>26.40</HousingExpenseRatio>
+                <TotalDebtExpenseRatio>38.00</TotalDebtExpenseRatio>
+              </QUALIFICATION>
+            </LOAN>
+          </LOANS>
+          <PARTIES>
+            <PARTY>
+              <BORROWER_DETAIL>
+                <CreditScoreValue>740</CreditScoreValue>
+                <TotalMonthlyIncomeAmount>10000.00</TotalMonthlyIncomeAmount>
+              </BORROWER_DETAIL>
+            </PARTY>
+          </PARTIES>
+          <COLLATERALS>
+            <COLLATERAL>
+              <SUBJECT_PROPERTY>
+                <ADDRESS>
+                  <StreetNumberText>500</StreetNumberText>
+                  <StreetNameText>Cypress Creek</StreetNameText>
+                  <StreetSuffixText>Dr</StreetSuffixText>
+                  <CityName>Kyle</CityName>
+                  <StateCode>TX</StateCode>
+                  <PostalCode>78640</PostalCode>
+                  <CountyName>Hays</CountyName>
+                  <FIPSCode>48209</FIPSCode>
+                </ADDRESS>
+                <PROPERTY_DETAIL>
+                  <GSEProjectClassificationType>Detached</GSEProjectClassificationType>
+                  <PropertyUsageType>PrimaryResidence</PropertyUsageType>
+                </PROPERTY_DETAIL>
+                <PropertyEstimatedValueAmount>500000.00</PropertyEstimatedValueAmount>
+                <SalesContractAmount>500000.00</SalesContractAmount>
+              </SUBJECT_PROPERTY>
+            </COLLATERAL>
+          </COLLATERALS>
+        </DEAL>
+      </DEALS>
+    </DEAL_SET>
+  </DEAL_SETS>
+</MESSAGE>

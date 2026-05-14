@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Fixture: USDA Rural Development Purchase — Hays County TX (rural-eligible)
+  Loan:    $200,000 base / $202,000 adjusted (1.00% guarantee fee financed)
+  Rate:    6.250% fixed 30yr
+  Guarantee fee: 1.00% × $200,000 = $2,000 (upfront, financed)
+  Annual fee:    0.35%/yr (collected monthly in escrow)
+  AUS:     GUS — Accept/Eligible
+  Task:    2.11 canonical fixture
+-->
+<MESSAGE>
+  <DEAL_SETS>
+    <DEAL_SET>
+      <DEALS>
+        <DEAL>
+          <LOANS>
+            <LOAN>
+              <MORTGAGE_TERMS>
+                <BaseLoanAmount>200000.00</BaseLoanAmount>
+                <LoanAmountWithFinancedMI>202000.00</LoanAmountWithFinancedMI>
+                <NoteRatePercent>6.250</NoteRatePercent>
+                <LoanTermMonthsCount>360</LoanTermMonthsCount>
+                <MortgageType>USDARuralDevelopment</MortgageType>
+                <LienPriorityType>FirstLien</LienPriorityType>
+                <LoanPurposeType>Purchase</LoanPurposeType>
+              </MORTGAGE_TERMS>
+              <AMORTIZATION>
+                <AmortizationType>Fixed</AmortizationType>
+              </AMORTIZATION>
+              <MI_DATA_DETAIL>
+                <MIType>BorrowerPaid</MIType>
+                <MIPremiumSourceType>USDAGuaranteeFee</MIPremiumSourceType>
+                <MIUpfrontRatePercent>1.00</MIUpfrontRatePercent>
+                <MIUpfrontPremiumAmount>2000.00</MIUpfrontPremiumAmount>
+                <MIFinancedIndicator>true</MIFinancedIndicator>
+                <MIMonthlyPremiumRatePercent>0.35</MIMonthlyPremiumRatePercent>
+              </MI_DATA_DETAIL>
+              <AUTOMATED_UNDERWRITING_SYSTEMS>
+                <AUTOMATED_UNDERWRITING_SYSTEM>
+                  <AutomatedUnderwritingSystemType>USDARuralHousingGUS</AutomatedUnderwritingSystemType>
+                  <AUSRecommendationType>Accept</AUSRecommendationType>
+                  <AUSCaseIdentifier>GUS-2025-USDA-001</AUSCaseIdentifier>
+                </AUTOMATED_UNDERWRITING_SYSTEM>
+              </AUTOMATED_UNDERWRITING_SYSTEMS>
+              <QUALIFICATION>
+                <QualifyingRatePercent>6.250</QualifyingRatePercent>
+                <HousingExpenseRatio>22.10</HousingExpenseRatio>
+                <TotalDebtExpenseRatio>35.00</TotalDebtExpenseRatio>
+              </QUALIFICATION>
+            </LOAN>
+          </LOANS>
+          <PARTIES>
+            <PARTY>
+              <BORROWER_DETAIL>
+                <CreditScoreValue>660</CreditScoreValue>
+                <TotalMonthlyIncomeAmount>5000.00</TotalMonthlyIncomeAmount>
+                <USDATotalHouseholdSize>3</USDATotalHouseholdSize>
+                <USDATotalAdultHouseholdAnnualIncome>60000.00</USDATotalAdultHouseholdAnnualIncome>
+              </BORROWER_DETAIL>
+            </PARTY>
+          </PARTIES>
+          <COLLATERALS>
+            <COLLATERAL>
+              <SUBJECT_PROPERTY>
+                <ADDRESS>
+                  <StreetNumberText>202</StreetNumberText>
+                  <StreetNameText>Rural Route</StreetNameText>
+                  <StreetSuffixText>Rd</StreetSuffixText>
+                  <CityName>Wimberley</CityName>
+                  <StateCode>TX</StateCode>
+                  <PostalCode>78676</PostalCode>
+                  <CountyName>Hays</CountyName>
+                  <FIPSCode>48209</FIPSCode>
+                </ADDRESS>
+                <PROPERTY_DETAIL>
+                  <GSEProjectClassificationType>Detached</GSEProjectClassificationType>
+                  <PropertyUsageType>PrimaryResidence</PropertyUsageType>
+                </PROPERTY_DETAIL>
+                <PropertyEstimatedValueAmount>210000.00</PropertyEstimatedValueAmount>
+                <SalesContractAmount>210000.00</SalesContractAmount>
+              </SUBJECT_PROPERTY>
+            </COLLATERAL>
+          </COLLATERALS>
+        </DEAL>
+      </DEALS>
+    </DEAL_SET>
+  </DEAL_SETS>
+</MESSAGE>

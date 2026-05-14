@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Fixture: VA Purchase — Kyle TX
+  Loan:    $350,000 base / $357,525 adjusted (2.15% funding fee financed)
+  Rate:    6.125% fixed 30yr
+  Funding fee: 2.15% × $350,000 = $7,525.00 (first use, 0% down)
+  AUS:     DU — Approve/Eligible
+  Task:    2.11 canonical fixture
+-->
+<MESSAGE>
+  <DEAL_SETS>
+    <DEAL_SET>
+      <DEALS>
+        <DEAL>
+          <LOANS>
+            <LOAN>
+              <MORTGAGE_TERMS>
+                <BaseLoanAmount>350000.00</BaseLoanAmount>
+                <LoanAmountWithFinancedMI>357525.00</LoanAmountWithFinancedMI>
+                <NoteRatePercent>6.125</NoteRatePercent>
+                <LoanTermMonthsCount>360</LoanTermMonthsCount>
+                <MortgageType>VA</MortgageType>
+                <LienPriorityType>FirstLien</LienPriorityType>
+                <LoanPurposeType>Purchase</LoanPurposeType>
+              </MORTGAGE_TERMS>
+              <AMORTIZATION>
+                <AmortizationType>Fixed</AmortizationType>
+              </AMORTIZATION>
+              <MI_DATA_DETAIL>
+                <MIType>BorrowerPaid</MIType>
+                <MIPremiumSourceType>VAFundingFee</MIPremiumSourceType>
+                <MIUpfrontRatePercent>2.15</MIUpfrontRatePercent>
+                <MIUpfrontPremiumAmount>7525.00</MIUpfrontPremiumAmount>
+                <MIFinancedIndicator>true</MIFinancedIndicator>
+              </MI_DATA_DETAIL>
+              <AUTOMATED_UNDERWRITING_SYSTEMS>
+                <AUTOMATED_UNDERWRITING_SYSTEM>
+                  <AutomatedUnderwritingSystemType>DesktopUnderwriter</AutomatedUnderwritingSystemType>
+                  <AUSRecommendationType>Approve/Eligible</AUSRecommendationType>
+                  <AUSCaseIdentifier>DU-2025-VA-001</AUSCaseIdentifier>
+                </AUTOMATED_UNDERWRITING_SYSTEM>
+              </AUTOMATED_UNDERWRITING_SYSTEMS>
+              <QUALIFICATION>
+                <QualifyingRatePercent>6.125</QualifyingRatePercent>
+                <HousingExpenseRatio>25.80</HousingExpenseRatio>
+                <TotalDebtExpenseRatio>41.00</TotalDebtExpenseRatio>
+              </QUALIFICATION>
+            </LOAN>
+          </LOANS>
+          <PARTIES>
+            <PARTY>
+              <BORROWER_DETAIL>
+                <CreditScoreValue>700</CreditScoreValue>
+                <TotalMonthlyIncomeAmount>7500.00</TotalMonthlyIncomeAmount>
+                <VABenefitsEligibleIndicator>true</VABenefitsEligibleIndicator>
+                <VAFirstTimeUseIndicator>true</VAFirstTimeUseIndicator>
+                <VAFullEntitlementIndicator>true</VAFullEntitlementIndicator>
+                <VAFundingFeeExemptIndicator>false</VAFundingFeeExemptIndicator>
+              </BORROWER_DETAIL>
+            </PARTY>
+          </PARTIES>
+          <COLLATERALS>
+            <COLLATERAL>
+              <SUBJECT_PROPERTY>
+                <ADDRESS>
+                  <StreetNumberText>78</StreetNumberText>
+                  <StreetNameText>Veterans</StreetNameText>
+                  <StreetSuffixText>Blvd</StreetSuffixText>
+                  <CityName>Kyle</CityName>
+                  <StateCode>TX</StateCode>
+                  <PostalCode>78640</PostalCode>
+                  <CountyName>Hays</CountyName>
+                  <FIPSCode>48209</FIPSCode>
+                </ADDRESS>
+                <PROPERTY_DETAIL>
+                  <GSEProjectClassificationType>Detached</GSEProjectClassificationType>
+                  <PropertyUsageType>PrimaryResidence</PropertyUsageType>
+                </PROPERTY_DETAIL>
+                <PropertyEstimatedValueAmount>365000.00</PropertyEstimatedValueAmount>
+                <SalesContractAmount>365000.00</SalesContractAmount>
+              </SUBJECT_PROPERTY>
+            </COLLATERAL>
+          </COLLATERALS>
+        </DEAL>
+      </DEALS>
+    </DEAL_SET>
+  </DEAL_SETS>
+</MESSAGE>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Fixture: FHA Purchase — Kyle TX (Hays County)
+  Loan:    $434,443 base / $442,046 adjusted (1.75% UFMIP financed)
+  Rate:    6.375% fixed 30yr
+  MI:      0.55%/yr monthly MIP, life-of-loan (LTV > 90%)
+  AUS:     DU — Approve/Eligible
+  Task:    2.11 canonical fixture for Epic 2 gate test (Task 2.12)
+-->
+<MESSAGE>
+  <DEAL_SETS>
+    <DEAL_SET>
+      <DEALS>
+        <DEAL>
+          <LOANS>
+            <LOAN>
+              <MORTGAGE_TERMS>
+                <BaseLoanAmount>434443.00</BaseLoanAmount>
+                <LoanAmountWithFinancedMI>442046.00</LoanAmountWithFinancedMI>
+                <NoteRatePercent>6.375</NoteRatePercent>
+                <LoanTermMonthsCount>360</LoanTermMonthsCount>
+                <MortgageType>FHA</MortgageType>
+                <LienPriorityType>FirstLien</LienPriorityType>
+                <LoanPurposeType>Purchase</LoanPurposeType>
+              </MORTGAGE_TERMS>
+              <AMORTIZATION>
+                <AmortizationType>Fixed</AmortizationType>
+              </AMORTIZATION>
+              <MI_DATA_DETAIL>
+                <MIType>BorrowerPaid</MIType>
+                <MIPremiumSourceType>FHAUpfrontMIP</MIPremiumSourceType>
+                <MIUpfrontRatePercent>1.75</MIUpfrontRatePercent>
+                <MIUpfrontPremiumAmount>7602.7525</MIUpfrontPremiumAmount>
+                <MIFinancedIndicator>true</MIFinancedIndicator>
+                <MIMonthlyPremiumRatePercent>0.55</MIMonthlyPremiumRatePercent>
+                <MICancellationLTVPercent>0.0</MICancellationLTVPercent>
+                <MIRequiredMonthsCount>24</MIRequiredMonthsCount>
+                <MIPremiumCalculationMethodType>Declining</MIPremiumCalculationMethodType>
+              </MI_DATA_DETAIL>
+              <ORIGINATION_FEE_DETAIL>
+                <CompensationAmount>4899.24</CompensationAmount>
+                <CompensationBasisPoints>112.76</CompensationBasisPoints>
+                <CompensationType>BorrowerPaid</CompensationType>
+                <DisclosedInSectionAIndicator>true</DisclosedInSectionAIndicator>
+              </ORIGINATION_FEE_DETAIL>
+              <AUTOMATED_UNDERWRITING_SYSTEMS>
+                <AUTOMATED_UNDERWRITING_SYSTEM>
+                  <AutomatedUnderwritingSystemType>DesktopUnderwriter</AutomatedUnderwritingSystemType>
+                  <AUSRecommendationType>Approve/Eligible</AUSRecommendationType>
+                  <AUSCaseIdentifier>DU-2025-FHA-001</AUSCaseIdentifier>
+                </AUTOMATED_UNDERWRITING_SYSTEM>
+              </AUTOMATED_UNDERWRITING_SYSTEMS>
+              <QUALIFICATION>
+                <QualifyingRatePercent>6.375</QualifyingRatePercent>
+                <HousingExpenseRatio>28.50</HousingExpenseRatio>
+                <TotalDebtExpenseRatio>43.00</TotalDebtExpenseRatio>
+              </QUALIFICATION>
+            </LOAN>
+          </LOANS>
+          <PARTIES>
+            <PARTY>
+              <BORROWER_DETAIL>
+                <CreditScoreValue>720</CreditScoreValue>
+                <TotalMonthlyIncomeAmount>8500.00</TotalMonthlyIncomeAmount>
+                <FirstTimeHomebuyerIndicator>true</FirstTimeHomebuyerIndicator>
+              </BORROWER_DETAIL>
+            </PARTY>
+          </PARTIES>
+          <COLLATERALS>
+            <COLLATERAL>
+              <SUBJECT_PROPERTY>
+                <ADDRESS>
+                  <StreetNumberText>1234</StreetNumberText>
+                  <StreetNameText>Mockingbird</StreetNameText>
+                  <StreetSuffixText>Ln</StreetSuffixText>
+                  <CityName>Kyle</CityName>
+                  <StateCode>TX</StateCode>
+                  <PostalCode>78640</PostalCode>
+                  <CountyName>Hays</CountyName>
+                  <FIPSCode>48209</FIPSCode>
+                </ADDRESS>
+                <PROPERTY_DETAIL>
+                  <GSEProjectClassificationType>Detached</GSEProjectClassificationType>
+                  <PropertyUsageType>PrimaryResidence</PropertyUsageType>
+                </PROPERTY_DETAIL>
+                <PropertyEstimatedValueAmount>459000.00</PropertyEstimatedValueAmount>
+                <SalesContractAmount>459000.00</SalesContractAmount>
+              </SUBJECT_PROPERTY>
+            </COLLATERAL>
+          </COLLATERALS>
+        </DEAL>
+      </DEALS>
+    </DEAL_SET>
+  </DEAL_SETS>
+</MESSAGE>
