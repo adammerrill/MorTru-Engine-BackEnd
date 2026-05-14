@@ -221,3 +221,14 @@ impl MismoQualification {
         })
     }
 }
+
+// ── AusSystems container (used by message.rs) ─────────────────────────────────
+
+/// `AUTOMATED_UNDERWRITING_SYSTEMS` container — holds one or more AUS submissions.
+#[derive(Debug, Clone, serde::Deserialize, serde::Serialize)]
+#[serde(rename = "AUTOMATED_UNDERWRITING_SYSTEMS")]
+pub struct AusSystems {
+    /// AUS submissions in document order. The first is the primary finding.
+    #[serde(rename = "AUTOMATED_UNDERWRITING_SYSTEM", default)]
+    pub systems: Vec<MismoAus>,
+}
