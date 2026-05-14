@@ -18,6 +18,7 @@ pub mod closing_cost;
 pub mod collateral;
 pub mod lender_comp;
 pub mod loan_terms;
+pub mod message;
 pub mod mi;
 pub mod party;
-// Task 2.10 (message root) lands below as it is delivered.
+// Tasks 2.11–2.12 land below as they are delivered.
