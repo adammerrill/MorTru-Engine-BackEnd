@@ -16,8 +16,8 @@ use mismo::{
     MismoError,
 };
 use types::{
-    AmortizationType, AusType, LienPriority, LoanPurpose, LtvBasisPoints, Occupancy,
-    ProgramCode, PropertyType,
+    AmortizationType, AusType, LienPriority, LoanPurpose, LtvBasisPoints, Occupancy, ProgramCode,
+    PropertyType,
 };
 
 // ── loan_type: LoanPurpose ────────────────────────────────────────────────────
@@ -68,7 +68,13 @@ fn test_loan_purpose_construction_from_mismo() {
 fn test_loan_purpose_unknown_returns_invalid_enum_error() {
     let err = try_loan_purpose("NotAPurpose").unwrap_err();
     assert!(
-        matches!(err, MismoError::InvalidEnum { element: "LoanPurposeType", .. }),
+        matches!(
+            err,
+            MismoError::InvalidEnum {
+                element: "LoanPurposeType",
+                ..
+            }
+        ),
         "expected InvalidEnum for LoanPurposeType, got: {err}"
     );
 }
@@ -77,12 +83,18 @@ fn test_loan_purpose_unknown_returns_invalid_enum_error() {
 
 #[test]
 fn test_amortization_type_fixed_from_mismo() {
-    assert_eq!(try_amortization_type("Fixed").unwrap(), AmortizationType::Fixed);
+    assert_eq!(
+        try_amortization_type("Fixed").unwrap(),
+        AmortizationType::Fixed
+    );
 }
 
 #[test]
 fn test_amortization_type_arm_from_mismo() {
-    assert_eq!(try_amortization_type("AdjustableRate").unwrap(), AmortizationType::Arm);
+    assert_eq!(
+        try_amortization_type("AdjustableRate").unwrap(),
+        AmortizationType::Arm
+    );
     assert_eq!(try_amortization_type("ARM").unwrap(), AmortizationType::Arm);
 }
 
@@ -97,7 +109,13 @@ fn test_amortization_type_interest_only_from_mismo() {
 #[test]
 fn test_amortization_type_unknown_returns_error() {
     let err = try_amortization_type("BalloonPayment").unwrap_err();
-    assert!(matches!(err, MismoError::InvalidEnum { element: "AmortizationType", .. }));
+    assert!(matches!(
+        err,
+        MismoError::InvalidEnum {
+            element: "AmortizationType",
+            ..
+        }
+    ));
 }
 
 // ── loan_type: LienPriority ───────────────────────────────────────────────────
@@ -109,7 +127,10 @@ fn test_lien_priority_first_lien_from_mismo() {
 
 #[test]
 fn test_lien_priority_second_lien_from_mismo() {
-    assert_eq!(try_lien_priority("SecondLien").unwrap(), LienPriority::Second);
+    assert_eq!(
+        try_lien_priority("SecondLien").unwrap(),
+        LienPriority::Second
+    );
 }
 
 #[test]
@@ -120,16 +141,30 @@ fn test_lien_priority_third_lien_from_mismo() {
 #[test]
 fn test_lien_priority_roundtrip() {
     // to_mismo() → try_lien_priority() should produce the original value.
-    for &lien in &[LienPriority::First, LienPriority::Second, LienPriority::Third] {
+    for &lien in &[
+        LienPriority::First,
+        LienPriority::Second,
+        LienPriority::Third,
+    ] {
         let s = lien.to_mismo();
-        assert_eq!(try_lien_priority(s).unwrap(), lien, "round-trip failed for {lien:?}");
+        assert_eq!(
+            try_lien_priority(s).unwrap(),
+            lien,
+            "round-trip failed for {lien:?}"
+        );
     }
 }
 
 #[test]
 fn test_lien_priority_unknown_returns_error() {
     let err = try_lien_priority("FourthLien").unwrap_err();
-    assert!(matches!(err, MismoError::InvalidEnum { element: "LienPriorityType", .. }));
+    assert!(matches!(
+        err,
+        MismoError::InvalidEnum {
+            element: "LienPriorityType",
+            ..
+        }
+    ));
 }
 
 // ── loan_type: ProgramCode ────────────────────────────────────────────────────
@@ -146,19 +181,31 @@ fn test_program_code_va_from_mismo() {
 
 #[test]
 fn test_program_code_usda_from_mismo() {
-    assert_eq!(try_program_code("USDARuralDevelopment").unwrap(), ProgramCode::Usda);
+    assert_eq!(
+        try_program_code("USDARuralDevelopment").unwrap(),
+        ProgramCode::Usda
+    );
     assert_eq!(try_program_code("USDA").unwrap(), ProgramCode::Usda);
 }
 
 #[test]
 fn test_program_code_conventional_from_mismo() {
-    assert_eq!(try_program_code("Conventional").unwrap(), ProgramCode::Conventional);
+    assert_eq!(
+        try_program_code("Conventional").unwrap(),
+        ProgramCode::Conventional
+    );
 }
 
 #[test]
 fn test_program_code_unknown_returns_error() {
     let err = try_program_code("NonQM").unwrap_err();
-    assert!(matches!(err, MismoError::InvalidEnum { element: "MortgageType", .. }));
+    assert!(matches!(
+        err,
+        MismoError::InvalidEnum {
+            element: "MortgageType",
+            ..
+        }
+    ));
 }
 
 // ── property: PropertyType ────────────────────────────────────────────────────
@@ -182,7 +229,10 @@ fn test_property_type_condominium_from_mismo() {
 #[test]
 fn test_property_type_two_unit_from_mismo() {
     assert_eq!(try_property_type("2-Unit").unwrap(), PropertyType::TwoUnit);
-    assert_eq!(try_property_type("3-Unit").unwrap(), PropertyType::ThreeUnit);
+    assert_eq!(
+        try_property_type("3-Unit").unwrap(),
+        PropertyType::ThreeUnit
+    );
     assert_eq!(try_property_type("4-Unit").unwrap(), PropertyType::FourUnit);
 }
 
@@ -218,7 +268,10 @@ fn test_property_type_unknown_returns_error() {
     let err = try_property_type("TimberFrame").unwrap_err();
     assert!(matches!(
         err,
-        MismoError::InvalidEnum { element: "PropertyStructureType", .. }
+        MismoError::InvalidEnum {
+            element: "PropertyStructureType",
+            ..
+        }
     ));
 }
 
@@ -247,7 +300,10 @@ fn test_occupancy_unknown_returns_error() {
     let err = try_occupancy("Vacation").unwrap_err();
     assert!(matches!(
         err,
-        MismoError::InvalidEnum { element: "PropertyUsageType", .. }
+        MismoError::InvalidEnum {
+            element: "PropertyUsageType",
+            ..
+        }
     ));
 }
 
@@ -410,7 +466,13 @@ fn test_mi_renewal_type_eleven_year_from_str() {
 #[test]
 fn test_mi_renewal_type_unknown_returns_error() {
     let err = MiRenewalType::try_from_str("Quarterly").unwrap_err();
-    assert!(matches!(err, MismoError::InvalidEnum { element: "MIPremiumRenewalType", .. }));
+    assert!(matches!(
+        err,
+        MismoError::InvalidEnum {
+            element: "MIPremiumRenewalType",
+            ..
+        }
+    ));
 }
 
 // ── mi: MiFirstPremiumType ────────────────────────────────────────────────────
@@ -466,7 +528,10 @@ fn test_aus_type_unknown_returns_error() {
     let err = try_aus_type("Proprietary").unwrap_err();
     assert!(matches!(
         err,
-        MismoError::InvalidEnum { element: "AutomatedUnderwritingSystemType", .. }
+        MismoError::InvalidEnum {
+            element: "AutomatedUnderwritingSystemType",
+            ..
+        }
     ));
 }
 
@@ -576,7 +641,10 @@ fn test_fee_section_unknown_returns_error() {
     let err = FeeSection::try_from_str("SectionD").unwrap_err();
     assert!(matches!(
         err,
-        MismoError::InvalidEnum { element: "IntegratedDisclosureSectionType", .. }
+        MismoError::InvalidEnum {
+            element: "IntegratedDisclosureSectionType",
+            ..
+        }
     ));
 }
 
@@ -584,19 +652,34 @@ fn test_fee_section_unknown_returns_error() {
 
 #[test]
 fn test_fee_paid_by_borrower_from_str() {
-    assert_eq!(FeePaidBy::try_from_str("Borrower").unwrap(), FeePaidBy::Borrower);
-    assert_eq!(FeePaidBy::try_from_str("BorrowerPaid").unwrap(), FeePaidBy::Borrower);
+    assert_eq!(
+        FeePaidBy::try_from_str("Borrower").unwrap(),
+        FeePaidBy::Borrower
+    );
+    assert_eq!(
+        FeePaidBy::try_from_str("BorrowerPaid").unwrap(),
+        FeePaidBy::Borrower
+    );
 }
 
 #[test]
 fn test_fee_paid_by_seller_from_str() {
-    assert_eq!(FeePaidBy::try_from_str("Seller").unwrap(), FeePaidBy::Seller);
-    assert_eq!(FeePaidBy::try_from_str("SellerPaid").unwrap(), FeePaidBy::Seller);
+    assert_eq!(
+        FeePaidBy::try_from_str("Seller").unwrap(),
+        FeePaidBy::Seller
+    );
+    assert_eq!(
+        FeePaidBy::try_from_str("SellerPaid").unwrap(),
+        FeePaidBy::Seller
+    );
 }
 
 #[test]
 fn test_fee_paid_by_lender_from_str() {
-    assert_eq!(FeePaidBy::try_from_str("Lender").unwrap(), FeePaidBy::Lender);
+    assert_eq!(
+        FeePaidBy::try_from_str("Lender").unwrap(),
+        FeePaidBy::Lender
+    );
 }
 
 // ── fee: FeeCalculationType ───────────────────────────────────────────────────
@@ -621,13 +704,22 @@ fn test_fee_calculation_type_numerical_from_str() {
 
 #[test]
 fn test_comp_type_borrower_paid_from_str() {
-    assert_eq!(CompType::try_from_str("BorrowerPaid").unwrap(), CompType::BorrowerPaid);
-    assert_eq!(CompType::try_from_str("Borrower").unwrap(), CompType::BorrowerPaid);
+    assert_eq!(
+        CompType::try_from_str("BorrowerPaid").unwrap(),
+        CompType::BorrowerPaid
+    );
+    assert_eq!(
+        CompType::try_from_str("Borrower").unwrap(),
+        CompType::BorrowerPaid
+    );
 }
 
 #[test]
 fn test_comp_type_lender_paid_from_str() {
-    assert_eq!(CompType::try_from_str("LenderPaid").unwrap(), CompType::LenderPaid);
+    assert_eq!(
+        CompType::try_from_str("LenderPaid").unwrap(),
+        CompType::LenderPaid
+    );
 }
 
 #[test]
@@ -651,5 +743,11 @@ fn test_comp_disclosure_from_comp_type() {
 #[test]
 fn test_comp_type_unknown_returns_error() {
     let err = CompType::try_from_str("AgentPaid").unwrap_err();
-    assert!(matches!(err, MismoError::InvalidEnum { element: "CompensationType", .. }));
+    assert!(matches!(
+        err,
+        MismoError::InvalidEnum {
+            element: "CompensationType",
+            ..
+        }
+    ));
 }

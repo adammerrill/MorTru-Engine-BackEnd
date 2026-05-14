@@ -38,14 +38,14 @@ impl MismoMiProgramType {
     /// Returns `MismoError::InvalidEnum` for unrecognised values.
     pub fn try_from_str(s: &str) -> crate::Result<Self> {
         match s.trim() {
-            "FHAUpfrontMIP"      => Ok(Self::FhaMip),
-            "VAFundingFee"       => Ok(Self::VaFundingFee),
-            "USDAGuaranteeFee"   => Ok(Self::UsdaGuaranteeFee),
-            "PrivateMI"          => Ok(Self::ConventionalPmi),
-            "None" | ""          => Ok(Self::None),
+            "FHAUpfrontMIP" => Ok(Self::FhaMip),
+            "VAFundingFee" => Ok(Self::VaFundingFee),
+            "USDAGuaranteeFee" => Ok(Self::UsdaGuaranteeFee),
+            "PrivateMI" => Ok(Self::ConventionalPmi),
+            "None" | "" => Ok(Self::None),
             _ => Err(crate::MismoError::InvalidEnum {
                 element: "MIPremiumSourceType",
-                value:   s.to_owned(),
+                value: s.to_owned(),
             }),
         }
     }
@@ -53,13 +53,19 @@ impl MismoMiProgramType {
     /// Returns true if this program has an upfront premium component.
     #[must_use]
     pub const fn has_upfront(self) -> bool {
-        matches!(self, Self::FhaMip | Self::VaFundingFee | Self::UsdaGuaranteeFee)
+        matches!(
+            self,
+            Self::FhaMip | Self::VaFundingFee | Self::UsdaGuaranteeFee
+        )
     }
 
     /// Returns true if this program has a recurring monthly premium.
     #[must_use]
     pub const fn has_monthly(self) -> bool {
-        matches!(self, Self::FhaMip | Self::UsdaGuaranteeFee | Self::ConventionalPmi)
+        matches!(
+            self,
+            Self::FhaMip | Self::UsdaGuaranteeFee | Self::ConventionalPmi
+        )
     }
 }
 
@@ -94,13 +100,13 @@ impl MiRenewalType {
     /// Returns `MismoError::InvalidEnum` for unrecognised values.
     pub fn try_from_str(s: &str) -> crate::Result<Self> {
         match s.trim() {
-            "Level"      => Ok(Self::Level),
-            "Declining"  => Ok(Self::Declining),
-            "Annual"     => Ok(Self::Annual),
+            "Level" => Ok(Self::Level),
+            "Declining" => Ok(Self::Declining),
+            "Annual" => Ok(Self::Annual),
             "ElevenYear" => Ok(Self::ElevenYear),
             _ => Err(crate::MismoError::InvalidEnum {
                 element: "MIPremiumRenewalType",
-                value:   s.to_owned(),
+                value: s.to_owned(),
             }),
         }
     }
@@ -126,12 +132,12 @@ impl MiFirstPremiumType {
     /// Returns `MismoError::InvalidEnum` for unrecognised values.
     pub fn try_from_str(s: &str) -> crate::Result<Self> {
         match s.trim() {
-            "AtClosing"    => Ok(Self::AtClosing),
+            "AtClosing" => Ok(Self::AtClosing),
             "FirstPayment" => Ok(Self::FirstPayment),
-            "Deferred"     => Ok(Self::Deferred),
+            "Deferred" => Ok(Self::Deferred),
             _ => Err(crate::MismoError::InvalidEnum {
                 element: "MIPaymentRemittanceType",
-                value:   s.to_owned(),
+                value: s.to_owned(),
             }),
         }
     }

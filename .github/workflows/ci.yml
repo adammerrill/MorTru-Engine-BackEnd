@@ -63,7 +63,21 @@ jobs:
         os: [ubuntu-latest, macos-latest]
     steps:
       - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
+        # Pin to the exact version in rust-toolchain.toml.
+        # Using @stable with no explicit toolchain= causes macOS runners to hit
+        # a rustup-init proxy conflict: the Homebrew cargo symlink takes PATH
+        # precedence over the dtolnay-installed cargo, producing:
+        #   "error: unexpected argument 'test' found; Usage: rustup-init[EXE]"
+        # Pinning 1.85.0 ensures the toolchain is fully present before cargo
+        # is ever invoked, so no on-demand rustup proxy download fires.
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: "1.85.0"
+        # Guarantee ~/.cargo/bin is first on PATH on every OS.
+        # On Ubuntu the dtolnay step already handles this; on macOS we need to
+        # be explicit so the installed cargo wins over Homebrew's symlink.
+      - name: Prepend ~/.cargo/bin to PATH
+        run: echo "$HOME/.cargo/bin" >> "$GITHUB_PATH"
       - uses: Swatinem/rust-cache@v2
       - run: cargo test --workspace --all-features --no-fail-fast
 

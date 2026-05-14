@@ -28,11 +28,11 @@ impl CompType {
     pub fn try_from_str(s: &str) -> crate::Result<Self> {
         match s.trim() {
             "BorrowerPaid" | "Borrower" => Ok(Self::BorrowerPaid),
-            "LenderPaid"   | "Lender"   => Ok(Self::LenderPaid),
-            "Split"                     => Ok(Self::Split),
+            "LenderPaid" | "Lender" => Ok(Self::LenderPaid),
+            "Split" => Ok(Self::Split),
             _ => Err(crate::MismoError::InvalidEnum {
                 element: "CompensationType",
-                value:   s.to_owned(),
+                value: s.to_owned(),
             }),
         }
     }
