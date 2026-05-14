@@ -14,7 +14,8 @@
 //! | `message` | `MESSAGE/DEAL_SETS/DEAL_SET/DEALS/DEAL` root | 2.9 |
 
 pub mod collateral;
+pub mod lender_comp;
 pub mod loan_terms;
 pub mod mi;
 pub mod party;
-// Tasks 2.7–2.9 land below as they are delivered.
+// Tasks 2.8–2.9 land below as they are delivered.
