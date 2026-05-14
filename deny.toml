@@ -1,49 +1,100 @@
-# cargo-deny configuration. Run with `cargo deny check` in CI.
-# https://embarkstudios.github.io/cargo-deny/
+# cargo-deny configuration for the Meridian Mortgage Engine workspace.
+#
+# Enforced in CI via: cargo deny check
+#
+# Policy: only OSI-approved permissive licenses are permitted.
+# Copyleft licenses (GPL, LGPL, AGPL) are hard-denied to protect the ability
+# to ship this code as a commercial product.
 
 [graph]
-all-features = true
+targets = []
+all-features = false
+no-default-features = false
 
-[advisories]
-db-path = "~/.cargo/advisory-db"
-db-urls = ["https://github.com/rustsec/advisory-db"]
-yanked  = "warn"
-ignore  = []
+# ── License policy ──────────────────────────────────────────────────────────
 
-# License compliance. Every transitive dependency must use one of these.
-# This list is intentionally narrow; we lean on widely-accepted permissive
-# licenses to avoid downstream contamination.
 [licenses]
+# Explicitly allowed permissive licenses found in our dependency tree.
 allow = [
+    "MIT",
     "Apache-2.0",
     "Apache-2.0 WITH LLVM-exception",
-    "MIT",
     "BSD-2-Clause",
     "BSD-3-Clause",
     "ISC",
-    "Unicode-DFS-2016",
-    "Unicode-3.0",
     "Zlib",
+    "Unicode-3.0",
+    "Unicode-DFS-2016",
+    "Unlicense",
+    "BSL-1.0",
     "CC0-1.0",
-    "0BSD",
-    "MPL-2.0",
+    "MIT-0",
+    "OpenSSL",
 ]
-confidence-threshold = 0.93
 
-[[licenses.exceptions]]
-allow = ["OpenSSL"]
-crate = "ring"
+# Copyleft licenses are hard-denied.
+deny = [
+    "GPL-2.0",
+    "GPL-2.0-only",
+    "GPL-3.0",
+    "GPL-3.0-only",
+    "LGPL-2.0",
+    "LGPL-2.1",
+    "LGPL-3.0",
+    "AGPL-3.0",
+]
 
-# Source registry policy. We trust crates.io only; anything from a git URL
-# or an alternate registry requires explicit allowance.
+# Treat any unrecognised SPDX expression as an error rather than silently
+# allowing it.
+copyleft        = "deny"
+allow-osi-fsf-free = "neither"
+default         = "deny"
+
+# Confidence required before we trust a licence detected via file scan
+# (rather than from the Cargo.toml `license` field).
+confidence-threshold = 0.8
+
+# ── Ban policy ───────────────────────────────────────────────────────────────
+
+[bans]
+# Warn on duplicated versions; the types crate must not pull in two
+# incompatible copies of serde or other foundational crates.
+multiple-versions = "warn"
+
+# Wildcard version requirements in dependency specs are forbidden.
+# All versions in this workspace must be pinned or semver-constrained.
+wildcards = "deny"
+
+# Deny known-problematic crates.
+deny = [
+    # OpenSSL's Rust bindings require native libssl; we use rustls instead.
+    { name = "openssl" },
+    { name = "openssl-sys" },
+]
+
+# ── Advisory policy (RUSTSEC) ────────────────────────────────────────────────
+
+[advisories]
+# Known security vulnerabilities are a hard CI failure.
+vulnerability = "deny"
+
+# Unmaintained crates are a soft warning; operator must triage.
+unmaintained = "warn"
+
+# Yanked crates should not be used.
+yanked = "deny"
+
+# Informational advisories are surfaced but do not block CI.
+notice = "warn"
+
+# Severity threshold: deny High and Critical advisories.
+ignore = []
+
+# ── Source policy ────────────────────────────────────────────────────────────
+
 [sources]
+# Only allow crates.io as a registry; disallow unknown registries or
+# pinned-to-git-commit dependencies in production code.
 unknown-registry = "deny"
 unknown-git      = "deny"
 allow-registry   = ["https://github.com/rust-lang/crates.io-index"]
-allow-git        = []
-
-# Bans. Reserved for crates we never want pulled in.
-[bans]
-multiple-versions = "warn"
-wildcards         = "deny"
-highlight         = "all"

@@ -1,12 +1,16 @@
 name: CI
 
-# CI gates required to merge a PR. Every step is strict:
-# - fmt: `--check` rejects unformatted code
-# - clippy: `-D warnings` rejects every warning
-# - test: full workspace test suite must pass
-# - coverage: line coverage must hit 100% on every non-stub crate
-# - deny: license + advisory + source policy enforced
-# - audit: known-vulnerable dependencies rejected
+# CI gates required to merge a PR into main. Every step is strict:
+#   fmt       — code must be gofmt-style formatted (rustfmt --check)
+#   clippy    — zero warnings allowed (-D warnings)
+#   test      — full workspace test suite on Ubuntu + macOS
+#   coverage  — ≥100% line coverage on non-stub crates (llvm-cov)
+#   bench     — criterion benchmarks must compile and run successfully
+#   deny      — license, advisory, ban, and source policy (cargo-deny)
+#   audit     — RUSTSEC advisory database scan (cargo-audit)
+#
+# Gate ownership: every gate has a named "owner" comment. The owner is
+# responsible for triaging failures and keeping the gate green.
 
 on:
   push:
@@ -20,6 +24,9 @@ env:
   RUST_BACKTRACE: 1
 
 jobs:
+  # ── Formatting ─────────────────────────────────────────────────────────────
+  # Owner: all contributors
+  # Failure: run `cargo fmt --all` locally before pushing
   fmt:
     name: rustfmt
     runs-on: ubuntu-latest
@@ -30,6 +37,9 @@ jobs:
           components: rustfmt
       - run: cargo fmt --all --check
 
+  # ── Lint ───────────────────────────────────────────────────────────────────
+  # Owner: all contributors
+  # Failure: run `cargo clippy --workspace --all-targets -- -D warnings` locally
   clippy:
     name: clippy
     runs-on: ubuntu-latest
@@ -41,6 +51,9 @@ jobs:
       - uses: Swatinem/rust-cache@v2
       - run: cargo clippy --workspace --all-targets --all-features -- -D warnings
 
+  # ── Tests ──────────────────────────────────────────────────────────────────
+  # Owner: all contributors
+  # Failure: a test regressed; investigate with `cargo test --workspace`
   test:
     name: test (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
@@ -54,6 +67,16 @@ jobs:
       - uses: Swatinem/rust-cache@v2
       - run: cargo test --workspace --all-features --no-fail-fast
 
+  # ── Coverage gate (≥100% on non-stub crates) ───────────────────────────────
+  # Owner: types crate maintainer
+  # Failure: a public function or branch is not exercised by any test.
+  #   Run locally:
+  #     cargo llvm-cov --workspace --all-features --html --open
+  #   to see exactly which lines are not covered.
+  #
+  # Stubs (crates whose src/lib.rs is empty) are excluded from the gate via
+  # --ignore-filename-regex so that adding a new empty crate does not
+  # instantly fail CI.
   coverage:
     name: coverage (100% gate)
     runs-on: ubuntu-latest
@@ -63,22 +86,56 @@ jobs:
         with:
           components: llvm-tools-preview
       - uses: Swatinem/rust-cache@v2
-      - name: install cargo-llvm-cov
+      - name: Install cargo-llvm-cov
         uses: taiki-e/install-action@cargo-llvm-cov
-      - name: generate coverage
+      - name: Generate coverage report
         run: |
-          cargo llvm-cov --workspace --all-features \
+          cargo llvm-cov \
+            --workspace \
+            --all-features \
             --lcov --output-path lcov.info \
             --fail-under-lines 100 \
-            --ignore-filename-regex 'crates/(mismo|reso|ingest|enrich|eligibility|compliance|scenarios|solver|amort|ml|orchestrator|api)/src/lib\.rs'
-      - name: upload lcov
+            --ignore-filename-regex \
+              'crates/(mismo|reso|ingest|enrich|eligibility|compliance|scenarios|solver|amort|ml|orchestrator|api)/src/lib\.rs'
+      - name: Upload LCOV report
         uses: actions/upload-artifact@v4
         with:
           name: lcov.info
           path: lcov.info
+          retention-days: 14
 
+  # ── Benchmarks (compile + smoke-run) ──────────────────────────────────────
+  # Owner: performance-sensitive contributors
+  # Failure: a benchmark no longer compiles, or introduces a regression.
+  #   Run locally: cargo bench --bench money_arithmetic
+  #
+  # Note: wall-clock timing is NOT gated in CI because runners have variable
+  # performance. The bench step verifies:
+  #   1. All benchmark code compiles (catches API breakage)
+  #   2. Criterion runs to completion without panicking
+  # The <5 ns target is enforced by local developer benchmarking and code review.
+  bench:
+    name: benchmarks (compile + smoke)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - name: Build benchmarks
+        run: cargo bench --bench money_arithmetic --no-run
+      - name: Smoke-run benchmarks (1 sample each)
+        run: |
+          cargo bench --bench money_arithmetic -- \
+            --sample-size 1 \
+            --warm-up-time 0 \
+            --measurement-time 1
+
+  # ── License + Advisory + Source policy ────────────────────────────────────
+  # Owner: security / legal
+  # Failure: a new dependency has an unapproved license or a known CVE.
+  #   See deny.toml for the policy. Add exceptions to deny.toml after review.
   deny:
-    name: cargo-deny (licenses + advisories)
+    name: cargo-deny (licenses + advisories + bans)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -87,6 +144,10 @@ jobs:
           command: check
           arguments: --all-features
 
+  # ── RUSTSEC vulnerability scan ─────────────────────────────────────────────
+  # Owner: security
+  # Failure: a dependency has a published security advisory.
+  #   Update or replace the vulnerable crate, then re-run CI.
   audit:
     name: cargo-audit (RUSTSEC)
     runs-on: ubuntu-latest
