@@ -123,11 +123,13 @@ jobs:
       - uses: Swatinem/rust-cache@v2
       - name: Build benchmarks
         run: cargo bench --bench money_arithmetic --no-run
-      - name: Smoke-run benchmarks (1 sample each)
+      - name: Smoke-run benchmarks (minimum 10 samples, 1s each)
+        # Criterion hard-requires --sample-size >= 10.
+        # We use the minimum to keep CI fast while still validating the bench runs.
         run: |
           cargo bench --bench money_arithmetic -- \
-            --sample-size 1 \
-            --warm-up-time 0 \
+            --sample-size 10 \
+            --warm-up-time 1 \
             --measurement-time 1
 
   # ── License + Advisory + Source policy ────────────────────────────────────
@@ -148,11 +150,15 @@ jobs:
   # Owner: security
   # Failure: a dependency has a published security advisory.
   #   Update or replace the vulnerable crate, then re-run CI.
+  # Note: rustsec/audit-check is unmaintained; we install cargo-audit directly.
   audit:
     name: cargo-audit (RUSTSEC)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: rustsec/audit-check@v1.4.1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - name: Install cargo-audit
+        run: cargo install cargo-audit --locked
+      - name: Run cargo audit
+        run: cargo audit
