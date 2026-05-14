@@ -13,10 +13,11 @@ publish.workspace      = true
 workspace = true
 
 [dependencies]
-types     = { workspace = true }
-serde     = { workspace = true }
-thiserror = { workspace = true }
-quick-xml = { workspace = true }
+types        = { workspace = true }
+serde        = { workspace = true }
+thiserror    = { workspace = true }
+quick-xml    = { workspace = true }
+rust_decimal = { workspace = true }
 
 [dev-dependencies]
 serde = { workspace = true }
