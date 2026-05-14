@@ -15,5 +15,6 @@
 
 pub mod collateral;
 pub mod loan_terms;
+pub mod mi;
 pub mod party;
-// Tasks 2.6–2.9 land below as they are delivered.
+// Tasks 2.7–2.9 land below as they are delivered.
