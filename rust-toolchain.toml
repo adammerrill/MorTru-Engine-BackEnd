@@ -1,0 +1,7 @@
+# Pinning the toolchain ensures every developer and every CI run uses the
+# same compiler, the same clippy lints, and the same fmt rules. Bump this
+# file deliberately when adopting newer language features.
+[toolchain]
+channel    = "1.75.0"
+components = ["rustfmt", "clippy", "llvm-tools-preview"]
+profile    = "minimal"

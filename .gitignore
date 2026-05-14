@@ -1,0 +1,24 @@
+# Build artifacts
+/target
+**/*.rs.bk
+*.pdb
+
+# Code coverage output
+/lcov.info
+/coverage/
+/tarpaulin-report.html
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Logs
+*.log
+
+# Local secrets (never commit)
+.env
+.env.local
+secrets/

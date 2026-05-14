@@ -1,0 +1,49 @@
+# cargo-deny configuration. Run with `cargo deny check` in CI.
+# https://embarkstudios.github.io/cargo-deny/
+
+[graph]
+all-features = true
+
+[advisories]
+db-path = "~/.cargo/advisory-db"
+db-urls = ["https://github.com/rustsec/advisory-db"]
+yanked  = "warn"
+ignore  = []
+
+# License compliance. Every transitive dependency must use one of these.
+# This list is intentionally narrow; we lean on widely-accepted permissive
+# licenses to avoid downstream contamination.
+[licenses]
+allow = [
+    "Apache-2.0",
+    "Apache-2.0 WITH LLVM-exception",
+    "MIT",
+    "BSD-2-Clause",
+    "BSD-3-Clause",
+    "ISC",
+    "Unicode-DFS-2016",
+    "Unicode-3.0",
+    "Zlib",
+    "CC0-1.0",
+    "0BSD",
+    "MPL-2.0",
+]
+confidence-threshold = 0.93
+
+[[licenses.exceptions]]
+allow = ["OpenSSL"]
+crate = "ring"
+
+# Source registry policy. We trust crates.io only; anything from a git URL
+# or an alternate registry requires explicit allowance.
+[sources]
+unknown-registry = "deny"
+unknown-git      = "deny"
+allow-registry   = ["https://github.com/rust-lang/crates.io-index"]
+allow-git        = []
+
+# Bans. Reserved for crates we never want pulled in.
+[bans]
+multiple-versions = "warn"
+wildcards         = "deny"
+highlight         = "all"

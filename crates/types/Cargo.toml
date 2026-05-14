@@ -1,0 +1,44 @@
+[package]
+name             = "types"
+description      = "Foundation types for the Meridian Mortgage Engine: money, identifiers, enums, errors."
+version.workspace      = true
+edition.workspace      = true
+authors.workspace      = true
+license.workspace      = true
+repository.workspace   = true
+rust-version.workspace = true
+publish.workspace      = true
+
+[lints]
+workspace = true
+
+[dependencies]
+# Task 1.2: money/rate value types
+serde         = { workspace = true }
+thiserror     = { workspace = true }
+rust_decimal  = { workspace = true }
+tracing       = { workspace = true }
+
+# Task 1.3: identifier types
+#   - uuid: ScenarioId, AnalysisId (UUID v4 generation + serde)
+#   - smol_str: cheap-clone storage for short identifier strings
+#     (LenderId, MlsListingKey, LoanCasefileId)
+uuid          = { workspace = true }
+smol_str      = { workspace = true }
+bitflags      = { workspace = true }
+ahash         = { workspace = true }
+
+[dev-dependencies]
+# Workspace-structural tests (from Task 1.1)
+cargo_metadata = { workspace = true }
+toml           = { workspace = true }
+
+# Task 1.2 + 1.3 testing
+proptest             = { workspace = true }
+serde_json           = { workspace = true }
+criterion            = { workspace = true }
+rust_decimal_macros  = { workspace = true }
+
+[[bench]]
+name    = "money_arithmetic"
+harness = false

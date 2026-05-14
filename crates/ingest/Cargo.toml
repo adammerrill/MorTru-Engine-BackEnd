@@ -1,0 +1,18 @@
+[package]
+name             = "ingest"
+description      = "Rate sheet, LLPA, MI, and reference-data ingestion pipeline."
+version.workspace      = true
+edition.workspace      = true
+authors.workspace      = true
+license.workspace      = true
+repository.workspace   = true
+rust-version.workspace = true
+publish.workspace      = true
+
+[lints]
+workspace = true
+
+[dependencies]
+# Stub: dependencies are introduced as Epic 4-6 tasks land.
+
+[dev-dependencies]

@@ -1,0 +1,18 @@
+[package]
+name             = "reso"
+description      = "RESO Data Dictionary 2.0 Property resource for listing data interchange."
+version.workspace      = true
+edition.workspace      = true
+authors.workspace      = true
+license.workspace      = true
+repository.workspace   = true
+rust-version.workspace = true
+publish.workspace      = true
+
+[lints]
+workspace = true
+
+[dependencies]
+# Stub: dependencies are introduced as Epic 3 tasks land.
+
+[dev-dependencies]

@@ -1,0 +1,18 @@
+[package]
+name             = "enrich"
+description      = "Property enrichment: raw listing -> EnrichedProperty with FIPS, tax, HOA, HOI estimates."
+version.workspace      = true
+edition.workspace      = true
+authors.workspace      = true
+license.workspace      = true
+repository.workspace   = true
+rust-version.workspace = true
+publish.workspace      = true
+
+[lints]
+workspace = true
+
+[dependencies]
+# Stub: dependencies are introduced as Epic 7 tasks land.
+
+[dev-dependencies]

@@ -1,0 +1,18 @@
+[package]
+name             = "mismo"
+description      = "MISMO 3.4 reference-model schema for the MorTru Engine."
+version.workspace      = true
+edition.workspace      = true
+authors.workspace      = true
+license.workspace      = true
+repository.workspace   = true
+rust-version.workspace = true
+publish.workspace      = true
+
+[lints]
+workspace = true
+
+[dependencies]
+# Stub: dependencies are introduced as Epic 2 tasks land.
+
+[dev-dependencies]

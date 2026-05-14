@@ -1,0 +1,123 @@
+# Workspace root for the MorTru Engine.
+#
+# Every crate in this workspace inherits its package metadata and lint
+# configuration from this file via the `workspace = true` directives in the
+# member Cargo.toml files. This single source of truth keeps versions,
+# edition, and lint strictness aligned across the codebase.
+
+[workspace]
+resolver = "2"
+members = ["crates/*"]
+
+[workspace.package]
+version    = "0.1.0"
+edition    = "2021"
+authors    = ["MorTru Engine Team"]
+license    = "MIT OR Apache-2.0"
+repository = "https://github.com/MorTru/engine"
+rust-version = "1.75"
+publish    = false
+
+# Shared dependencies. Member crates opt into specific dependencies by
+# declaring `serde = { workspace = true }` in their own [dependencies] table.
+# Versions live here so a single bump applies everywhere.
+[workspace.dependencies]
+# Serde / errors / time / money
+serde               = { version = "1", features = ["derive"] }
+serde_json          = "1"
+thiserror           = "1"
+chrono              = { version = "0.4", features = ["serde"] }
+rust_decimal        = { version = "1", features = ["serde", "serde-with-str"] }
+rust_decimal_macros = "1"
+smol_str            = { version = "0.2", features = ["serde"] }
+uuid                = { version = "1", features = ["serde", "v4"] }
+bitflags            = { version = "2", features = ["serde"] }
+
+# Hot-path performance
+ahash               = "0.8"
+rayon               = "1"
+arc-swap            = "1"
+
+# Async / HTTP
+tokio               = { version = "1", features = ["full"] }
+axum                = "0.7"
+tower               = "0.4"
+tower-http          = { version = "0.5", features = ["trace", "cors"] }
+
+# Observability
+tracing             = "0.1"
+tracing-subscriber  = { version = "0.3", features = ["env-filter", "json"] }
+
+# Ingestion
+calamine            = "0.24"
+
+# Test / bench
+criterion           = "0.5"
+proptest            = "1"
+rstest              = "0.18"
+approx              = "0.5"
+tokio-test          = "0.4"
+toml                = "0.8"
+cargo_metadata      = "0.18"
+
+# Workspace-internal crates referenced by other workspace crates
+types         = { path = "crates/types" }
+mismo         = { path = "crates/mismo" }
+reso          = { path = "crates/reso" }
+ingest        = { path = "crates/ingest" }
+enrich        = { path = "crates/enrich" }
+eligibility   = { path = "crates/eligibility" }
+compliance    = { path = "crates/compliance" }
+scenarios     = { path = "crates/scenarios" }
+solver        = { path = "crates/solver" }
+amort         = { path = "crates/amort" }
+ml            = { path = "crates/ml" }
+orchestrator  = { path = "crates/orchestrator" }
+api           = { path = "crates/api" }
+
+# Lint configuration inherited by every member crate via `[lints]
+# workspace = true`. The strictness is calibrated to catch real bugs without
+# flooding the build with stylistic noise. CI runs `cargo clippy -- -D warnings`
+# so anything flagged here becomes a build failure.
+[workspace.lints.rust]
+unsafe_code                    = "forbid"
+unreachable_pub                = "warn"
+missing_debug_implementations  = "warn"
+trivial_casts                  = "warn"
+trivial_numeric_casts          = "warn"
+unused_lifetimes               = "warn"
+unused_qualifications          = "warn"
+
+[workspace.lints.clippy]
+all                            = { level = "warn", priority = -1 }
+correctness                    = { level = "deny", priority = -1 }
+suspicious                     = { level = "warn", priority = -1 }
+perf                           = { level = "warn", priority = -1 }
+style                          = { level = "warn", priority = -1 }
+
+# Release profile is tuned for the production binary. Fat LTO and a single
+# codegen unit maximize cross-crate inlining at the cost of longer link times.
+# `panic = "abort"` removes unwinding metadata (smaller binary, faster code) and
+# matches the production stance that any panic in this engine is a bug to fix,
+# not a condition to recover from.
+[profile.release]
+lto              = "fat"
+codegen-units    = 1
+opt-level        = 3
+panic            = "abort"
+strip            = "symbols"
+debug            = false
+overflow-checks  = false
+
+# Bench profile mirrors release but keeps debug info for flamegraph / perf.
+[profile.bench]
+inherits         = "release"
+strip            = "none"
+debug            = true
+
+# Dev profile keeps overflow checks on so arithmetic bugs surface in test runs
+# rather than silently wrapping in production-equivalent code paths.
+[profile.dev]
+opt-level        = 0
+overflow-checks  = true
+debug            = true
