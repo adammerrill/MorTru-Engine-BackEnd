@@ -88,11 +88,4 @@ pub fn try_program_code(s: &str) -> crate::Result<ProgramCode> {
     })
 }
 
-// ── Round-trip helpers ────────────────────────────────────────────────────────
-
-/// Serialize `LienPriority` to its MISMO `LienPriorityType` string.
-///
-/// Delegates to `LienPriority::to_mismo()`.
-pub const fn lien_priority_to_mismo(lien: LienPriority) -> &'static str {
-    lien.to_mismo()
-}
+// Callers that need to serialize LienPriority call lien.to_mismo() directly.

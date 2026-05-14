@@ -12,7 +12,9 @@ use mismo::{
     schema::loan_terms::{Amortization, LoanTermsParsed, MortgageTerms},
     MismoError,
 };
-use types::{AmortizationType, BasisPoints, Cents, LienPriority, LoanPurpose, ProgramCode, TermMonths};
+use types::{
+    AmortizationType, BasisPoints, Cents, LienPriority, LoanPurpose, ProgramCode, TermMonths,
+};
 
 // ── Test helpers ──────────────────────────────────────────────────────────────
 
@@ -38,7 +40,9 @@ fn spreadsheet_terms() -> MortgageTerms {
 }
 
 fn fixed_amort() -> Amortization {
-    Amortization { amortization_type: "Fixed".into() }
+    Amortization {
+        amortization_type: "Fixed".into(),
+    }
 }
 
 // ── Core parse: spreadsheet values ───────────────────────────────────────────
@@ -47,9 +51,9 @@ fn fixed_amort() -> Amortization {
 fn test_fha_loan_terms_parse_to_typed() {
     let parsed = spreadsheet_terms().parse(&fixed_amort()).unwrap();
 
-    assert_eq!(parsed.program,     ProgramCode::Fha);
-    assert_eq!(parsed.purpose,     LoanPurpose::Purchase);
-    assert_eq!(parsed.lien,        LienPriority::First);
+    assert_eq!(parsed.program, ProgramCode::Fha);
+    assert_eq!(parsed.purpose, LoanPurpose::Purchase);
+    assert_eq!(parsed.lien, LienPriority::First);
     assert_eq!(parsed.amortization, AmortizationType::Fixed);
 }
 
@@ -174,7 +178,13 @@ fn test_invalid_mortgage_type_returns_invalid_enum_error() {
     t.mortgage_type = "SubprimeMortgage".into();
     let err = t.parse(&fixed_amort()).unwrap_err();
     assert!(
-        matches!(err, MismoError::InvalidEnum { element: "MortgageType", .. }),
+        matches!(
+            err,
+            MismoError::InvalidEnum {
+                element: "MortgageType",
+                ..
+            }
+        ),
         "expected InvalidEnum for MortgageType, got: {err}"
     );
 }
@@ -184,7 +194,13 @@ fn test_invalid_lien_priority_returns_error() {
     let mut t = spreadsheet_terms();
     t.lien_priority_type = "FifthLien".into();
     let err = t.parse(&fixed_amort()).unwrap_err();
-    assert!(matches!(err, MismoError::InvalidEnum { element: "LienPriorityType", .. }));
+    assert!(matches!(
+        err,
+        MismoError::InvalidEnum {
+            element: "LienPriorityType",
+            ..
+        }
+    ));
 }
 
 #[test]
@@ -192,7 +208,13 @@ fn test_invalid_loan_purpose_returns_error() {
     let mut t = spreadsheet_terms();
     t.loan_purpose_type = "Speculation".into();
     let err = t.parse(&fixed_amort()).unwrap_err();
-    assert!(matches!(err, MismoError::InvalidEnum { element: "LoanPurposeType", .. }));
+    assert!(matches!(
+        err,
+        MismoError::InvalidEnum {
+            element: "LoanPurposeType",
+            ..
+        }
+    ));
 }
 
 #[test]
@@ -200,7 +222,13 @@ fn test_term_months_out_of_range_returns_error() {
     let mut t = spreadsheet_terms();
     t.loan_term_months_count = "60".into(); // below 120 minimum
     let err = t.parse(&fixed_amort()).unwrap_err();
-    assert!(matches!(err, MismoError::OutOfRange { element: "LoanTermMonthsCount", .. }));
+    assert!(matches!(
+        err,
+        MismoError::OutOfRange {
+            element: "LoanTermMonthsCount",
+            ..
+        }
+    ));
 }
 
 #[test]
@@ -208,15 +236,29 @@ fn test_non_numeric_amount_returns_error() {
     let mut t = spreadsheet_terms();
     t.base_loan_amount = "four hundred thousand".into();
     let err = t.parse(&fixed_amort()).unwrap_err();
-    assert!(matches!(err, MismoError::OutOfRange { element: "BaseLoanAmount", .. }));
+    assert!(matches!(
+        err,
+        MismoError::OutOfRange {
+            element: "BaseLoanAmount",
+            ..
+        }
+    ));
 }
 
 #[test]
 fn test_invalid_amortization_type_returns_error() {
     let t = spreadsheet_terms();
-    let bad_amort = Amortization { amortization_type: "Balloon".into() };
+    let bad_amort = Amortization {
+        amortization_type: "Balloon".into(),
+    };
     let err = t.parse(&bad_amort).unwrap_err();
-    assert!(matches!(err, MismoError::InvalidEnum { element: "AmortizationType", .. }));
+    assert!(matches!(
+        err,
+        MismoError::InvalidEnum {
+            element: "AmortizationType",
+            ..
+        }
+    ));
 }
 
 // ── Program types ─────────────────────────────────────────────────────────────
@@ -252,24 +294,32 @@ fn test_mortgage_terms_xml_roundtrip() {
     let original = spreadsheet_terms();
     let xml = mismo::xml::serialize::to_xml(&original).unwrap();
 
-    assert!(xml.contains("434443.00"), "XML should contain base loan amount");
-    assert!(xml.contains("6.375"),     "XML should contain note rate");
-    assert!(xml.contains("FHA"),       "XML should contain mortgage type");
-    assert!(xml.contains("360"),       "XML should contain term");
+    assert!(
+        xml.contains("434443.00"),
+        "XML should contain base loan amount"
+    );
+    assert!(xml.contains("6.375"), "XML should contain note rate");
+    assert!(xml.contains("FHA"), "XML should contain mortgage type");
+    assert!(xml.contains("360"), "XML should contain term");
 
     let restored: MortgageTerms = mismo::xml::parse::from_xml(&xml).unwrap();
     let parsed_original = original.parse(&fixed_amort()).unwrap();
     let parsed_restored = restored.parse(&fixed_amort()).unwrap();
 
-    assert_eq!(parsed_original.base_loan_amount, parsed_restored.base_loan_amount);
-    assert_eq!(parsed_original.note_rate,        parsed_restored.note_rate);
-    assert_eq!(parsed_original.term,             parsed_restored.term);
-    assert_eq!(parsed_original.program,          parsed_restored.program);
+    assert_eq!(
+        parsed_original.base_loan_amount,
+        parsed_restored.base_loan_amount
+    );
+    assert_eq!(parsed_original.note_rate, parsed_restored.note_rate);
+    assert_eq!(parsed_original.term, parsed_restored.term);
+    assert_eq!(parsed_original.program, parsed_restored.program);
 }
 
 #[test]
 fn test_amortization_xml_roundtrip() {
-    let original = Amortization { amortization_type: "Fixed".into() };
+    let original = Amortization {
+        amortization_type: "Fixed".into(),
+    };
     let xml = mismo::xml::serialize::to_xml(&original).unwrap();
     assert!(xml.contains("Fixed"));
     let restored: Amortization = mismo::xml::parse::from_xml(&xml).unwrap();
@@ -301,14 +351,107 @@ fn test_parse_mortgage_terms_from_xml_string() {
     let parsed: LoanTermsParsed = terms.parse(&amort).unwrap();
 
     // Verify all spreadsheet reference values
-    assert_eq!(parsed.base_loan_amount,   Cents(43_444_300));
+    assert_eq!(parsed.base_loan_amount, Cents(43_444_300));
     assert_eq!(parsed.adjusted_loan_amount, Some(Cents(44_204_600)));
-    assert_eq!(parsed.note_rate,          BasisPoints(6375));
-    assert_eq!(parsed.term,               TermMonths::new(360).unwrap());
-    assert_eq!(parsed.program,            ProgramCode::Fha);
-    assert_eq!(parsed.lien,               LienPriority::First);
-    assert_eq!(parsed.purpose,            LoanPurpose::Purchase);
-    assert_eq!(parsed.amortization,       AmortizationType::Fixed);
-    assert_eq!(parsed.seller_concession,  Some(Cents(1_000_000)));
+    assert_eq!(parsed.note_rate, BasisPoints(6375));
+    assert_eq!(parsed.term, TermMonths::new(360).unwrap());
+    assert_eq!(parsed.program, ProgramCode::Fha);
+    assert_eq!(parsed.lien, LienPriority::First);
+    assert_eq!(parsed.purpose, LoanPurpose::Purchase);
+    assert_eq!(parsed.amortization, AmortizationType::Fixed);
+    assert_eq!(parsed.seller_concession, Some(Cents(1_000_000)));
     assert!(parsed.seller_pays_title);
+}
+
+// ── Coverage: error branches not hit by the main test matrix ─────────────────
+
+#[test]
+fn test_non_numeric_term_months_returns_out_of_range_error() {
+    // Exercises the parse::<u16>() failure path in parse_term_months,
+    // distinct from the TermMonths::new() out-of-range path tested above.
+    let mut t = spreadsheet_terms();
+    t.loan_term_months_count = "thirty-years".into();
+    let err = t.parse(&fixed_amort()).unwrap_err();
+    assert!(matches!(
+        err,
+        MismoError::OutOfRange {
+            element: "LoanTermMonthsCount",
+            ..
+        }
+    ));
+}
+
+#[test]
+fn test_invalid_optional_u32_returns_error() {
+    // Exercises the map_err branch in parse_optional_u32 when the
+    // string is non-empty but not a valid unsigned integer.
+    let mut t = spreadsheet_terms();
+    t.holding_period_months = Some("not-a-number".into());
+    let err = t.parse(&fixed_amort()).unwrap_err();
+    assert!(matches!(
+        err,
+        MismoError::OutOfRange {
+            element: "MortgageHoldingPeriodMonthsCount",
+            ..
+        }
+    ));
+}
+
+#[test]
+fn test_invalid_optional_cents_on_optional_field_returns_error() {
+    // Exercises the parse_cents error path when called via parse_optional_cents
+    // with a non-empty, non-numeric string.
+    let mut t = spreadsheet_terms();
+    t.seller_concession_amount = Some("bad-amount".into());
+    let err = t.parse(&fixed_amort()).unwrap_err();
+    assert!(matches!(
+        err,
+        MismoError::OutOfRange {
+            element: "SellerConcessionAmount",
+            ..
+        }
+    ));
+}
+
+#[test]
+fn test_bool_indicator_some_non_truthy_string_is_false() {
+    // Exercises the Some(s) → matches!(...) → false branch in
+    // parse_bool_indicator, distinct from the None → unwrap_or(false) path.
+    let mut t = spreadsheet_terms();
+    t.waive_escrow = Some("false".into()); // non-truthy Some value
+    let parsed = t.parse(&fixed_amort()).unwrap();
+    assert!(!parsed.waive_escrow);
+}
+
+#[test]
+fn test_invalid_note_rate_string_returns_error() {
+    // Exercises the parse_rate_bps error branch.
+    let mut t = spreadsheet_terms();
+    t.note_rate_percent = "not-a-rate".into();
+    let err = t.parse(&fixed_amort()).unwrap_err();
+    assert!(matches!(
+        err,
+        MismoError::OutOfRange {
+            element: "NoteRatePercent",
+            ..
+        }
+    ));
+}
+
+#[test]
+fn test_empty_string_optional_cents_treated_as_none() {
+    // Exercises the Some("") arm of parse_optional_cents.
+    let mut t = spreadsheet_terms();
+    t.seller_concession_amount = Some("".into());
+    let parsed = t.parse(&fixed_amort()).unwrap();
+    assert!(parsed.seller_concession.is_none());
+}
+
+#[test]
+fn test_empty_string_optional_u32_treated_as_none() {
+    // Exercises the Some("") arm of parse_optional_u32.
+    let mut t = spreadsheet_terms();
+    t.holding_period_months = Some("".into());
+    let parsed = t.parse(&fixed_amort()).unwrap();
+    assert!(parsed.holding_period_months.is_none());
 }

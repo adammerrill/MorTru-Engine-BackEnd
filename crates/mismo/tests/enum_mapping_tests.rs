@@ -751,3 +751,128 @@ fn test_comp_type_unknown_returns_error() {
         }
     ));
 }
+
+// ── Coverage gap fill: every enum variant that lacked a direct test ──────────
+// These tests exercise all match arms not hit by the main test matrix above,
+// preventing the llvm-cov --fail-under-lines 97 gate from firing.
+
+#[test]
+fn test_affordable_lending_homeone_from_str() {
+    assert_eq!(
+        AffordableLendingProgram::try_from_str("HomeOne").unwrap(),
+        AffordableLendingProgram::HomeOne
+    );
+}
+
+#[test]
+fn test_mi_renewal_type_level_from_str() {
+    assert_eq!(
+        MiRenewalType::try_from_str("Level").unwrap(),
+        MiRenewalType::Level
+    );
+}
+
+#[test]
+fn test_mi_renewal_type_annual_from_str() {
+    assert_eq!(
+        MiRenewalType::try_from_str("Annual").unwrap(),
+        MiRenewalType::Annual
+    );
+}
+
+#[test]
+fn test_mi_first_premium_first_payment_from_str() {
+    assert_eq!(
+        MiFirstPremiumType::try_from_str("FirstPayment").unwrap(),
+        MiFirstPremiumType::FirstPayment
+    );
+}
+
+#[test]
+fn test_mi_first_premium_deferred_from_str() {
+    assert_eq!(
+        MiFirstPremiumType::try_from_str("Deferred").unwrap(),
+        MiFirstPremiumType::Deferred
+    );
+}
+
+#[test]
+fn test_aus_recommendation_approve_ineligible_from_str() {
+    let r = AusRecommendation::try_from_str("ApproveIneligible").unwrap();
+    assert_eq!(r, AusRecommendation::ApproveIneligible);
+    assert!(r.is_approvable());
+}
+
+#[test]
+fn test_aus_recommendation_refer_with_caution_from_str() {
+    let r = AusRecommendation::try_from_str("ReferWithCaution").unwrap();
+    assert_eq!(r, AusRecommendation::ReferWithCaution);
+    assert!(!r.is_approvable());
+}
+
+#[test]
+fn test_aus_recommendation_out_of_scope_maps_to_ineligible() {
+    assert_eq!(
+        AusRecommendation::try_from_str("OutOfScope").unwrap(),
+        AusRecommendation::Ineligible
+    );
+}
+
+#[test]
+fn test_fee_section_c_e_f_g_h_from_mismo_string() {
+    assert_eq!(
+        FeeSection::try_from_str("LoanCosts_ServicesShoppedFor").unwrap(),
+        FeeSection::C
+    );
+    assert_eq!(FeeSection::try_from_str("C").unwrap(), FeeSection::C);
+    assert_eq!(
+        FeeSection::try_from_str("OtherCosts_TaxesAndGovernmentFees").unwrap(),
+        FeeSection::E
+    );
+    assert_eq!(FeeSection::try_from_str("E").unwrap(), FeeSection::E);
+    assert_eq!(
+        FeeSection::try_from_str("OtherCosts_Prepaids").unwrap(),
+        FeeSection::F
+    );
+    assert_eq!(FeeSection::try_from_str("F").unwrap(), FeeSection::F);
+    assert_eq!(
+        FeeSection::try_from_str("OtherCosts_InitialEscrowPayment").unwrap(),
+        FeeSection::G
+    );
+    assert_eq!(FeeSection::try_from_str("G").unwrap(), FeeSection::G);
+    assert_eq!(
+        FeeSection::try_from_str("OtherCosts_Other").unwrap(),
+        FeeSection::H
+    );
+    assert_eq!(FeeSection::try_from_str("H").unwrap(), FeeSection::H);
+}
+
+#[test]
+fn test_fee_paid_by_other_from_str() {
+    assert_eq!(FeePaidBy::try_from_str("Other").unwrap(), FeePaidBy::Other);
+    assert_eq!(
+        FeePaidBy::try_from_str("PaidByOther").unwrap(),
+        FeePaidBy::Other
+    );
+}
+
+#[test]
+fn test_fee_calculation_type_unavailable_from_str() {
+    assert_eq!(
+        FeeCalculationType::try_from_str("Unavailable").unwrap(),
+        FeeCalculationType::Unavailable
+    );
+}
+
+#[test]
+fn test_comp_type_split_from_str() {
+    assert_eq!(CompType::try_from_str("Split").unwrap(), CompType::Split);
+}
+
+#[test]
+fn test_comp_disclosure_split_routes_to_page3() {
+    assert_eq!(
+        CompDisclosure::from_comp_type(CompType::Split),
+        CompDisclosure::OnPage3
+    );
+}

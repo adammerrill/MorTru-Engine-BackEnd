@@ -71,10 +71,13 @@ fn parse_rate_bps(s: &str, element: &'static str) -> crate::Result<BasisPoints> 
 
 /// Parse a MISMO month-count string (e.g. `"360"`) to [`TermMonths`].
 fn parse_term_months(s: &str) -> crate::Result<TermMonths> {
-    let n: u16 = s.trim().parse().map_err(|_| crate::MismoError::OutOfRange {
-        element: "LoanTermMonthsCount",
-        detail: format!("'{s}' is not a valid integer month count"),
-    })?;
+    let n: u16 = s
+        .trim()
+        .parse()
+        .map_err(|_| crate::MismoError::OutOfRange {
+            element: "LoanTermMonthsCount",
+            detail: format!("'{s}' is not a valid integer month count"),
+        })?;
     TermMonths::new(n).map_err(|_| crate::MismoError::OutOfRange {
         element: "LoanTermMonthsCount",
         detail: format!("{n} is outside the valid TermMonths range (120–360)"),
@@ -121,7 +124,10 @@ pub struct MortgageTerms {
 
     /// Loan amount after financed UFMIP/funding fee. e.g. `"442046.00"`.
     /// Absent when MI is not financed.
-    #[serde(rename = "LoanAmountWithFinancedMI", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "LoanAmountWithFinancedMI",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub loan_amount_with_financed_mi: Option<String>,
 
     /// Note rate as a percentage string. e.g. `"6.375"` or `"6.375%"`.
@@ -145,40 +151,63 @@ pub struct MortgageTerms {
     pub loan_purpose_type: String,
 
     // ── Engine extension fields (not in MISMO 3.4 standard) ──────────────────
-
     /// Planned holding period in months. Used for break-even analysis.
-    #[serde(rename = "MortgageHoldingPeriodMonthsCount", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "MortgageHoldingPeriodMonthsCount",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub holding_period_months: Option<String>,
 
     /// Number of days from today to the expected closing date.
     /// Used to calculate prepaid interest (daily_rate × days).
-    #[serde(rename = "DaysUntilClosingCount", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "DaysUntilClosingCount",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub days_until_closing: Option<String>,
 
     /// Seller-paid closing cost contribution. e.g. `"10000.00"`.
     /// Appears in Section K of the cash-to-close calculation.
-    #[serde(rename = "SellerConcessionAmount", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "SellerConcessionAmount",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub seller_concession_amount: Option<String>,
 
     /// Whether the seller pays the owner's title insurance policy.
-    #[serde(rename = "SellerPaysOwnersTitleIndicator", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "SellerPaysOwnersTitleIndicator",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub seller_pays_owners_title: Option<String>,
 
     /// Whether the borrower has waived impound/escrow accounts.
-    #[serde(rename = "EscrowWaiverIndicator", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "EscrowWaiverIndicator",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub waive_escrow: Option<String>,
 
     /// Whether a temporary rate buydown subsidy is present.
-    #[serde(rename = "TemporaryBuydownIndicator", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "TemporaryBuydownIndicator",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub temp_buydown: Option<String>,
 
     /// Whether a subordinate lien (HELOC / 2nd mortgage) is being used.
-    #[serde(rename = "SubordinateFinancingIndicator", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "SubordinateFinancingIndicator",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub subordinate_financing: Option<String>,
 
     /// Whether the loan amount exceeds the standard conforming limit and
     /// falls in the FHFA-designated high-cost area tier.
-    #[serde(rename = "HighBalanceLoanIndicator", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "HighBalanceLoanIndicator",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub high_balance: Option<String>,
 }
 
@@ -203,7 +232,6 @@ pub struct Amortization {
 #[derive(Debug, Clone)]
 pub struct LoanTermsParsed {
     // ── Core financial parameters ─────────────────────────────────────────────
-
     /// Base loan amount before any financed MI premium.
     pub base_loan_amount: Cents,
 
@@ -230,7 +258,6 @@ pub struct LoanTermsParsed {
     pub amortization: AmortizationType,
 
     // ── Closing context (optional engine extensions) ──────────────────────────
-
     /// Planned holding period for break-even calculation.
     pub holding_period_months: Option<u32>,
 
@@ -288,9 +315,7 @@ impl MortgageTerms {
             program: crate::enums::loan_type::try_program_code(&self.mortgage_type)?,
             lien: crate::enums::loan_type::try_lien_priority(&self.lien_priority_type)?,
             purpose: crate::enums::loan_type::try_loan_purpose(&self.loan_purpose_type)?,
-            amortization: crate::enums::loan_type::try_amortization_type(
-                &amort.amortization_type,
-            )?,
+            amortization: crate::enums::loan_type::try_amortization_type(&amort.amortization_type)?,
             holding_period_months: parse_optional_u32(
                 &self.holding_period_months,
                 "MortgageHoldingPeriodMonthsCount",
