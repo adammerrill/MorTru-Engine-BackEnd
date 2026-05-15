@@ -1,0 +1,1200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Architecture Audit — Epics 1–4 · MorTru Engine</title>
+<style>
+  :root {
+    --bg:#0f1117;--surface:#1a1d27;--surface2:#22263a;
+    --border:#2e3248;--accent:#5b6ef5;--accent2:#7c8ff7;
+    --green:#34c97a;--yellow:#f5c842;--red:#f5564a;
+    --teal:#2ecfd4;--orange:#f59642;--purple:#b57bf7;
+    --text:#e4e6f0;--muted:#7b82a0;--code:#a6b0cf;
+    --font:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    --mono:'JetBrains Mono','Fira Code','Cascadia Code',monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:15px;line-height:1.65}
+  a{color:var(--accent2);text-decoration:none}
+  .layout{display:flex;min-height:100vh}
+  .sidebar{width:270px;background:var(--surface);border-right:1px solid var(--border);position:sticky;top:0;height:100vh;overflow-y:auto;flex-shrink:0}
+  .main{flex:1;max-width:1040px;padding:48px 56px;overflow-x:hidden}
+  .brand{padding:24px 20px 16px;border-bottom:1px solid var(--border)}
+  .brand .t{font-size:13px;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+  .brand .s{font-size:11px;color:var(--muted);margin-top:2px}
+  .ns{padding:12px 20px 4px;font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.1em;text-transform:uppercase}
+  .ni{display:block;padding:6px 20px;font-size:13px;color:var(--muted);cursor:pointer;border-left:2px solid transparent;transition:all .15s}
+  .ni:hover,.ni.active{color:var(--text);border-left-color:var(--accent);background:rgba(91,110,245,.08)}
+  .tab-pane{display:none}.tab-pane.active{display:block}
+  h1{font-size:30px;font-weight:700;line-height:1.2;margin-bottom:12px}
+  h2{font-size:20px;font-weight:600;margin:40px 0 14px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+  h3{font-size:16px;font-weight:600;margin:28px 0 10px;color:var(--accent2)}
+  h4{font-size:13px;font-weight:700;margin:20px 0 8px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+  p{margin-bottom:14px}ul,ol{margin:0 0 14px 20px}li{margin-bottom:4px}
+  .badge{display:inline-block;padding:2px 9px;border-radius:4px;font-size:11px;font-weight:600;letter-spacing:.03em;text-transform:uppercase}
+  .b-green{background:rgba(52,201,122,.15);color:var(--green)}
+  .b-yellow{background:rgba(245,200,66,.15);color:var(--yellow)}
+  .b-red{background:rgba(245,86,74,.12);color:var(--red)}
+  .b-blue{background:rgba(91,110,245,.15);color:var(--accent2)}
+  .b-teal{background:rgba(46,207,212,.12);color:var(--teal)}
+  .b-muted{background:var(--surface2);color:var(--muted);border:1px solid var(--border)}
+  .b-purple{background:rgba(181,123,247,.12);color:var(--purple)}
+  pre{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:18px 20px;overflow-x:auto;margin:14px 0 20px}
+  code{font-family:var(--mono);font-size:13px;color:var(--code)}
+  p code,li code,td code{background:var(--surface2);padding:1px 6px;border-radius:4px;font-size:12px;color:var(--code)}
+  table{width:100%;border-collapse:collapse;margin:14px 0 24px;font-size:13px}
+  th{background:var(--surface2);padding:9px 14px;text-align:left;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid var(--border)}
+  td{padding:9px 14px;border-bottom:1px solid var(--border);vertical-align:top}
+  tr:last-child td{border-bottom:none}
+  td:first-child{font-family:var(--mono);font-size:12px;color:var(--code)}
+  .callout{border-radius:8px;padding:14px 18px;margin:18px 0;border-left:3px solid}
+  .c-info{background:rgba(91,110,245,.08);border-color:var(--accent)}
+  .c-warn{background:rgba(245,200,66,.07);border-color:var(--yellow)}
+  .c-danger{background:rgba(245,86,74,.08);border-color:var(--red)}
+  .c-green{background:rgba(52,201,122,.07);border-color:var(--green)}
+  .callout strong{display:block;margin-bottom:4px;font-size:11px;text-transform:uppercase;letter-spacing:.06em}
+  .audit-row{display:grid;grid-template-columns:200px 1fr auto;gap:0;border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:10px}
+  .ar-label{padding:12px 16px;background:var(--surface2);font-size:13px;font-weight:600}
+  .ar-body{padding:12px 16px;font-size:13px;border-left:1px solid var(--border)}
+  .ar-status{padding:12px 16px;border-left:1px solid var(--border);display:flex;align-items:center}
+  .gap-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;margin-bottom:12px;overflow:hidden}
+  .gc-head{padding:12px 16px;background:var(--surface2);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+  .gc-sev{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+  .sev-crit{background:var(--red)}.sev-high{background:var(--orange)}.sev-med{background:var(--yellow)}.sev-low{background:var(--teal)}
+  .gc-title{font-weight:600;font-size:14px;flex:1}
+  .gc-body{padding:12px 16px;font-size:13px;color:var(--muted)}
+  .schema-box{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:20px;margin:16px 0}
+  .sb-title{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px}
+  .field-row{display:flex;gap:8px;margin-bottom:6px;align-items:flex-start;font-size:13px}
+  .fn{font-family:var(--mono);font-size:12px;color:var(--code);flex-shrink:0;width:220px}
+  .ft{font-family:var(--mono);font-size:11px;color:var(--teal);flex-shrink:0;width:160px}
+  .fd{color:var(--muted);font-size:12px}
+  .exists{border-left:3px solid var(--green);padding-left:8px}
+  .missing{border-left:3px solid var(--red);padding-left:8px}
+  .partial{border-left:3px solid var(--yellow);padding-left:8px}
+  .program-pill{display:inline-block;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:600;margin:2px}
+  .pp-fha{background:rgba(52,201,122,.15);color:var(--green)}
+  .pp-va{background:rgba(91,110,245,.15);color:var(--accent2)}
+  .pp-usda{background:rgba(46,207,212,.12);color:var(--teal)}
+  .pp-conv{background:rgba(245,200,66,.12);color:var(--yellow)}
+  .pp-hp{background:rgba(245,150,66,.12);color:var(--orange)}
+  .flow{font-family:var(--mono);font-size:12px;color:var(--code);line-height:1.9;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:20px;margin:16px 0;white-space:pre;overflow-x:auto}
+  .epic-grade{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:20px 0}
+  .eg-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px;text-align:center}
+  .eg-name{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+  .eg-grade{font-size:32px;font-weight:700}
+  .eg-sub{font-size:12px;color:var(--muted);margin-top:4px}
+  .grade-a{color:var(--green)}.grade-b{color:var(--teal)}.grade-c{color:var(--yellow)}.grade-d{color:var(--orange)}.grade-f{color:var(--red)}
+  .prio-row{display:flex;gap:12px;margin-bottom:10px;align-items:flex-start}
+  .prio-badge{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:1px}
+  .p-crit{background:rgba(245,86,74,.2);color:var(--red)}
+  .p-high{background:rgba(245,150,66,.2);color:var(--orange)}
+  .p-med{background:rgba(245,200,66,.15);color:var(--yellow)}
+  .p-low{background:rgba(46,207,212,.12);color:var(--teal)}
+  .prio-body{flex:1}
+  .prio-title{font-weight:600;margin-bottom:3px}
+  .prio-detail{font-size:13px;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="layout">
+
+<nav class="sidebar">
+  <div class="brand"><div class="t">MorTru Engine</div><div class="s">Architecture Audit · Epics 1–4</div></div>
+  <div class="ns">Overview</div>
+  <a class="ni active" onclick="show('goal')">End Goal + API Contract</a>
+  <a class="ni" onclick="show('grades')">Audit Grades</a>
+  <div class="ns">Epic Audits</div>
+  <a class="ni" onclick="show('e1')">Epic 1 — Types</a>
+  <a class="ni" onclick="show('e2')">Epic 2 — MISMO</a>
+  <a class="ni" onclick="show('e3')">Epic 3 — RESO</a>
+  <a class="ni" onclick="show('e4')">Epic 4 — ref_data</a>
+  <div class="ns">Gaps</div>
+  <a class="ni" onclick="show('borrower')">BorrowerProfile</a>
+  <a class="ni" onclick="show('dti')">Front-End DTI</a>
+  <a class="ni" onclick="show('pitia')">PITIA Breakdown</a>
+  <a class="ni" onclick="show('reasons')">Reason Code Catalog</a>
+  <a class="ni" onclick="show('mismo_out')">MISMO Output</a>
+  <div class="ns">Remediation</div>
+  <a class="ni" onclick="show('plan')">Remediation Plan</a>
+  <a class="ni" onclick="show('edge')">Edge Cases</a>
+</nav>
+
+<main class="main">
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<div class="tab-pane active" id="tab-goal">
+  <h1>End Goal — Loan Scenario Analysis API</h1>
+  <p style="color:var(--muted);font-size:16px;margin-bottom:24px;">What the system must ultimately produce, and what it must accept as input.</p>
+
+  <div class="callout c-info"><strong>Scope Boundary (User-Defined)</strong>
+  <strong>In scope:</strong> Front-end DTI (housing expense / gross monthly income). The engine computes PITIA and compares it to the borrower's gross monthly income.<br>
+  <strong>Out of scope:</strong> Back-end DTI, existing debts, credit card payments, student loans. These require a licensed loan officer and are deliberately excluded.
+  </div>
+
+  <h2>The API Input</h2>
+  <p>The endpoint accepts <strong>two input formats</strong> — native JSON or MISMO 3.4 XML. Both routes produce identical analysis output.</p>
+
+  <div class="schema-box">
+    <div class="sb-title">Native JSON Input</div>
+    <pre><code>POST /api/v1/analyze
+Content-Type: application/json
+
+{
+  "property": {
+    // Option A: RESO Web API fields (from MLS feed)
+    "ListingKey": "3yd-ABORORTX-12345678",
+    "ListPrice": 459000.00,
+    "StateOrProvince": "TX",
+    ...235 RESO DD 2.0 fields...
+
+    // Option B: Minimal native format (no MLS key required)
+    "address": "1234 Mockingbird Ln",
+    "city": "Kyle",
+    "state": "TX",
+    "zip": "78640",
+    "purchase_price_cents": 45900000,
+    "property_type": "single_family_detached"
+  },
+
+  "borrower": {
+    "gross_monthly_income_cents": 850000,       // $8,500/mo — REQUIRED
+    "credit_score": 720,                         // REQUIRED
+    "down_payment_cents": 16065000,              // $160,650 (3.5%)
+    "down_payment_source": "own_funds",          // own_funds | gift | bridge
+    "is_veteran": false,                         // VA eligibility
+    "veteran_status": null,                      // first_use | subsequent | disabled
+    "is_first_time_buyer": true,                 // HomeReady/HP eligibility
+    "household_size": 3,                         // USDA income limit check
+    "annual_household_income_cents": 10200000,   // USDA (ALL adults, not just borrower)
+    "occupancy": "primary_residence",            // primary | second_home | investment
+    "coborrowers": [                             // optional, income adds for DTI
+      { "gross_monthly_income_cents": 350000, "credit_score": 680 }
+    ]
+  },
+
+  "request": {
+    "purpose": "purchase",                       // purchase | rate_term_refi | cash_out
+    "programs": ["fha", "va", "usda", "conventional", "home_ready"],  // null = all
+    "terms_months": [360, 180],                  // null = [360]
+    "include_arms": false                        // default: false
+  }
+}</code></pre>
+  </div>
+
+  <div class="schema-box">
+    <div class="sb-title">MISMO 3.4 XML Input (Full Coverage Path)</div>
+    <pre><code>POST /api/v1/analyze
+Content-Type: application/xml
+
+&lt;?xml version="1.0"?&gt;
+&lt;MESSAGE xmlns="http://www.mismo.org/residential/2009/schemas"&gt;
+  &lt;DEAL_SETS&gt;&lt;DEAL_SET&gt;&lt;DEALS&gt;&lt;DEAL&gt;
+    &lt;PARTIES&gt;
+      &lt;PARTY&gt;
+        &lt;BORROWER_DETAIL&gt;
+          &lt;CreditScoreValue&gt;720&lt;/CreditScoreValue&gt;
+          &lt;TotalMonthlyIncomeAmount&gt;8500.00&lt;/TotalMonthlyIncomeAmount&gt;
+          &lt;USDATotalAdultHouseholdAnnualIncome&gt;102000&lt;/USDATotalAdultHouseholdAnnualIncome&gt;
+          &lt;FirstTimeHomebuyerIndicator&gt;Y&lt;/FirstTimeHomebuyerIndicator&gt;
+          &lt;SelfEmployedIndicator&gt;N&lt;/SelfEmployedIndicator&gt;
+        &lt;/BORROWER_DETAIL&gt;
+      &lt;/PARTY&gt;
+    &lt;/PARTIES&gt;
+    &lt;COLLATERALS&gt;
+      &lt;COLLATERAL&gt;
+        &lt;SUBJECT_PROPERTY&gt;...property fields...&lt;/SUBJECT_PROPERTY&gt;
+      &lt;/COLLATERAL&gt;
+    &lt;/COLLATERALS&gt;
+    &lt;LOANS&gt;
+      &lt;LOAN&gt;
+        &lt;MORTGAGE_TERMS&gt;
+          &lt;BaseLoanAmount&gt;443261.00&lt;/BaseLoanAmount&gt;
+          &lt;NoteRatePercent&gt;6.875&lt;/NoteRatePercent&gt;
+          &lt;LoanTermMonthsCount&gt;360&lt;/LoanTermMonthsCount&gt;
+        &lt;/MORTGAGE_TERMS&gt;
+      &lt;/LOAN&gt;
+    &lt;/LOANS&gt;
+  &lt;/DEAL&gt;&lt;/DEALS&gt;&lt;/DEAL_SET&gt;&lt;/DEAL_SETS&gt;
+&lt;/MESSAGE&gt;</code></pre>
+  </div>
+
+  <h2>The API Output</h2>
+  <div class="schema-box">
+    <div class="sb-title">Analysis Result — JSON (abbreviated)</div>
+    <pre><code>{
+  "analysis_id": "01927abc-...",
+  "analysis_timestamp": "2025-01-15T14:30:00Z",
+  "data_version_manifest": {
+    "fha_loan_limits": "fha_loan_limits:2025-01-01",
+    "gse_loan_limits": "gse_loan_limits:2025-01-01",
+    "usda_rural_eligibility": "usda_rural_eligibility:2018-08-23",
+    "engine_sha": "a1b2c3d4"
+  },
+
+  "property_summary": {
+    "address": "1234 Mockingbird Ln, Kyle TX 78640",
+    "engine_type": "single_family_detached",
+    "fips_code": "48209",
+    "purchase_price_cents": 45900000,
+    "tax_monthly_cents": 74167,         // $8,900 / 12
+    "hoa_monthly_cents": 7500,          // $75/mo
+    "hoi_monthly_cents_estimated": 17917, // $215/mo state estimate
+    "flood_insurance_required": false
+  },
+
+  "borrower_summary": {
+    "representative_credit_score": 720,
+    "gross_monthly_income_cents": 850000,
+    "combined_income_cents": 1200000,    // with co-borrower
+    "down_payment_cents": 16065000,
+    "down_payment_pct": "3.50%"
+  },
+
+  "scenarios": [
+
+    // ── QUALIFIED scenario ─────────────────────────────────────────────────
+    {
+      "scenario_id": "01927abd-...",
+      "program": "fha",
+      "product": "fixed_fha16_to30",
+      "term_months": 360,
+      "status": "qualified",
+      "qualification_reasons": [],
+
+      "analysis": {
+        "base_loan_amount_cents": 44281350,    // purchase - down payment
+        "ufmip_cents": 774923,                 // 1.75% financed
+        "total_loan_amount_cents": 45056273,
+        "ltv": "96.42%",
+        "rate_bps": 687,                       // 6.875% - illustrative
+        "monthly_pi_cents": 295942,
+        "monthly_mip_cents": 34426,            // FHA annual MIP / 12
+        "monthly_taxes_cents": 74167,
+        "monthly_hoi_cents": 17917,
+        "monthly_hoa_cents": 7500,
+        "monthly_flood_insurance_cents": 0,
+        "total_pitia_cents": 429952,           // $4,299.52/mo
+        "front_end_dti": "35.83%",             // 429952 / 1200000
+        "front_end_dti_limit": "31.00%",
+        "front_end_dti_pass": false            // FAILS DTI at this rate/income
+      }
+    },
+
+    // ── NOT QUALIFIED scenario ─────────────────────────────────────────────
+    {
+      "scenario_id": "01927abe-...",
+      "program": "usda",
+      "product": "fixed_usda30",
+      "term_months": 360,
+      "status": "not_qualified",
+      "qualification_reasons": [
+        {
+          "code": "USDA_INCOME_EXCEEDS_LIMIT",
+          "severity": "fatal",
+          "detail": "Annual household income $102,000 exceeds USDA SFGH limit of $98,400 for a 3-person household in Hays County TX",
+          "threshold_cents": 9840000,
+          "actual_cents": 10200000
+        }
+      ],
+      "analysis": null
+    },
+
+    // ── NOT RECOMMENDED scenario ───────────────────────────────────────────
+    {
+      "scenario_id": "01927abf-...",
+      "program": "fha",
+      "product": "fixed_fha16_to30",
+      "term_months": 360,
+      "status": "not_recommended",
+      "qualification_reasons": [],
+      "recommendation_reasons": [
+        {
+          "code": "FHA_LIFETIME_MIP_AVOIDABLE",
+          "severity": "advisory",
+          "detail": "FHA MIP on loans originated at >90% LTV lasts for the life of the loan. At your credit score of 720 and 3.5% down payment, conventional at 96.5% LTV would eliminate lifetime MIP once LTV reaches 80%.",
+          "cost_difference_5yr_cents": 180000,
+          "alternative_scenario_id": "01927ac0-..."
+        },
+        {
+          "code": "VETERAN_VA_LOAN_AVAILABLE",
+          "severity": "advisory",
+          "detail": "You indicated veteran status. A VA loan requires no down payment, no monthly MI, and typically offers lower rates than FHA.",
+          "alternative_scenario_id": "01927ac1-..."
+        }
+      ],
+      "analysis": { ... }
+    }
+  ]
+}</code></pre>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<div class="tab-pane" id="tab-grades">
+  <h1>Audit Grades</h1>
+
+  <div class="epic-grade">
+    <div class="eg-card">
+      <div class="eg-name">Epic 1 — Types</div>
+      <div class="eg-grade grade-b">B+</div>
+      <div class="eg-sub">Strong primitives, missing profile types</div>
+    </div>
+    <div class="eg-card">
+      <div class="eg-name">Epic 2 — MISMO</div>
+      <div class="eg-grade grade-c">C+</div>
+      <div class="eg-sub">Good input parsing, no output path</div>
+    </div>
+    <div class="eg-card">
+      <div class="eg-name">Epic 3 — RESO</div>
+      <div class="eg-grade grade-a">A−</div>
+      <div class="eg-sub">Comprehensive; minor PITIA helpers missing</div>
+    </div>
+    <div class="eg-card">
+      <div class="eg-name">Epic 4 — ref_data</div>
+      <div class="eg-grade grade-d">D</div>
+      <div class="eg-sub">Missing program eligibility tables</div>
+    </div>
+  </div>
+
+  <h2>Critical Gap Summary</h2>
+  <table>
+    <tr><th>Gap</th><th>Severity</th><th>Affects</th><th>Where to Fix</th></tr>
+    <tr>
+      <td>BorrowerProfile type</td>
+      <td><span class="badge b-red">Critical</span></td>
+      <td>Every analysis — the core input object doesn't exist</td>
+      <td>Epic 1 Task 1.11 (new)</td>
+    </tr>
+    <tr>
+      <td>Program eligibility table (DTI limits, credit mins, LTV maxes)</td>
+      <td><span class="badge b-red">Critical</span></td>
+      <td>All program eligibility decisions</td>
+      <td>Epic 4 Task 4.21 (new)</td>
+    </tr>
+    <tr>
+      <td>Front-end DTI limit by program</td>
+      <td><span class="badge b-red">Critical</span></td>
+      <td>FHA 31%, USDA 29%, Conv 28% — core eligibility gate</td>
+      <td>Epic 4 Task 4.21 (new)</td>
+    </tr>
+    <tr>
+      <td>Minimum credit score by program</td>
+      <td><span class="badge b-red">Critical</span></td>
+      <td>FHA 580, USDA 640, Conv 620 — hard ineligibility</td>
+      <td>Epic 4 Task 4.21 (new)</td>
+    </tr>
+    <tr>
+      <td>LoanScenarioResult / output types</td>
+      <td><span class="badge b-red">Critical</span></td>
+      <td>The API response doesn't have typed structs</td>
+      <td>Epic 1 Task 1.12 (new)</td>
+    </tr>
+    <tr>
+      <td>PITIA monthly breakdown type</td>
+      <td><span class="badge b-red">Critical</span></td>
+      <td>P+I+T+I+A — required for DTI calculation</td>
+      <td>Epic 1 Task 1.12 (new)</td>
+    </tr>
+    <tr>
+      <td>HOI monthly estimate when not in property data</td>
+      <td><span class="badge b-yellow">High</span></td>
+      <td>PITIA calculation — most RESO feeds don't include HOI</td>
+      <td>Epic 4 Task 4.22 (new)</td>
+    </tr>
+    <tr>
+      <td>VeteranStatus enum</td>
+      <td><span class="badge b-yellow">High</span></td>
+      <td>VA funding fee calculation depends on use/disability</td>
+      <td>Epic 1 (add to types)</td>
+    </tr>
+    <tr>
+      <td>ReasonCode catalog</td>
+      <td><span class="badge b-yellow">High</span></td>
+      <td>Not_qualified and not_recommended structured codes</td>
+      <td>Epic 1 Task 1.12 (new)</td>
+    </tr>
+    <tr>
+      <td>MISMO output/response generation</td>
+      <td><span class="badge b-yellow">High</span></td>
+      <td>Full MISMO coverage requires both input AND output</td>
+      <td>Epic 2 Task 2.13+ (new)</td>
+    </tr>
+    <tr>
+      <td>FHA condo approval requirement</td>
+      <td><span class="badge b-teal">Medium</span></td>
+      <td>Not all condos are FHA-approved — needs HUD condo lookup</td>
+      <td>Epic 4 Task 4.23 (new)</td>
+    </tr>
+    <tr>
+      <td>Down payment source validation</td>
+      <td><span class="badge b-teal">Medium</span></td>
+      <td>Gift funds: FHA=OK, Conventional=OK w/ rules, USDA=OK</td>
+      <td>Epic 1 BorrowerProfile</td>
+    </tr>
+    <tr>
+      <td>First-time homebuyer flag</td>
+      <td><span class="badge b-teal">Medium</span></td>
+      <td>HomeOne: FTIB required; HomeReady/HP: income limit waiver possible</td>
+      <td>Epic 1 BorrowerProfile</td>
+    </tr>
+    <tr>
+      <td>Co-borrower credit score selection</td>
+      <td><span class="badge b-teal">Medium</span></td>
+      <td>Lower of two middle scores rule for co-borrowers</td>
+      <td>Epic 1 BorrowerProfile</td>
+    </tr>
+  </table>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<div class="tab-pane" id="tab-e1">
+  <h1>Epic 1 — Types Audit</h1>
+
+  <h2>What Exists ✓</h2>
+  <p>Epic 1 has a very strong foundation. The primitive types are correct, well-tested, and MISMO-mapped:</p>
+
+  <div class="schema-box">
+    <div class="field-row exists"><div class="fn">CreditScore</div><div class="ft">u16 (300–850)</div><div class="fd">validated; middle_of_three(); lower_of_two() — correct industry convention</div></div>
+    <div class="field-row exists"><div class="fn">LtvBasisPoints</div><div class="ft">u32 (0–11000)</div><div class="fd">from_loan_and_value(); handles VA >100%; half-up rounding</div></div>
+    <div class="field-row exists"><div class="fn">DtiBasisPoints</div><div class="ft">u32 (0–∞ w/ log)</div><div class="fd">no hard cap (QM/Temp QM can exceed 43%); logs above 60%</div></div>
+    <div class="field-row exists"><div class="fn">Cents</div><div class="ft">i64</div><div class="fd">integer money; no floating point; all prices in cents</div></div>
+    <div class="field-row exists"><div class="fn">BasisPoints</div><div class="ft">i32</div><div class="fd">interest rates in bps; from_percentage_str()</div></div>
+    <div class="field-row exists"><div class="fn">ProgramCode</div><div class="ft">enum</div><div class="fd">Conventional, HomeReady, HomePossible, HomeOne, Fha, FhaDpa, Va, VaJumbo, Usda, Bond, Jumbo, NonQm + MISMO mappings</div></div>
+    <div class="field-row exists"><div class="fn">LoanProduct</div><div class="ft">enum</div><div class="fd">All fixed and ARM products with term ranges; ARM/construction predicates</div></div>
+    <div class="field-row exists"><div class="fn">LoanPurpose</div><div class="ft">enum</div><div class="fd">Purchase, R&T Refi, CashOut, Construction + MISMO mappings</div></div>
+    <div class="field-row exists"><div class="fn">Occupancy</div><div class="ft">enum</div><div class="fd">PrimaryResidence, SecondHome, Investment + MISMO mappings</div></div>
+    <div class="field-row exists"><div class="fn">TermMonths</div><div class="ft">u16</div><div class="fd">validated; common term constants</div></div>
+    <div class="field-row exists"><div class="fn">StateCode</div><div class="ft">enum</div><div class="fd">All 56 US state/territory codes; from_str case-insensitive</div></div>
+    <div class="field-row exists"><div class="fn">FipsCode</div><div class="ft">String (5-digit)</div><div class="fd">validated; FromStr; Display</div></div>
+    <div class="field-row exists"><div class="fn">AmortizationType</div><div class="ft">enum</div><div class="fd">Fixed, Arm + MISMO mappings</div></div>
+    <div class="field-row exists"><div class="fn">LockPeriod</div><div class="ft">enum</div><div class="fd">15/21/30/45/60/75/90 day locks</div></div>
+    <div class="field-row exists"><div class="fn">MlsListingKey</div><div class="fn">ScenarioId</div><div class="fn">AnalysisId</div><div class="fd">identifier types</div></div>
+  </div>
+
+  <h2>Critical Gaps</h2>
+
+  <div class="gap-card">
+    <div class="gc-head"><div class="gc-sev sev-crit"></div><div class="gc-title">BorrowerProfile — the core input type does not exist</div><span class="badge b-red">Critical</span></div>
+    <div class="gc-body">
+      <p>The entire analysis pipeline receives borrower data, but there is no <code>BorrowerProfile</code> struct anywhere in the codebase. Every downstream epic (eligibility, pricing, scenarios, orchestrator) needs this type. It must be defined in <code>types</code> so all crates can depend on it without circular references.</p>
+      <pre><code>// Needs to be added to crates/types/src/borrower_profile.rs
+pub struct BorrowerProfile {
+    // ── Income (front-end DTI only) ───────────────────────────────────────
+    /// Combined gross monthly income of all borrowers on the note.
+    /// This is what drives front-end DTI. Back-end DTI is out of scope.
+    pub gross_monthly_income: Cents,
+
+    // ── Credit ────────────────────────────────────────────────────────────
+    /// Representative credit score per industry convention:
+    ///   Single borrower: middle of 3 bureau scores
+    ///   Co-borrower: lower of the two borrowers' middle scores
+    pub representative_credit_score: CreditScore,
+
+    // ── Down payment ──────────────────────────────────────────────────────
+    pub down_payment: Cents,
+    pub down_payment_source: DownPaymentSource, // OwnFunds | Gift | Bridge
+
+    // ── Program eligibility flags ─────────────────────────────────────────
+    pub occupancy: Occupancy,
+    pub loan_purpose: LoanPurpose,
+    pub is_first_time_buyer: bool,
+    pub veteran_status: Option&lt;VeteranStatus&gt;,  // None = not a veteran
+
+    // ── USDA-specific (household, not just borrowers) ─────────────────────
+    /// Number of people (including non-borrowers) who will live in the home.
+    /// USDA uses household income from ALL adults, not just borrowers.
+    pub household_size: Option&lt;u8&gt;,
+    /// Annual income of all adults in the household (USDA only).
+    pub annual_household_income: Option&lt;Cents&gt;,
+
+    // ── Co-borrower raw scores (for representative score calculation) ──────
+    pub coborrower_credit_scores: Vec&lt;CreditScore&gt;,
+    pub coborrower_monthly_incomes: Vec&lt;Cents&gt;,
+}</code></pre>
+    </div>
+  </div>
+
+  <div class="gap-card">
+    <div class="gc-head"><div class="gc-sev sev-crit"></div><div class="gc-title">VeteranStatus enum — missing</div><span class="badge b-red">Critical</span></div>
+    <div class="gc-body">
+      <p>VA funding fee differs significantly by veteran status. Without this enum, VA scenarios cannot compute the funding fee, which is the largest cost difference between first-use and subsequent-use VA loans.</p>
+      <pre><code>pub enum VeteranStatus {
+    /// First-time VA loan use, no disability. Funding fee: 2.15% (3.5% if &gt;10% down already paid → 1.5%)
+    FirstUse,
+    /// Subsequent use of VA benefit. Funding fee: 3.3%.
+    SubsequentUse,
+    /// Disability-exempt. Funding fee: 0% (waived entirely).
+    DisabilityExempt,
+    /// National Guard / Reserves - different funding fee than active duty
+    NationalGuardFirstUse,
+    NationalGuardSubsequent,
+}</code></pre>
+    </div>
+  </div>
+
+  <div class="gap-card">
+    <div class="gc-head"><div class="gc-sev sev-crit"></div><div class="gc-title">LoanScenarioResult + PitiaBreakdown output types — missing</div><span class="badge b-red">Critical</span></div>
+    <div class="gc-body">
+      <p>The API response needs typed output structs. Currently there is no <code>LoanScenarioResult</code>, <code>PitiaBreakdown</code>, <code>QualificationStatus</code>, or <code>ReasonCode</code> type. Without these, no downstream crate can return a structured analysis result.</p>
+    </div>
+  </div>
+
+  <div class="gap-card">
+    <div class="gc-head"><div class="gc-sev sev-high"></div><div class="gc-title">DownPaymentSource enum — missing</div><span class="badge b-yellow">High</span></div>
+    <div class="gc-body">
+      <p>The source of down payment funds affects eligibility rules. Gift funds are allowed for FHA (any amount), conventional (with restrictions at &lt;20% down), and USDA (documentation required). A bridge loan or equity from sale has different treatment. This is a required field in BorrowerProfile.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<div class="tab-pane" id="tab-e2">
+  <h1>Epic 2 — MISMO Audit</h1>
+
+  <h2>What Exists ✓</h2>
+  <table>
+    <tr><th>Module</th><th>Coverage</th><th>Status</th></tr>
+    <tr><td>loan_terms.rs</td><td>BaseLoanAmount, NoteRatePercent, LoanTermMonthsCount, ProgramCode, LoanPurpose, LienPriority</td><td><span class="badge b-green">✓ Done</span></td></tr>
+    <tr><td>party.rs</td><td>BorrowerDetail: CreditScoreValue, TotalMonthlyIncomeAmount, SelfEmployedIndicator, USDATotalAdultHouseholdAnnualIncome, AffiliatedBusinessIndicator</td><td><span class="badge b-green">✓ Done</span></td></tr>
+    <tr><td>collateral.rs</td><td>SubjectProperty, Address, PropertyType fields</td><td><span class="badge b-green">✓ Done</span></td></tr>
+    <tr><td>aus.rs</td><td>DU/LP AUS responses, recommendation codes, LTV/DTI from AUS output</td><td><span class="badge b-green">✓ Done</span></td></tr>
+    <tr><td>mi.rs</td><td>MI schema types</td><td><span class="badge b-green">✓ Done</span></td></tr>
+    <tr><td>closing_cost.rs</td><td>Closing cost container types</td><td><span class="badge b-green">✓ Done</span></td></tr>
+    <tr><td>message.rs</td><td>ParsedDeal assembly from full MISMO message</td><td><span class="badge b-green">✓ Done</span></td></tr>
+  </table>
+
+  <h2>Critical Gaps</h2>
+
+  <div class="gap-card">
+    <div class="gc-head"><div class="gc-sev sev-crit"></div><div class="gc-title">No method to populate BorrowerProfile from ParsedDeal</div><span class="badge b-red">Critical</span></div>
+    <div class="gc-body">
+      <p><code>ParsedDeal</code> contains borrower data but there is no method to extract it into a <code>BorrowerProfile</code>. The ingest bridge (Epic 6) will need this. Without it, the MISMO input path cannot produce the same analysis as the native JSON path.</p>
+      <pre><code>// Needs to be added — ParsedDeal → BorrowerProfile conversion
+impl ParsedDeal {
+    pub fn to_borrower_profile(&amp;self) -> Result&lt;BorrowerProfile, IngestError&gt;
+}</code></pre>
+    </div>
+  </div>
+
+  <div class="gap-card">
+    <div class="gc-head"><div class="gc-sev sev-crit"></div><div class="gc-title">MISMO OUTPUT not implemented — only input parsing exists</div><span class="badge b-red">Critical</span></div>
+    <div class="gc-body">
+      <p>"Full MISMO 3.4 coverage" means the system can both <strong>receive</strong> MISMO and <strong>produce</strong> MISMO. Currently Epic 2 only parses MISMO XML. There is no path that takes a <code>LoanAnalysisResult</code> and produces a MISMO 3.4 XML document. This is required for:</p>
+      <ul>
+        <li>LOS (Loan Origination Software) integration — almost all LOS systems accept MISMO 3.4 deal set format</li>
+        <li>AUS submission — Fannie Mae Desktop Underwriter accepts MISMO format loan files</li>
+        <li>Compliance audit trail — MISMO is the regulatory standard format</li>
+      </ul>
+      <pre><code>// Needs to be added to mismo crate — output direction
+pub fn analysis_to_mismo_xml(
+    analysis: &amp;LoanAnalysisResult,
+    borrower: &amp;BorrowerProfile,
+    property: &amp;PropertyEnriched,
+) -> Result&lt;String, MismoError&gt;</code></pre>
+    </div>
+  </div>
+
+  <div class="gap-card">
+    <div class="gc-head"><div class="gc-sev sev-high"></div><div class="gc-title">VA entitlement fields not captured in BorrowerDetail</div><span class="badge b-yellow">High</span></div>
+    <div class="gc-body">
+      <p>MISMO has specific fields for VA entitlement: <code>VeteranServiceType</code>, <code>VALoanEntitlementType</code>, <code>DisabilityStatusIndicator</code>. The current <code>BorrowerDetail</code> struct does not parse these, meaning VA scenarios from MISMO input will not have funding fee information.</p>
+    </div>
+  </div>
+
+  <div class="gap-card">
+    <div class="gc-head"><div class="gc-sev sev-high"></div><div class="gc-title">FirstTimeHomebuyerIndicator not in BorrowerDetail</div><span class="badge b-yellow">High</span></div>
+    <div class="gc-body">
+      <p>MISMO has <code>FirstTimeHomebuyerIndicator</code>. This is required for HomeOne eligibility (FTIB required) and HomeReady/HomePossible census tract waiver determination. Currently not parsed.</p>
+    </div>
+  </div>
+
+  <div class="gap-card">
+    <div class="gc-head"><div class="gc-sev sev-high"></div><div class="gc-title">Household size not in BorrowerDetail</div><span class="badge b-yellow">High</span></div>
+    <div class="gc-body">
+      <p>USDA income limits require household size (number of people in the home). MISMO has no standard field for this — it needs to be an extension field or a native API parameter. Currently there is no path to populate <code>BorrowerProfile.household_size</code> from MISMO input.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<div class="tab-pane" id="tab-e3">
+  <h1>Epic 3 — RESO Audit</h1>
+
+  <h2>Status: A− — Very strong, three targeted additions needed</h2>
+  <p>Epic 3 is the most complete epic relative to its end-goal function. <code>PropertyEnriched</code> provides virtually everything the PITIA calculation and eligibility engine need from the property side.</p>
+
+  <h2>What Exists ✓ (PITIA-relevant fields)</h2>
+  <table>
+    <tr><th>Field</th><th>Used For</th><th>Status</th></tr>
+    <tr><td>hoa_monthly_cents</td><td>PITIA "A" component</td><td><span class="badge b-green">✓ Done</span></td></tr>
+    <tr><td>tax_annual_cents</td><td>PITIA "T" component (÷12)</td><td><span class="badge b-green">✓ Done</span></td></tr>
+    <tr><td>flood_zone + flood_insurance_required</td><td>PITIA extra "I" when in SFHA</td><td><span class="badge b-green">✓ Done</span></td></tr>
+    <tr><td>engine_type</td><td>Selects which programs are eligible</td><td><span class="badge b-green">✓ Done</span></td></tr>
+    <tr><td>unit_count</td><td>FHA/GSE limit selection (1–4 unit)</td><td><span class="badge b-green">✓ Done</span></td></tr>
+    <tr><td>fips_code</td><td>Loan limit and USDA eligibility lookup key</td><td><span class="badge b-green">✓ Done</span></td></tr>
+    <tr><td>tract_geoid</td><td>AMI and USDA tract-level checks</td><td><span class="badge b-green">✓ Done</span></td></tr>
+    <tr><td>is_mobile_home</td><td>Hard ineligibility for all agency programs</td><td><span class="badge b-green">✓ Done</span></td></tr>
+    <tr><td>has_land_lease</td><td>USDA ineligible; affects FHA condo; affects VA</td><td><span class="badge b-green">✓ Done</span></td></tr>
+    <tr><td>is_attached</td><td>Condo/townhouse determination for PMI/MIP pricing</td><td><span class="badge b-green">✓ Done</span></td></tr>
+    <tr><td>year_built</td><td>Age affects FHA/VA property condition requirements</td><td><span class="badge b-green">✓ Done</span></td></tr>
+    <tr><td>list_price / close_price</td><td>Purchase price for LTV and loan amount calculation</td><td><span class="badge b-green">✓ Done</span></td></tr>
+  </table>
+
+  <h2>Three Additions Needed</h2>
+
+  <div class="gap-card">
+    <div class="gc-head"><div class="gc-sev sev-high"></div><div class="gc-title">monthly_tax_cents() helper — trivial but important</div><span class="badge b-yellow">High</span></div>
+    <div class="gc-body">
+      <p><code>tax_annual_cents</code> is in <code>PropertyEnriched</code> but there is no <code>monthly_tax_cents()</code> helper. The PITIA calculation needs monthly tax, and dividing by 12 with correct rounding (round-up to be conservative for borrower benefit) should be a method, not inline arithmetic repeated at every call site.</p>
+      <pre><code>// Add to property/listing.rs
+impl PropertyReso {
+    /// Monthly property tax = TaxAnnualAmount / 12, rounded up to the nearest cent.
+    /// Conservative rounding protects borrower from underestimating payment.
+    pub fn monthly_tax_cents(&amp;self) -> Option&lt;Cents&gt; {
+        self.tax_annual_cents.map(|annual| {
+            Cents((annual.0 + 11) / 12)  // ceiling division
+        })
+    }
+}</code></pre>
+    </div>
+  </div>
+
+  <div class="gap-card">
+    <div class="gc-head"><div class="gc-sev sev-high"></div><div class="gc-title">HOI monthly estimate — property data almost never includes HOI</div><span class="badge b-yellow">High</span></div>
+    <div class="gc-body">
+      <p>RESO data does not include homeowner's insurance premium. For PITIA calculation the engine needs an HOI estimate. RESO properties have the property state and value — an estimator can use state-average rates to produce a reasonable monthly amount. Without this, the engine cannot compute a complete PITIA or front-end DTI.</p>
+      <p><strong>Estimation method:</strong> Annual HOI ≈ <code>property_value × state_rate</code>. For example, Texas averages ~0.17% per year. $459,000 × 0.0017 / 12 = $65/month. This is stored in <code>ref_data</code> as a state-level rate table (Task 4.22, new).</p>
+      <p>Note: RESO does not have an <code>InsurancePremiumAnnual</code> field. The estimate is always required unless the borrower provides actual HOI quote data.</p>
+    </div>
+  </div>
+
+  <div class="gap-card">
+    <div class="gc-head"><div class="gc-sev sev-med"></div><div class="gc-title">Flood insurance monthly estimate — when required, amount is unknown</div><span class="badge b-teal">Medium</span></div>
+    <div class="gc-body">
+      <p>When <code>flood_insurance_required = true</code> (FloodZone AE/VE/etc.), the engine knows flood insurance is needed but has no amount to include in PITIA. A state or zone-based minimum estimate is needed — FEMA's minimum NFIP premium for a residential structure in a SFHA zone is approximately $700–$1,200/year. A conservative floor estimate of $1,200/year ($100/month) should be used when the actual premium is unknown.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<div class="tab-pane" id="tab-e4">
+  <h1>Epic 4 — ref_data Audit</h1>
+
+  <div class="callout c-danger"><strong>Grade D — Missing the most critical eligibility tables</strong>Epic 4 has excellent geo/income eligibility types (FHA limits, GSE limits, USDA, AMI), but is completely missing the program-level eligibility rules that the engine needs first. Before any geographic check runs, the engine must verify credit score, DTI, and LTV. None of these program-level guardrails are in the data model.</div>
+
+  <h2>What Exists / Is Planned ✓</h2>
+  <table>
+    <tr><th>Data</th><th>Task</th><th>Status</th></tr>
+    <tr><td>FHA loan limits (county, 1–4 unit)</td><td>4.5</td><td><span class="badge b-yellow">Planned</span></td></tr>
+    <tr><td>GSE conforming limits + high-balance flag</td><td>4.6</td><td><span class="badge b-yellow">Planned</span></td></tr>
+    <tr><td>USDA rural eligibility (tract level)</td><td>4.7</td><td><span class="badge b-yellow">Planned</span></td></tr>
+    <tr><td>USDA income limits (SFGH, 8 family sizes)</td><td>4.9</td><td><span class="badge b-yellow">Planned</span></td></tr>
+    <tr><td>AMI tract data (50/80/100/115% AMI)</td><td>4.10</td><td><span class="badge b-yellow">Planned</span></td></tr>
+    <tr><td>GeoEligibility unified query</td><td>4.19</td><td><span class="badge b-yellow">Planned</span></td></tr>
+    <tr><td>FHA MIP rates</td><td>4.13</td><td><span class="badge b-yellow">Planned</span></td></tr>
+    <tr><td>VA funding fee table</td><td>4.14</td><td><span class="badge b-yellow">Planned</span></td></tr>
+    <tr><td>LLPA matrices</td><td>4.15</td><td><span class="badge b-yellow">Planned</span></td></tr>
+  </table>
+
+  <h2>Critical Missing: Program Eligibility Rules Table (Task 4.21, new)</h2>
+
+  <div class="gap-card">
+    <div class="gc-head"><div class="gc-sev sev-crit"></div><div class="gc-title">Front-end DTI maximum limits by program — NOT IN THE PLAN</div><span class="badge b-red">Critical</span></div>
+    <div class="gc-body">
+      <p>The engine cannot perform eligibility analysis without front-end DTI limits. These must be stored as ref_data (not hardcoded) because agencies update them and lenders can apply overlays.</p>
+      <table>
+        <tr><th>Program</th><th>Front-End DTI Max</th><th>With Compensating Factors</th><th>Notes</th></tr>
+        <tr><td><span class="program-pill pp-fha">FHA</span></td><td>31.00%</td><td>46.99% (AUS approval)</td><td>31% is the standard underwriting threshold</td></tr>
+        <tr><td><span class="program-pill pp-va">VA</span></td><td>No limit</td><td>No limit</td><td>VA uses only residual income, not front-end DTI</td></tr>
+        <tr><td><span class="program-pill pp-usda">USDA</span></td><td>29.00%</td><td>32.00% (with waivers)</td><td>Stricter than FHA</td></tr>
+        <tr><td><span class="program-pill pp-conv">Conventional</span></td><td>28.00%</td><td>36.00%+ (DU/LP approval)</td><td>Standard guideline; DU can approve above this</td></tr>
+        <tr><td><span class="program-pill pp-hp">HomeReady/HP</span></td><td>36.00%</td><td>45.00% (DU approval)</td><td>More lenient than standard conventional</td></tr>
+        <tr><td><span class="program-pill pp-hp">HomeOne</span></td><td>28.00%</td><td>36.00%</td><td>Same as standard conventional</td></tr>
+      </table>
+      <div class="callout c-warn"><strong>VA Note</strong>VA does not use front-end DTI. Instead, VA uses residual income (take-home pay minus PITIA and estimated living expenses). Since back-end DTI and living expenses are out of scope, VA front-end DTI should be set to a very high number (e.g. 999%) in the data store to ensure it never triggers a DTI failure. The analysis output should note that VA uses residual income, not front-end DTI.</div>
+    </div>
+  </div>
+
+  <div class="gap-card">
+    <div class="gc-head"><div class="gc-sev sev-crit"></div><div class="gc-title">Minimum credit score by program — NOT IN THE PLAN</div><span class="badge b-red">Critical</span></div>
+    <div class="gc-body">
+      <table>
+        <tr><th>Program</th><th>Min Credit Score</th><th>Special Rules</th></tr>
+        <tr><td><span class="program-pill pp-fha">FHA</span></td><td>580 (3.5% down) / 500 (10% down)</td><td>Below 500 is hard ineligible</td></tr>
+        <tr><td><span class="program-pill pp-va">VA</span></td><td>620 (lender overlay)</td><td>VA itself has no minimum; typical lender overlay is 620</td></tr>
+        <tr><td><span class="program-pill pp-usda">USDA</span></td><td>640</td><td>Below 640 requires manual underwriting (rare approval)</td></tr>
+        <tr><td><span class="program-pill pp-conv">Conventional</span></td><td>620</td><td>Below 620 = ineligible for FNMA/FHLMC delivery</td></tr>
+        <tr><td><span class="program-pill pp-hp">HomeReady/HP/HomeOne</span></td><td>620</td><td>Same as conventional</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="gap-card">
+    <div class="gc-head"><div class="gc-sev sev-crit"></div><div class="gc-title">Maximum LTV / minimum down payment by program and credit tier — NOT IN THE PLAN</div><span class="badge b-red">Critical</span></div>
+    <div class="gc-body">
+      <table>
+        <tr><th>Program</th><th>Max LTV</th><th>Min Down</th><th>Credit Dependency</th></tr>
+        <tr><td><span class="program-pill pp-fha">FHA</span></td><td>96.50%</td><td>3.50%</td><td>Requires credit score ≥580; drops to 90% LTV if 500–579</td></tr>
+        <tr><td><span class="program-pill pp-va">VA</span></td><td>100.00%</td><td>0%</td><td>Full entitlement: no down required; VA can go up to ~103% (financed fee)</td></tr>
+        <tr><td><span class="program-pill pp-usda">USDA</span></td><td>100.00%</td><td>0%</td><td>Can finance guarantee fee; effectively ~101%</td></tr>
+        <tr><td><span class="program-pill pp-hp">HomeReady/HP</span></td><td>97.00%</td><td>3%</td><td>Same for all 620+ scores</td></tr>
+        <tr><td><span class="program-pill pp-hp">HomeOne</span></td><td>97.00%</td><td>3%</td><td>First-time buyer required; same LTV</td></tr>
+        <tr><td><span class="program-pill pp-conv">Conventional (standard)</span></td><td>95.00%</td><td>5%</td><td>No PMI = 80% LTV; high-balance conventional = 90% max</td></tr>
+        <tr><td><span class="program-pill pp-conv">Conventional (high-balance)</span></td><td>90.00%</td><td>10%</td><td>Loan amount above standard conforming limit</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="gap-card">
+    <div class="gc-head"><div class="gc-sev sev-high"></div><div class="gc-title">HOI estimation by state — NOT IN THE PLAN</div><span class="badge b-yellow">High</span></div>
+    <div class="gc-body">
+      <p>RESO data never includes HOI (homeowner's insurance) premiums. To compute PITIA, the engine must estimate HOI. The estimation method: <code>purchase_price × state_annual_rate / 12</code>. This requires a ref_data table of annual HOI rate by state (e.g. TX = 0.17%, CA = 0.08%, FL = 0.21%). Without this, PITIA and front-end DTI cannot be calculated for any property.</p>
+    </div>
+  </div>
+
+  <div class="gap-card">
+    <div class="gc-head"><div class="gc-sev sev-med"></div><div class="gc-title">FHA condo project approval — NOT IN THE PLAN</div><span class="badge b-teal">Medium</span></div>
+    <div class="gc-body">
+      <p>Not all condominiums are FHA-approved. For a condo to receive FHA financing, the project must be on the HUD Approved Condominiums list (or use single-unit approval for certain conditions). Without checking HUD's condo approval database, the engine will incorrectly mark some condos as FHA-eligible. The HUD condo API is queryable at <code>https://www.hud.gov/program_offices/housing/sfh/apprlenderinstruct</code>.</p>
+      <p><strong>Recommended approach:</strong> In the analysis output, flag all condo FHA scenarios as "pending condo project approval verification" rather than fully qualified. The eligibility engine should note this with reason code <code>FHA_CONDO_PROJECT_APPROVAL_REQUIRED</code>.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<div class="tab-pane" id="tab-borrower">
+  <h1>BorrowerProfile — Complete Design</h1>
+  <p>New type needed in Epic 1. This is the single most important missing piece — every downstream epic needs this type.</p>
+
+  <pre><code>// crates/types/src/borrower_profile.rs
+
+/// How the borrower's down payment funds were sourced.
+/// Source affects gift documentation requirements and program eligibility.
+#[derive(Copy, Clone, Debug, PartialEq, Eq, Hash, Serialize, Deserialize)]
+pub enum DownPaymentSource {
+    OwnFunds,      // savings, investments, sale of asset — no restriction
+    Gift,          // gift from family member — documentation required
+    Bridge,        // equity bridge from home being sold — affects timing
+    DownPaymentAssistance, // DPA grant/loan from HFA or nonprofit
+}
+
+/// The borrower's VA entitlement and funding fee tier.
+#[derive(Copy, Clone, Debug, PartialEq, Eq, Hash, Serialize, Deserialize)]
+pub enum VeteranStatus {
+    FirstUse,                    // 2.15% fee (standard purchase); 0% if disabled
+    SubsequentUse,               // 3.30% fee
+    DisabilityExempt,            // 0% fee — always preferred
+    NationalGuardReservesFirst,  // 2.40% fee (Guard/Reserves)
+    NationalGuardReservesSubseq, // 3.30% fee
+}
+
+/// Borrower's employment / income type.
+/// Affects income documentation requirements (not income amount or DTI calc).
+#[derive(Copy, Clone, Debug, PartialEq, Eq, Hash, Serialize, Deserialize)]
+pub enum EmploymentType {
+    W2FullTime,    // standard W-2 employment — simplest documentation
+    W2PartTime,    // part-time; must show 2yr history to count full amount
+    SelfEmployed,  // 2yr tax returns required; net income used
+    Commission,    // 2yr average if variable
+    Retired,       // pension/SS income — stable; good for programs
+    Military,      // base pay + BAH eligible
+}
+
+/// The complete borrower input for the analysis engine.
+pub struct BorrowerProfile {
+    // ── Income (front-end DTI only — back-end is out of scope) ────────────────
+    /// Gross monthly qualifying income for all borrowers combined.
+    /// This is the number used for front-end DTI.
+    /// W-2: gross salary / 12
+    /// Self-employed: 2-year average net income / 12
+    pub gross_monthly_income: Cents,
+    pub employment_type: EmploymentType,
+
+    // ── Credit ────────────────────────────────────────────────────────────────
+    /// Representative credit score per agency convention:
+    ///   Single borrower: middle score of 3 bureau pulls
+    ///   Co-borrowers: lower of each borrower's middle score
+    /// Engine uses this for all eligibility and pricing tier lookups.
+    pub representative_credit_score: CreditScore,
+
+    // ── Transaction ───────────────────────────────────────────────────────────
+    pub occupancy: Occupancy,
+    pub loan_purpose: LoanPurpose,
+
+    // ── Down payment ──────────────────────────────────────────────────────────
+    pub down_payment: Cents,
+    pub down_payment_source: DownPaymentSource,
+
+    // ── Program eligibility flags ─────────────────────────────────────────────
+    /// First-time homebuyer: required for HomeOne; expands options for HomeReady/HP.
+    pub is_first_time_buyer: bool,
+    /// VA entitlement details. None = borrower is not a veteran.
+    pub veteran_status: Option&lt;VeteranStatus&gt;,
+    /// Existing VA loan not yet paid off → reduced/impaired entitlement.
+    /// Affects whether loan limit applies to VA loans.
+    pub has_existing_va_loan: bool,
+
+    // ── USDA-specific (different income definition) ───────────────────────────
+    /// Total people who will live in the home (all ages).
+    /// Used to look up USDA SFGH income limit for the right family size.
+    /// None = USDA income check deferred / not applicable.
+    pub household_size: Option&lt;u8&gt;,
+    /// Combined annual income of ALL adults (18+) in the home, including
+    /// non-borrowers. This is the USDA-specific income figure.
+    /// Different from gross_monthly_income × 12 when non-borrower adults exist.
+    pub annual_household_income: Option&lt;Cents&gt;,
+
+    // ── Co-borrower details ───────────────────────────────────────────────────
+    /// For the analysis, co-borrower incomes are already rolled into
+    /// gross_monthly_income above. These are kept separately for:
+    /// 1) Representative credit score calculation (lower of middle scores)
+    /// 2) Verification: combined income ≥ gross_monthly_income
+    pub coborrower_credit_scores: Vec&lt;CreditScore&gt;, // empty if no co-borrower
+}</code></pre>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<div class="tab-pane" id="tab-dti">
+  <h1>Front-End DTI — End-to-End Path</h1>
+
+  <h2>What Front-End DTI Means in This Engine</h2>
+  <p><strong>Front-End DTI = PITIA / Gross Monthly Income</strong></p>
+  <p>Where PITIA = Principal + Interest + Taxes + Insurance + Association (HOA)</p>
+
+  <div class="callout c-info"><strong>Scope Boundary</strong>The engine calculates front-end DTI only. Back-end DTI (which adds all monthly debt obligations to housing cost) requires knowledge of credit card minimums, student loans, auto loans, and other debts. These must be provided by a licensed loan officer and are out of scope. The analysis output clearly labels all DTI figures as "front-end only."</div>
+
+  <h2>PITIA Component Sources</h2>
+  <table>
+    <tr><th>Component</th><th>Source</th><th>How Computed</th></tr>
+    <tr><td><strong>P</strong> — Principal</td><td>Amortization (crate: amort)</td><td>From rate, loan amount, term</td></tr>
+    <tr><td><strong>I</strong> — Interest</td><td>Amortization (crate: amort)</td><td>From rate, loan amount, term</td></tr>
+    <tr><td><strong>T</strong> — Taxes</td><td>PropertyEnriched.tax_annual_cents</td><td>Annual / 12 (ceiling)</td></tr>
+    <tr><td><strong>I</strong> — Insurance (HOI)</td><td>PropertyEnriched or estimate</td><td>From RESO data or state rate × value / 12</td></tr>
+    <tr><td><strong>I</strong> — Insurance (MIP/PMI)</td><td>ref_data: FHA MIP or Conv PMI rates</td><td>By program, LTV, credit score, term</td></tr>
+    <tr><td><strong>I</strong> — Insurance (Flood)</td><td>PropertyEnriched.flood_insurance_required</td><td>Actual or floor estimate ($100/mo)</td></tr>
+    <tr><td><strong>A</strong> — Association (HOA)</td><td>PropertyEnriched.hoa_monthly_cents</td><td>Already normalized to monthly</td></tr>
+    <tr><td><strong>G</strong> — Guarantee/Annual fee</td><td>ref_data: USDA/VA annual fees</td><td>By program, loan amount</td></tr>
+  </table>
+
+  <h2>Program-Specific Insurance Components</h2>
+  <table>
+    <tr><th>Program</th><th>Upfront Fee (financed)</th><th>Monthly Fee</th><th>Cancellation</th></tr>
+    <tr><td><span class="program-pill pp-fha">FHA</span></td><td>UFMIP: 1.75% of base loan</td><td>MIP: 0.50–0.85% annual / 12</td><td>LTV ≤ 90%: cancels at 11yr; LTV &gt;90%: life of loan</td></tr>
+    <tr><td><span class="program-pill pp-va">VA</span></td><td>Funding fee: 0–3.3%</td><td>None (no monthly MI)</td><td>N/A — no monthly MI</td></tr>
+    <tr><td><span class="program-pill pp-usda">USDA</span></td><td>Guarantee fee: 1.00%</td><td>Annual fee: 0.35% / 12</td><td>Life of loan (currently no cancellation)</td></tr>
+    <tr><td><span class="program-pill pp-conv">Conventional PMI</span></td><td>None (or buyout option)</td><td>By LTV/FICO grid (typically 0.2–1.5%)</td><td>Cancels at 80% LTV (Homeowners Protection Act)</td></tr>
+    <tr><td><span class="program-pill pp-hp">HomeReady/HP PMI</span></td><td>None</td><td>Reduced rate vs standard conv</td><td>Same as conventional (80% LTV)</td></tr>
+  </table>
+
+  <h2>DTI Calculation Example — Kyle TX SFR</h2>
+  <pre><code>Inputs:
+  Purchase price:    $459,000
+  Down payment:      $16,065 (3.5%)
+  Base loan:         $442,935
+  UFMIP (FHA 1.75%): $7,751 (financed)
+  Total loan:        $450,686
+  Rate:              6.875% (illustrative)
+  Term:              360 months
+  Gross income:      $8,500/mo (single borrower)
+
+PITIA breakdown:
+  P + I:   $2,959/mo  (amortization: $450,686 × 6.875% / 12, 360 months)
+  T:       $   742/mo  ($8,900/yr ÷ 12, ceiling)
+  I (HOI): $   215/mo  (state estimate: $459,000 × 0.0056% ≈ TX average)
+  I (MIP): $   313/mo  (FHA: 0.85% × $442,935 / 12 = $313.41)
+  A (HOA): $    75/mo  (from PropertyEnriched)
+  ─────────────────────
+  PITIA:   $4,304/mo
+
+Front-end DTI:  $4,304 / $8,500 = 50.6%  ← EXCEEDS FHA 31% limit → NOT QUALIFIED
+
+With co-borrower adding $3,500/mo:
+  Combined income: $12,000/mo
+  Front-end DTI:  $4,304 / $12,000 = 35.9%  ← still exceeds FHA 31% limit
+
+Conclusion: $459,000 purchase with 3.5% down at 6.875% does not qualify
+on front-end DTI for FHA at $8,500–$12,000/mo income.
+The engine surfaces this with REASON_CODE: FHA_FRONT_END_DTI_EXCEEDED.</code></pre>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<div class="tab-pane" id="tab-pitia">
+  <h1>PITIA Breakdown — Type Design</h1>
+
+  <pre><code>// crates/types/src/pitia.rs — new type needed
+
+/// Complete housing payment breakdown for one loan scenario.
+/// All amounts are monthly in Cents. P+I is from the amortization engine.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct PitiaBreakdown {
+    // ── P + I ─────────────────────────────────────────────────────────────
+    pub monthly_principal_and_interest: Cents,
+
+    // ── T ─────────────────────────────────────────────────────────────────
+    pub monthly_property_tax: Cents,
+    /// True if this is an estimate (tax not in property data — computed
+    /// from assessed value × estimated rate).
+    pub property_tax_estimated: bool,
+
+    // ── I (standard HOI) ──────────────────────────────────────────────────
+    pub monthly_homeowners_insurance: Cents,
+    /// True if HOI is a state-average estimate (no actual quote provided).
+    pub hoi_estimated: bool,
+
+    // ── I (program MI) ────────────────────────────────────────────────────
+    /// Monthly mortgage insurance (FHA MIP, USDA annual fee, or Conv PMI).
+    /// Zero for VA (no monthly MI).
+    pub monthly_mortgage_insurance: Cents,
+    pub mortgage_insurance_type: MortgageInsuranceType,
+    /// LTV at which monthly MI cancels. None = life of loan (FHA &gt;90% LTV).
+    pub mi_cancels_at_ltv: Option&lt;LtvBasisPoints&gt;,
+
+    // ── I (flood — only when in SFHA) ─────────────────────────────────────
+    /// Monthly flood insurance. Zero when not in SFHA zone.
+    pub monthly_flood_insurance: Cents,
+    pub flood_insurance_estimated: bool,
+
+    // ── A ─────────────────────────────────────────────────────────────────
+    /// Monthly HOA dues. Zero if no HOA.
+    pub monthly_hoa: Cents,
+
+    // ── Totals ────────────────────────────────────────────────────────────
+    pub total_pitia: Cents,
+}
+
+impl PitiaBreakdown {
+    /// Front-end DTI as basis points. Caller provides gross monthly income.
+    pub fn front_end_dti(&amp;self, gross_monthly_income: Cents) -> DtiBasisPoints {
+        if gross_monthly_income.0 &lt;= 0 { return DtiBasisPoints::new(u32::MAX); }
+        let bps = (i64::from(self.total_pitia.0) * 10_000
+                   / i64::from(gross_monthly_income.0)) as u32;
+        DtiBasisPoints::new(bps)
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub enum MortgageInsuranceType {
+    FhaMip,          // FHA mortgage insurance premium
+    ConventionalPmi, // private mortgage insurance
+    UsdaAnnualFee,   // USDA annual guarantee fee (0.35%)
+    None,            // VA, or conventional ≥20% down
+}</code></pre>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<div class="tab-pane" id="tab-reasons">
+  <h1>Reason Code Catalog</h1>
+  <p>Structured codes for scenario status explanations. These must be typed (not plain strings) so the API consumer can build UI logic around them.</p>
+
+  <h2>NOT_QUALIFIED Reason Codes (fatal — loan cannot be made)</h2>
+  <table>
+    <tr><th>Code</th><th>Program(s)</th><th>Plain English</th></tr>
+    <tr><td>LOAN_AMOUNT_EXCEEDS_FHA_LIMIT</td><td>FHA</td><td>Loan amount (with UFMIP) exceeds county FHA limit for this property type</td></tr>
+    <tr><td>LOAN_AMOUNT_EXCEEDS_GSE_LIMIT</td><td>Conventional/VA</td><td>Loan amount exceeds county conforming limit (jumbo = not in scope)</td></tr>
+    <tr><td>CREDIT_SCORE_BELOW_MINIMUM</td><td>All</td><td>Representative credit score below program minimum</td></tr>
+    <tr><td>CREDIT_SCORE_REQUIRES_HIGHER_DOWN</td><td>FHA</td><td>Score 500–579: requires 10% down, not 3.5%</td></tr>
+    <tr><td>LTV_EXCEEDS_PROGRAM_MAXIMUM</td><td>All</td><td>Down payment insufficient for this program's max LTV</td></tr>
+    <tr><td>FRONT_END_DTI_EXCEEDED</td><td>FHA/USDA/Conventional</td><td>Monthly PITIA / gross income exceeds program limit</td></tr>
+    <tr><td>USDA_GEOGRAPHIC_INELIGIBLE</td><td>USDA</td><td>Property is in a USDA-designated ineligible urban/suburban area</td></tr>
+    <tr><td>USDA_INCOME_EXCEEDS_LIMIT</td><td>USDA</td><td>Annual household income exceeds USDA SFGH 115% AMI limit for family size</td></tr>
+    <tr><td>PROPERTY_TYPE_INELIGIBLE</td><td>All/specific</td><td>Mobile home, investment property, or other ineligible type</td></tr>
+    <tr><td>MOBILE_HOME_LAND_LEASE</td><td>All</td><td>Mobile home on leased land is personal property, not real estate</td></tr>
+    <tr><td>OCCUPANCY_NOT_PRIMARY</td><td>USDA/FHA DPA</td><td>Program requires primary residence; second home/investment not eligible</td></tr>
+    <tr><td>NOT_FIRST_TIME_BUYER</td><td>HomeOne</td><td>FNMA HomeOne requires at least one first-time homebuyer</td></tr>
+    <tr><td>VA_NO_ENTITLEMENT</td><td>VA</td><td>Borrower is not a veteran or does not have VA eligibility</td></tr>
+    <tr><td>FIPS_NOT_RESOLVED</td><td>USDA/FHA/Conv</td><td>Property FIPS code could not be determined — loan limits unavailable</td></tr>
+    <tr><td>FHA_CONDO_PROJECT_APPROVAL_REQUIRED</td><td>FHA</td><td>Condo project must be on HUD approved list for FHA financing</td></tr>
+    <tr><td>MANUFACTURED_HOME_ON_LEASED_LAND</td><td>FHA/Conventional</td><td>Manufactured home on leased land requires specific title and program restrictions</td></tr>
+    <tr><td>DOWN_PAYMENT_SOURCE_RESTRICTION</td><td>Conventional</td><td>Down payment from gift funds requires &gt;5% borrower contribution for loans &lt;20% down in some scenarios</td></tr>
+  </table>
+
+  <h2>NOT_RECOMMENDED Reason Codes (advisory — qualified but there's a better option)</h2>
+  <table>
+    <tr><th>Code</th><th>When Triggered</th><th>Plain English</th></tr>
+    <tr><td>FHA_LIFETIME_MIP_AVOIDABLE</td><td>FHA + credit≥620 + near 5% down</td><td>With this credit score, conventional avoids lifetime MIP — worth considering even at slightly higher rate</td></tr>
+    <tr><td>VA_LOAN_AVAILABLE</td><td>Veteran using FHA or Conventional</td><td>You're a veteran — VA loan has no down payment requirement and no monthly MI</td></tr>
+    <tr><td>USDA_LOAN_AVAILABLE</td><td>Property USDA-eligible, income qualifies, but not in scenario</td><td>This property qualifies for USDA financing with no down payment and no monthly MI</td></tr>
+    <tr><td>HOME_READY_INCOME_ELIGIBLE</td><td>Borrower in low-income tract, using standard conventional</td><td>You qualify for HomeReady (lower MI rate, 3% down) based on your census tract</td></tr>
+    <tr><td>HIGHER_DOWN_ELIMINATES_PMI</td><td>Conventional 80%+ LTV</td><td>Adding $X to your down payment eliminates monthly PMI — saving $Y per month</td></tr>
+    <tr><td>SHORTER_TERM_SAVES_INTEREST</td><td>15yr vs 30yr when payment fits</td><td>A 15-year term saves $X in total interest at $Y more per month</td></tr>
+    <tr><td>CONSIDER_BUYDOWN_POINTS</td><td>When rate is borderline for DTI</td><td>Paying 1 point reduces rate by ~0.25%, lowering payment by $Z and bringing DTI into range</td></tr>
+    <tr><td>HIGH_LTV_REFINANCE_TARGET</td><td>FHA/Conv with &gt;90% LTV</td><td>When you reach 80% LTV (estimated in X years at current payment), refinancing to conventional eliminates MI</td></tr>
+    <tr><td>CREDIT_IMPROVEMENT_SAVES</td><td>Credit score just below a pricing tier</td><td>Improving your credit score by X points would reduce your rate by ~0.125% and save $Y per month</td></tr>
+    <tr><td>ARM_LONG_TERM_RISK</td><td>ARM product selected or shown</td><td>ARM initial rate saves $X/mo but rate adjusts after Y years — only recommended if you expect to sell or refinance before adjustment</td></tr>
+    <tr><td>SELLER_CONCESSION_AVAILABLE</td><td>Purchase with room for concessions</td><td>FHA allows up to 6% seller concession — negotiating this reduces cash to close by $X</td></tr>
+  </table>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<div class="tab-pane" id="tab-mismo_out">
+  <h1>MISMO 3.4 Full Coverage — Output Path</h1>
+
+  <div class="callout c-warn"><strong>Current State</strong>Epic 2 built MISMO 3.4 <em>input</em> parsing (MISMO XML → ParsedDeal). "Full MISMO coverage" requires the output direction too: LoanAnalysisResult → MISMO 3.4 XML. This is currently undesigned and unbuilt.</div>
+
+  <h2>What MISMO Output Enables</h2>
+  <ul>
+    <li><strong>LOS Integration:</strong> All major Loan Origination Software (Encompass, BytePro, Calyx) can import MISMO 3.4 deal set format. Outputting MISMO lets borrowers take their analysis directly to a lender's LOS.</li>
+    <li><strong>AUS Submission:</strong> Fannie Mae's Desktop Underwriter (DU) and Freddie Mac's Loan Product Advisor (LPA) both accept MISMO 3.4 loan data for automated underwriting. Generating MISMO output enables AUS submission.</li>
+    <li><strong>Audit Trail:</strong> CFPB examination prefers MISMO as the industry-standard representation of loan data. MISMO XML is self-documenting and schema-validated.</li>
+    <li><strong>Downstream Processing:</strong> Title companies, appraisers, and MI providers all accept MISMO 3.4.</li>
+  </ul>
+
+  <h2>MISMO Output Scope (Task 2.13, new)</h2>
+  <p>For each qualified scenario, produce a MISMO 3.4 <code>MESSAGE</code> containing:</p>
+  <ul>
+    <li><code>DEAL/PARTIES/PARTY/BORROWER_DETAIL</code> — credit score, income, occupancy</li>
+    <li><code>DEAL/COLLATERALS/COLLATERAL/SUBJECT_PROPERTY</code> — address, property type, value</li>
+    <li><code>DEAL/LOANS/LOAN/MORTGAGE_TERMS</code> — loan amount, rate, term, program</li>
+    <li><code>DEAL/LOANS/LOAN/QUALIFYING_RATE_PERCENT</code> — rate used for DTI</li>
+    <li><code>DEAL/LOANS/LOAN/PROPOSED_HOUSING_EXPENSE</code> — P+I, taxes, insurance, HOA (PITIA)</li>
+    <li><code>DEAL/LOANS/LOAN/QUALIFY_INCOME</code> — gross monthly income</li>
+    <li><code>DEAL/LOANS/LOAN/MI_DATA</code> — if applicable</li>
+  </ul>
+  <p>The output does <strong>not</strong> need to include liabilities, full borrower PII, or any data the engine doesn't have. A partial MISMO document that covers the loan/property/borrower financial profile is sufficient and standard practice for point-of-sale tools.</p>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<div class="tab-pane" id="tab-plan">
+  <h1>Remediation Plan — Priority Order</h1>
+  <p>Ordered by what must exist before the next thing can be built.</p>
+
+  <h3>Phase 1 — Foundation (must complete before any scenario analysis)</h3>
+
+  <div class="prio-row">
+    <div class="prio-badge p-crit">P1</div>
+    <div class="prio-body">
+      <div class="prio-title">Task 1.11 (new) — BorrowerProfile type + supporting enums</div>
+      <div class="prio-detail">Add BorrowerProfile, VeteranStatus, DownPaymentSource, EmploymentType to the types crate. ~15 tests. Every downstream epic depends on this.</div>
+    </div>
+  </div>
+
+  <div class="prio-row">
+    <div class="prio-badge p-crit">P1</div>
+    <div class="prio-body">
+      <div class="prio-title">Task 1.12 (new) — LoanScenarioResult + PitiaBreakdown + QualificationStatus + ReasonCode</div>
+      <div class="prio-detail">The output type hierarchy. PitiaBreakdown with front_end_dti() method. ReasonCode enum with all fatal and advisory codes. ~20 tests.</div>
+    </div>
+  </div>
+
+  <div class="prio-row">
+    <div class="prio-badge p-crit">P1</div>
+    <div class="prio-body">
+      <div class="prio-title">Task 4.21 (new) — ProgramEligibilityRules ref_data table</div>
+      <div class="prio-detail">Front-end DTI maximums, minimum credit scores, and maximum LTV per program, stored as versioned ref_data. Includes JsonFileStore seed data. ~20 tests. Without this, no eligibility decision can be made.</div>
+    </div>
+  </div>
+
+  <div class="prio-row">
+    <div class="prio-badge p-crit">P1</div>
+    <div class="prio-body">
+      <div class="prio-title">Task 4.22 (new) — HOI estimation rate table by state</div>
+      <div class="prio-detail">Average annual HOI rate as a percentage of property value, by state. Used when no actual HOI quote is available (which is always the case with RESO data). ~10 tests.</div>
+    </div>
+  </div>
+
+  <h3>Phase 2 — MISMO completeness</h3>
+
+  <div class="prio-row">
+    <div class="prio-badge p-high">P2</div>
+    <div class="prio-body">
+      <div class="prio-title">Epic 2 Task 2.13 (new) — BorrowerDetail additions: VA entitlement, FTIB flag, household size</div>
+      <div class="prio-detail">Add VA-specific MISMO fields to BorrowerDetail. Add FirstTimeHomebuyerIndicator. Add household size extension field. Add ParsedDeal::to_borrower_profile() conversion. ~15 tests.</div>
+    </div>
+  </div>
+
+  <div class="prio-row">
+    <div class="prio-badge p-high">P2</div>
+    <div class="prio-body">
+      <div class="prio-title">Epic 2 Task 2.14 (new) — MISMO output generation</div>
+      <div class="prio-detail">analysis_to_mismo_xml() function producing a MISMO 3.4 MESSAGE from a qualified LoanScenarioResult. Covers DEAL/LOANS/LOAN/PROPOSED_HOUSING_EXPENSE and QUALIFY_INCOME sections. ~20 tests.</div>
+    </div>
+  </div>
+
+  <h3>Phase 3 — Property data completeness</h3>
+
+  <div class="prio-row">
+    <div class="prio-badge p-high">P2</div>
+    <div class="prio-body">
+      <div class="prio-title">Epic 3 — Add monthly_tax_cents() and PropertyEnriched.hoi_monthly_estimated_cents()</div>
+      <div class="prio-detail">Two new methods: annual→monthly tax helper with ceiling rounding; HOI estimate from state rate table. These complete the PITIA calculation path. ~8 tests.</div>
+    </div>
+  </div>
+
+  <h3>Phase 4 — Expand Epic 4 (complete as planned + new tasks)</h3>
+  <p>Tasks 4.2–4.20 proceed as planned. New additions:</p>
+
+  <div class="prio-row">
+    <div class="prio-badge p-med">P3</div>
+    <div class="prio-body">
+      <div class="prio-title">Task 4.23 (new) — FHA Condo Project Approval</div>
+      <div class="prio-detail">HUD approved condominium lookup (API or cached list). All FHA condo scenarios are flagged as "pending condo project verification" unless the project is confirmed on the HUD list.</div>
+    </div>
+  </div>
+
+  <div class="prio-row">
+    <div class="prio-badge p-low">P4</div>
+    <div class="prio-body">
+      <div class="prio-title">Task 4.24 (new) — USDA Property Condition Requirements</div>
+      <div class="prio-detail">USDA requires the property to be in decent, safe, and sanitary condition with functional utilities. Year built, property condition field from RESO, and manufactured home specific requirements. ~8 tests.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<div class="tab-pane" id="tab-edge">
+  <h1>Edge Cases Not in Original Request</h1>
+  <p>The following are common scenarios that a first-time system designer would not naturally think of. All of them affect real loan eligibility and must be handled.</p>
+
+  <h2>Borrower Edge Cases</h2>
+  <table>
+    <tr><th>Edge Case</th><th>Relevant Programs</th><th>How Engine Should Handle</th></tr>
+    <tr><td>Co-borrower credit score is lower than primary</td><td>All</td><td>Representative score = lower of each borrower's middle score. Engine uses the lower score for all eligibility/pricing. CreditScore::lower_of_two() exists — must wire into BorrowerProfile.</td></tr>
+    <tr><td>No credit score (thin file)</td><td>FHA, USDA, VA</td><td>FHA allows non-traditional credit; Conventional does not. Engine should return reason code CREDIT_FILE_INSUFFICIENT for Conventional and flag FHA/USDA as "manual underwriting required."</td></tr>
+    <tr><td>Self-employed borrower income</td><td>All</td><td>Income documentation is different (2yr tax returns) but the gross income number entered by the user is already the qualifying income. EmploymentType is for documentation flag, not income calculation. The user enters the gross monthly qualifying income directly.</td></tr>
+    <tr><td>Non-borrower adult household income</td><td>USDA only</td><td>annual_household_income in BorrowerProfile is a separate field from gross_monthly_income × 12. USDA requires ALL adults' income. The engine uses annual_household_income only for USDA income limit check.</td></tr>
+    <tr><td>VA disability rating</td><td>VA</td><td>Veterans with any disability rating (10%+) are exempt from the VA funding fee — saves 2.15–3.3% of the loan amount upfront. DisabilityExempt variant in VeteranStatus handles this.</td></tr>
+    <tr><td>Existing VA loan + buying new primary</td><td>VA</td><td>has_existing_va_loan = true → reduced entitlement → county conforming limit applies. Without this, VA loan amount could exceed what's actually available. </td></tr>
+    <tr><td>First-time buyer with gift funds</td><td>FHA, HomeReady</td><td>FHA: gift funds OK for entire down payment. Conventional at &lt;20% down: borrower must contribute at least 3% from own funds unless using HomeReady (gift = OK for entire amount). Down_payment_source matters for eligibility.</td></tr>
+  </table>
+
+  <h2>Property Edge Cases</h2>
+  <table>
+    <tr><th>Edge Case</th><th>Programs Affected</th><th>Engine Handling</th></tr>
+    <tr><td>Manufactured home on owned land (not leased)</td><td>FHA, VA, USDA, Conventional</td><td>Eligible when: on permanent foundation, titled as real property (not personal property), land owned not leased. PropertyEnriched.has_land_lease() handles the leased land case. Permanent foundation and real property titling are not in RESO data — surface as advisory reason code MANUFACTURED_HOME_VERIFY_TITLING.</td></tr>
+    <tr><td>Condominium — FHA project approval</td><td>FHA</td><td>Not all condos are FHA-approved. Single-unit approval is available in some cases. Without HUD condo lookup, output FHA_CONDO_PROJECT_APPROVAL_REQUIRED reason code for all condo FHA scenarios.</td></tr>
+    <tr><td>New construction (NewConstructionYN = true)</td><td>All</td><td>New construction: appraisal based on plans and specs (not existing property). FHA requires a 10-year builder warranty. For engine purposes, treat as standard analysis but surface NEW_CONSTRUCTION_REQUIREMENTS_APPLY advisory code.</td></tr>
+    <tr><td>Mixed-use property (commercial + residential)</td><td>Most</td><td>FHA allows up to 25% commercial use. Conventional typically requires 100% residential. RESO PropertyType = Commercial would screen this out; mixed-use with residential primary use needs a reason code.</td></tr>
+    <tr><td>Acreage / rural property</td><td>Conventional, FHA</td><td>Large acreage (typically &gt;10 acres) can affect appraisability. USDA loves acreage. Surface LARGE_LOT_APPRAISAL_ADVISORY for properties &gt;5 acres in non-USDA programs.</td></tr>
+    <tr><td>Property not in MLS (FSBO, off-market)</td><td>All</td><td>If property data comes from the native API format (not RESO) with no ListingKey, the engine should still work. BorrowerProfile + minimal property data (address, type, price) must be sufficient. PropertyReso is optional — the engine can work with PropertyEnriched populated from direct user input.</td></tr>
+    <tr><td>High-cost county conventional</td><td>Conventional</td><td>High-balance conforming (loan &gt; $806,500 but ≤ county limit) triggers specific LLPAs and a minimum 10% down payment. GseLoanLimits.is_high_balance_amount() handles this; engine must apply 90% max LTV for high-balance.</td></tr>
+    <tr><td>Flood zone — actual premium vs estimate</td><td>FHA, VA, USDA, Conventional</td><td>Required flood insurance premium varies enormously by zone type, elevation, structure value, and coverage amount. The floor estimate ($100/mo) is conservative. Surface FLOOD_INSURANCE_ESTIMATE_USED advisory and encourage borrower to get actual NFIP quote.</td></tr>
+  </table>
+
+  <h2>Analysis Output Edge Cases</h2>
+  <table>
+    <tr><th>Edge Case</th><th>Engine Handling</th></tr>
+    <tr><td>All programs not qualified</td><td>Return all scenarios with not_qualified status and reason codes. Response includes "no qualified programs found" summary. Never return an empty scenarios array without explanation.</td></tr>
+    <tr><td>Property FIPS not resolved (no coordinates, no TaxTract)</td><td>Cannot run geo eligibility (USDA, loan limits). Return scenarios with reason code FIPS_NOT_RESOLVED for geo-dependent programs. Surface FIPS_RESOLUTION_NEEDED advisory.</td></tr>
+    <tr><td>Purchase price vs appraised value discrepancy</td><td>For purchases, LTV = loan / lesser of purchase price or appraised value. RESO data has ListPrice — at point of sale, the appraised value is not yet known. Engine uses purchase price and surfaces APPRAISAL_MAY_AFFECT_LTV advisory.</td></tr>
+    <tr><td>Rate not available (no rate sheet)</td><td>Without a lender rate sheet, the engine cannot compute P+I or verify DTI. Return scenarios with RATE_REQUIRED reason code and show which programs would qualify at a given rate assumption. Allow user to provide a rate.</td></tr>
+    <tr><td>DTI borderline (within 1% of limit)</td><td>Surface FRONT_END_DTI_CLOSE_TO_LIMIT advisory even on qualified scenarios. A small change in rate or insurance estimate could push over the limit.</td></tr>
+    <tr><td>Seller concessions affecting down payment</td><td>Seller concessions reduce closing costs, not the purchase price. They do not increase the down payment. Surface SELLER_CONCESSION_AVAILABLE advisory showing how much closing cost relief is available per program (FHA: 6%, Conventional: 3–9% by LTV, VA: 4%, USDA: no limit).</td></tr>
+  </table>
+</div>
+
+</main>
+</div>
+
+<script>
+function show(id) {
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.ni').forEach(n => n.classList.remove('active'));
+  const pane = document.getElementById('tab-' + id);
+  if (pane) pane.classList.add('active');
+  if (event && event.target) event.target.classList.add('active');
+}
+</script>
+</body>
+</html>
