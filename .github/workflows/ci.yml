@@ -84,22 +84,20 @@ jobs:
         # Running 'rustup default 1.85.0' relinks every proxy binary in
         # ~/.cargo/bin/ to the correct toolchain regardless of cache state.
       - name: Relink Rust 1.85.0 toolchain after cache restore
-        # Swatinem/rust-cache restores $CARGO_HOME/bin, which can leave the
-        # cargo proxy in a broken state (toolchain not found → falls through to
-        # rustup-init setup mode → "unexpected argument 'test' found").
+        # Swatinem/rust-cache restores $CARGO_HOME/bin. On macOS, the binary
+        # at $CARGO_HOME/bin/cargo ends up as Homebrew's rustup-init shim
+        # regardless of PATH ordering, RUSTUP_TOOLCHAIN env vars, or explicit
+        # $HOME/.cargo/bin/cargo — all three approaches have been tried and all
+        # resolve to rustup-init entering setup mode.
         #
-        # Three-layer defence:
-        #   1. 'rustup toolchain install' re-links the toolchain even if cached
-        #   2. 'rustup default' sets the active toolchain for proxy lookups
-        #   3. RUSTUP_TOOLCHAIN env var bypasses the default-toolchain lookup
-        #      entirely — every rustup proxy in subsequent steps uses 1.85.0
-        #      regardless of what the cache left behind.
+        # The only reliable fix: 'rustup run 1.85.0 cargo' bypasses PATH and
+        # proxy resolution entirely and directly executes the cargo binary from
+        # ~/.rustup/toolchains/1.85.0-.../bin/cargo. rustup itself works fine
+        # (the relink step proves it) — only the cargo proxy is broken.
         run: |
           rustup toolchain install 1.85.0 --no-self-update --profile minimal
           rustup default 1.85.0
-          echo "RUSTUP_TOOLCHAIN=1.85.0" >> "$GITHUB_ENV"
-          echo "$HOME/.cargo/bin" >> "$GITHUB_PATH"
-      - run: cargo test --workspace --all-features --no-fail-fast
+      - run: rustup run 1.85.0 cargo test --workspace --all-features --no-fail-fast
 
   # ── Coverage gate (≥100% on non-stub crates) ───────────────────────────────
   # Owner: types crate maintainer
