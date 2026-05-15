@@ -29,6 +29,7 @@ const EXPECTED_CRATES: &[&str] = &[
     "types",
     "mismo",
     "reso",
+    "ref_data",
     "ingest",
     "enrich",
     "eligibility",

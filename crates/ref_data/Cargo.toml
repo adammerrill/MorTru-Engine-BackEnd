@@ -1,0 +1,24 @@
+[package]
+name             = "ref_data"
+description      = "Versioned reference data — loan limits, USDA eligibility, AMI, MI rates, LLPA matrices, lender overlays."
+version.workspace      = true
+edition.workspace      = true
+authors.workspace      = true
+license.workspace      = true
+repository.workspace   = true
+rust-version.workspace = true
+publish.workspace      = true
+
+[lints]
+workspace = true
+
+[dependencies]
+types        = { workspace = true }
+serde        = { workspace = true }
+serde_json   = { workspace = true }
+thiserror    = { workspace = true }
+rust_decimal = { workspace = true }
+chrono       = { workspace = true }
+
+[dev-dependencies]
+serde_json = { workspace = true }

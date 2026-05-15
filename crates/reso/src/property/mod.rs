@@ -48,11 +48,17 @@ pub struct PropertyReso {
     pub system_locale: Option<String>,
 
     /// Primary key in the originating MLS/system.
-    #[serde(rename = "OriginatingSystemKey", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "OriginatingSystemKey",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub originating_system_key: Option<String>,
 
     /// Name of the originating MLS or system.
-    #[serde(rename = "OriginatingSystemName", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "OriginatingSystemName",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub originating_system_name: Option<String>,
 
     /// Key from the RESO Data Source.
@@ -64,7 +70,10 @@ pub struct PropertyReso {
     pub source_system_name: Option<String>,
 
     /// Timestamp when data passed through a RESO bridge.
-    #[serde(rename = "BridgeModificationTimestamp", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "BridgeModificationTimestamp",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub bridge_modification_timestamp: Option<String>,
 
     /// "Sale", "Lease", or "Rent".
@@ -72,33 +81,53 @@ pub struct PropertyReso {
     pub transaction_type: Option<String>,
 
     // ── Category 2: Timestamps (8 fields) ─────────────────────────────────────
-
     /// Most recent modification timestamp for any field. (DD 2.0 required)
-    #[serde(rename = "ModificationTimestamp", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "ModificationTimestamp",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub modification_timestamp: Option<String>,
 
     /// When listing first entered the MLS system.
-    #[serde(rename = "OriginalEntryTimestamp", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "OriginalEntryTimestamp",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub original_entry_timestamp: Option<String>,
 
     /// When StandardStatus last changed.
-    #[serde(rename = "StatusChangeTimestamp", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "StatusChangeTimestamp",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub status_change_timestamp: Option<String>,
 
     /// When ListPrice last changed.
-    #[serde(rename = "PriceChangeTimestamp", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "PriceChangeTimestamp",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub price_change_timestamp: Option<String>,
 
     /// Timestamp of last major field change.
-    #[serde(rename = "MajorChangeTimestamp", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "MajorChangeTimestamp",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub major_change_timestamp: Option<String>,
 
     /// When media/photos were last updated.
-    #[serde(rename = "PhotosChangeTimestamp", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "PhotosChangeTimestamp",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub photos_change_timestamp: Option<String>,
 
     /// Date of last contract status change.
-    #[serde(rename = "ContractStatusChangeDate", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "ContractStatusChangeDate",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub contract_status_change_date: Option<String>,
 
     /// Date listing expires per the listing agreement.
@@ -106,7 +135,6 @@ pub struct PropertyReso {
     pub expiration_date: Option<String>,
 
     // ── Category 3: Listing Status (8 fields) ─────────────────────────────────
-
     /// RESO standard status. One of: Active, ActiveUnderContract, Canceled,
     /// Closed, ComingSoon, Delete, Expired, Incomplete, Pending, Withdrawn.
     #[serde(rename = "StandardStatus", skip_serializing_if = "Option::is_none")]
@@ -129,7 +157,10 @@ pub struct PropertyReso {
     pub contingency_date: Option<String>,
 
     /// Special conditions: None, Auction, BankOwned, HUD, ShortSale, Probate.
-    #[serde(rename = "SpecialListingConditions", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "SpecialListingConditions",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub special_listing_conditions: Option<Vec<String>>,
 
     /// Disclosure types: Lead, Mold, AsIs, NoDisclosures, etc.
@@ -141,7 +172,6 @@ pub struct PropertyReso {
     pub possession: Option<Vec<String>>,
 
     // ── Category 4: Property Type / Subtype (4 fields) ────────────────────────
-
     /// RESO PropertyType lookup. Residential, ResidentialIncome, Land, etc.
     #[serde(rename = "PropertyType", skip_serializing_if = "Option::is_none")]
     pub property_type: Option<String>,
@@ -151,7 +181,10 @@ pub struct PropertyReso {
     pub property_sub_type: Option<String>,
 
     /// Structural condition: Excellent, Good, Average, Fair, Poor, TearDown.
-    #[serde(rename = "StructuralCondition", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "StructuralCondition",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub structural_condition: Option<String>,
 
     /// Property condition: NewConstruction, UpdatedRemodeled, Fixer, AsIs.
@@ -159,7 +192,6 @@ pub struct PropertyReso {
     pub property_condition: Option<Vec<String>>,
 
     // ── Category 5: Address (22 fields) ──────────────────────────────────────
-
     /// Full address as a single unparsed string.
     #[serde(rename = "UnparsedAddress", skip_serializing_if = "Option::is_none")]
     pub unparsed_address: Option<String>,
@@ -169,7 +201,10 @@ pub struct PropertyReso {
     pub street_number: Option<String>,
 
     /// Numeric portion of street number for sorting.
-    #[serde(rename = "StreetNumberNumeric", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "StreetNumberNumeric",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub street_number_numeric: Option<i32>,
 
     /// Street directional prefix: N, S, E, W, NE, NW, SE, SW.
@@ -185,7 +220,10 @@ pub struct PropertyReso {
     pub street_suffix: Option<String>,
 
     /// Additional suffix modifier (e.g. "Extension").
-    #[serde(rename = "StreetSuffixModifier", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "StreetSuffixModifier",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub street_suffix_modifier: Option<String>,
 
     /// Trailing directional: N, S, E, W, NE, NW, SE, SW.
@@ -249,7 +287,6 @@ pub struct PropertyReso {
     pub township_range: Option<String>,
 
     // ── Category 6: Geographic Coordinates (5 fields) ─────────────────────────
-
     /// WGS 84 decimal degrees latitude. Primary FIPS derivation source.
     #[serde(rename = "Latitude", skip_serializing_if = "Option::is_none")]
     pub latitude: Option<f64>,
@@ -271,7 +308,6 @@ pub struct PropertyReso {
     pub map_coordinate: Option<String>,
 
     // ── Category 7: Physical Dimensions (20 fields) ───────────────────────────
-
     /// Finished livable square footage (GLA). Primary area field used by engine.
     #[serde(rename = "LivingArea", skip_serializing_if = "Option::is_none")]
     pub living_area: Option<Decimal>,
@@ -285,31 +321,52 @@ pub struct PropertyReso {
     pub living_area_source: Option<String>,
 
     /// Finished area above grade.
-    #[serde(rename = "AboveGradeFinishedArea", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "AboveGradeFinishedArea",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub above_grade_finished_area: Option<Decimal>,
 
     /// Units for AboveGradeFinishedArea.
-    #[serde(rename = "AboveGradeFinishedAreaUnits", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "AboveGradeFinishedAreaUnits",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub above_grade_finished_area_units: Option<String>,
 
     /// Source for AboveGradeFinishedArea.
-    #[serde(rename = "AboveGradeFinishedAreaSource", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "AboveGradeFinishedAreaSource",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub above_grade_finished_area_source: Option<String>,
 
     /// Finished below-grade (basement) area.
-    #[serde(rename = "BelowGradeFinishedArea", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "BelowGradeFinishedArea",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub below_grade_finished_area: Option<Decimal>,
 
     /// Units for BelowGradeFinishedArea.
-    #[serde(rename = "BelowGradeFinishedAreaUnits", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "BelowGradeFinishedAreaUnits",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub below_grade_finished_area_units: Option<String>,
 
     /// Source for BelowGradeFinishedArea.
-    #[serde(rename = "BelowGradeFinishedAreaSource", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "BelowGradeFinishedAreaSource",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub below_grade_finished_area_source: Option<String>,
 
     /// Unfinished below-grade area.
-    #[serde(rename = "BelowGradeUnfinishedArea", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "BelowGradeUnfinishedArea",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub below_grade_unfinished_area: Option<Decimal>,
 
     /// Total building footprint including all floors.
@@ -337,7 +394,10 @@ pub struct PropertyReso {
     pub number_of_units_total: Option<i32>,
 
     /// Total units in the larger community/project (for condos/co-ops).
-    #[serde(rename = "NumberOfUnitsInCommunity", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "NumberOfUnitsInCommunity",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub number_of_units_in_community: Option<i32>,
 
     /// Floor level of main entry (important for condos/co-ops).
@@ -353,7 +413,6 @@ pub struct PropertyReso {
     pub common_walls: Option<Vec<String>>,
 
     // ── Category 8: Age and Construction (14 fields) ──────────────────────────
-
     /// Year original structure was completed.
     #[serde(rename = "YearBuilt", skip_serializing_if = "Option::is_none")]
     pub year_built: Option<i32>,
@@ -387,7 +446,10 @@ pub struct PropertyReso {
     pub architectural_style: Option<Vec<String>>,
 
     /// Construction materials: Frame, Brick, Stone, Stucco, Wood, Concrete, etc.
-    #[serde(rename = "ConstructionMaterials", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "ConstructionMaterials",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub construction_materials: Option<Vec<String>>,
 
     /// Foundation type: Slab, CrawlSpace, ConcretePerimeter, Block, etc.
@@ -406,12 +468,10 @@ pub struct PropertyReso {
     #[serde(rename = "PropertyAttachedYN", skip_serializing_if = "Option::is_none")]
     pub property_attached_yn: Option<bool>,
 
-    /// Condition: NewConstruction, UpdatedRemodeled, Fixer, AsIs, Updated.
-    // Note: also in Category 4 as `property_condition` — same RESO field
-    // retained here for completeness of the physical category.
+    // Note: PropertyCondition is defined in Category 4 (property_condition field).
+    // It is not duplicated here — see category 4 above.
 
     // ── Category 9: Lot / Land (15 fields) ────────────────────────────────────
-
     /// Lot size in acres.
     #[serde(rename = "LotSizeAcres", skip_serializing_if = "Option::is_none")]
     pub lot_size_acres: Option<Decimal>,
@@ -465,25 +525,36 @@ pub struct PropertyReso {
     pub land_lease_amount: Option<Decimal>,
 
     /// Frequency of land lease payment.
-    #[serde(rename = "LandLeaseAmountFrequency", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "LandLeaseAmountFrequency",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub land_lease_amount_frequency: Option<String>,
 
     /// Land lease expiration date.
-    #[serde(rename = "LandLeaseExpirationDate", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "LandLeaseExpirationDate",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub land_lease_expiration_date: Option<String>,
 
     // ── Category 10: Rooms (13 fields) ────────────────────────────────────────
-
     /// Total bedrooms including all levels.
     #[serde(rename = "BedroomsTotal", skip_serializing_if = "Option::is_none")]
     pub bedrooms_total: Option<i32>,
 
     /// Total bathrooms as decimal: full + half×0.5 + quarter×0.25.
-    #[serde(rename = "BathroomsTotalDecimal", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "BathroomsTotalDecimal",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub bathrooms_total_decimal: Option<Decimal>,
 
     /// Total bathroom count as integer.
-    #[serde(rename = "BathroomsTotalInteger", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "BathroomsTotalInteger",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub bathrooms_total_integer: Option<i32>,
 
     /// Full bathrooms (toilet + sink + tub or shower).
@@ -495,11 +566,17 @@ pub struct PropertyReso {
     pub bathrooms_half: Option<i32>,
 
     /// Quarter bathrooms (single fixture).
-    #[serde(rename = "BathroomsOneQuarter", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "BathroomsOneQuarter",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub bathrooms_one_quarter: Option<i32>,
 
     /// Three-quarter bathrooms (toilet + sink + shower, no tub).
-    #[serde(rename = "BathroomsThreeQuarter", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "BathroomsThreeQuarter",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub bathrooms_three_quarter: Option<i32>,
 
     /// Total rooms (MLS counting method varies).
@@ -527,7 +604,6 @@ pub struct PropertyReso {
     pub basement_yn: Option<bool>,
 
     // ── Category 11: Parking (10 fields) ──────────────────────────────────────
-
     /// Total parking spaces of all types combined.
     #[serde(rename = "ParkingTotal", skip_serializing_if = "Option::is_none")]
     pub parking_total: Option<i32>,
@@ -569,7 +645,6 @@ pub struct PropertyReso {
     pub open_parking_yn: Option<bool>,
 
     // ── Category 12: Systems and Utilities (18 fields) ────────────────────────
-
     /// Heating system type: CentralAir, ForcedAir, HeatPump, Radiant, etc.
     #[serde(rename = "Heating", skip_serializing_if = "Option::is_none")]
     pub heating: Option<Vec<String>>,
@@ -643,7 +718,6 @@ pub struct PropertyReso {
     pub door_features: Option<Vec<String>>,
 
     // ── Category 13: Interior (8 fields) ──────────────────────────────────────
-
     /// Flooring types: Carpet, CeramicTile, Hardwood, Laminate, Stone, etc.
     #[serde(rename = "Flooring", skip_serializing_if = "Option::is_none")]
     pub flooring: Option<Vec<String>>,
@@ -657,7 +731,10 @@ pub struct PropertyReso {
     pub security_features: Option<Vec<String>>,
 
     /// Accessibility features: GrabBars, HandicapParking, Ramp, etc.
-    #[serde(rename = "AccessibilityFeatures", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "AccessibilityFeatures",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub accessibility_features: Option<Vec<String>>,
 
     /// Kitchen features: Granite, IslandKitchen, QuartzCounters, etc.
@@ -665,7 +742,10 @@ pub struct PropertyReso {
     pub kitchen_features: Option<Vec<String>>,
 
     /// Master bathroom features: DoubleSinks, SoakingTub, SeparateShower, etc.
-    #[serde(rename = "MasterBathroomFeatures", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "MasterBathroomFeatures",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub master_bathroom_features: Option<Vec<String>>,
 
     /// Other rooms: BonusRoom, Den, FamilyRoom, Library, OfficeStudy, etc.
@@ -673,17 +753,22 @@ pub struct PropertyReso {
     pub other_rooms: Option<Vec<String>>,
 
     /// Free-text basement description.
-    #[serde(rename = "BasementDescription", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "BasementDescription",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub basement_description: Option<String>,
 
     // ── Category 14: Exterior (8 fields) ──────────────────────────────────────
-
     /// Exterior features: Balcony, Barbecue, Lighting, PrivateYard, etc.
     #[serde(rename = "ExteriorFeatures", skip_serializing_if = "Option::is_none")]
     pub exterior_features: Option<Vec<String>>,
 
     /// Patio and porch features: Covered, Deck, Enclosed, FrontPorch, etc.
-    #[serde(rename = "PatioAndPorchFeatures", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "PatioAndPorchFeatures",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub patio_and_porch_features: Option<Vec<String>>,
 
     /// Other structures: Barn, Gazebo, GuestHouse, Shed, Workshop, None.
@@ -711,7 +796,6 @@ pub struct PropertyReso {
     pub zoning_description: Option<String>,
 
     // ── Category 15: Pool / Spa (6 fields) ────────────────────────────────────
-
     /// True if private pool on property.
     #[serde(rename = "PoolPrivateYN", skip_serializing_if = "Option::is_none")]
     pub pool_private_yn: Option<bool>,
@@ -729,15 +813,20 @@ pub struct PropertyReso {
     pub spa_features: Option<Vec<String>>,
 
     /// True if pool is personal property excluded from the sale.
-    #[serde(rename = "PoolPersonalProperty", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "PoolPersonalProperty",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub pool_personal_property: Option<bool>,
 
     /// True if spa is personal property excluded from the sale.
-    #[serde(rename = "SpaPersonalProperty", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "SpaPersonalProperty",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub spa_personal_property: Option<bool>,
 
     // ── Category 16: View / Waterfront (8 fields) ─────────────────────────────
-
     /// True if property has a notable view.
     #[serde(rename = "ViewYN", skip_serializing_if = "Option::is_none")]
     pub view_yn: Option<bool>,
@@ -759,7 +848,10 @@ pub struct PropertyReso {
     pub waterfront_features: Option<Vec<String>>,
 
     /// Linear feet of water frontage.
-    #[serde(rename = "WaterFrontageLength", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "WaterFrontageLength",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub water_frontage_length: Option<Decimal>,
 
     /// True if property has water access (not necessarily waterfront).
@@ -771,7 +863,6 @@ pub struct PropertyReso {
     pub boat_facilities: Option<Vec<String>>,
 
     // ── Category 17: HOA / Community (14 fields) ──────────────────────────────
-
     /// True if property is subject to an HOA.
     #[serde(rename = "AssociationYN", skip_serializing_if = "Option::is_none")]
     pub association_yn: Option<bool>,
@@ -781,11 +872,17 @@ pub struct PropertyReso {
     pub association_fee: Option<Decimal>,
 
     /// HOA fee frequency: Monthly, Annually, Quarterly, SemiAnnually, OneTime.
-    #[serde(rename = "AssociationFeeFrequency", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "AssociationFeeFrequency",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub association_fee_frequency: Option<String>,
 
     /// What HOA fee includes: CommonArea, Insurance, Pool, Trash, Water, etc.
-    #[serde(rename = "AssociationFeeIncludes", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "AssociationFeeIncludes",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub association_fee_includes: Option<Vec<String>>,
 
     /// Primary HOA name.
@@ -801,11 +898,17 @@ pub struct PropertyReso {
     pub association_fee2: Option<Decimal>,
 
     /// Secondary HOA fee frequency.
-    #[serde(rename = "AssociationFeeFrequency2", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "AssociationFeeFrequency2",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub association_fee_frequency2: Option<String>,
 
     /// What secondary HOA fee includes.
-    #[serde(rename = "AssociationFeeIncludes2", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "AssociationFeeIncludes2",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub association_fee_includes2: Option<Vec<String>>,
 
     /// Secondary HOA name.
@@ -821,7 +924,10 @@ pub struct PropertyReso {
     pub pets_allowed: Option<String>,
 
     /// HOA amenities: Pool, Spa, TennisCourt, ClubHouse, GolfCourse, Gym, etc.
-    #[serde(rename = "AssociationAmenities", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "AssociationAmenities",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub association_amenities: Option<Vec<String>>,
 
     /// Community features: Golf, Gated, Lake, Pool, BikingTrails, Park, etc.
@@ -829,7 +935,6 @@ pub struct PropertyReso {
     pub community_features: Option<Vec<String>>,
 
     // ── Category 18: Tax / Legal (14 fields) ──────────────────────────────────
-
     /// Annual property tax amount. Engine uses this for escrow calculation.
     #[serde(rename = "TaxAnnualAmount", skip_serializing_if = "Option::is_none")]
     pub tax_annual_amount: Option<Decimal>,
@@ -843,7 +948,10 @@ pub struct PropertyReso {
     pub tax_year: Option<i32>,
 
     /// Full legal description of the parcel.
-    #[serde(rename = "TaxLegalDescription", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "TaxLegalDescription",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub tax_legal_description: Option<String>,
 
     /// County assessor parcel number (APN).
@@ -879,7 +987,10 @@ pub struct PropertyReso {
     pub tax_exemptions: Option<Vec<String>>,
 
     /// Other annual tax assessments: Mello-Roos, special assessments, CID fees.
-    #[serde(rename = "TaxOtherAnnualAssessmentAmount", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "TaxOtherAnnualAssessmentAmount",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub tax_other_annual_assessment_amount: Option<Decimal>,
 
     /// Current land use: Agricultural, Commercial, Industrial, Residential.
@@ -887,21 +998,29 @@ pub struct PropertyReso {
     pub current_use: Option<Vec<String>>,
 
     // ── Category 19: Schools (8 fields) ───────────────────────────────────────
-
     /// Elementary school name.
     #[serde(rename = "ElementarySchool", skip_serializing_if = "Option::is_none")]
     pub elementary_school: Option<String>,
 
     /// Elementary school district.
-    #[serde(rename = "ElementarySchoolDistrict", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "ElementarySchoolDistrict",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub elementary_school_district: Option<String>,
 
     /// Middle or junior high school name.
-    #[serde(rename = "MiddleOrJuniorSchool", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "MiddleOrJuniorSchool",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub middle_or_junior_school: Option<String>,
 
     /// Middle school district.
-    #[serde(rename = "MiddleOrJuniorSchoolDistrict", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "MiddleOrJuniorSchoolDistrict",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub middle_or_junior_school_district: Option<String>,
 
     /// High school name.
@@ -921,21 +1040,32 @@ pub struct PropertyReso {
     pub other_school: Option<String>,
 
     // ── Category 20: Green / Sustainability (10 fields) ───────────────────────
-
     /// Green building certifications: LEED, EnergyStar, GreenPoint, etc.
-    #[serde(rename = "GreenBuildingVerificationType", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "GreenBuildingVerificationType",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub green_building_verification_type: Option<Vec<String>>,
 
     /// Energy-efficient features: Appliances, Doors, HVAC, Insulation, etc.
-    #[serde(rename = "GreenEnergyEfficient", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "GreenEnergyEfficient",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub green_energy_efficient: Option<Vec<String>>,
 
     /// Renewable energy generation: Solar, Wind, GridTied.
-    #[serde(rename = "GreenEnergyGeneration", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "GreenEnergyGeneration",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub green_energy_generation: Option<Vec<String>>,
 
     /// Indoor air quality features: ContaminantControl, LowVOC, Ventilation.
-    #[serde(rename = "GreenIndoorAirQuality", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "GreenIndoorAirQuality",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub green_indoor_air_quality: Option<Vec<String>>,
 
     /// Green landscaping: NativeXeriscaping, GrayWater, DroughtTolerantPlants.
@@ -943,27 +1073,41 @@ pub struct PropertyReso {
     pub green_landscaping: Option<Vec<String>>,
 
     /// Water conservation: LowFlowFixtures, GrayWaterSystem, EfficientHotWater.
-    #[serde(rename = "GreenWaterConservation", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "GreenWaterConservation",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub green_water_conservation: Option<Vec<String>>,
 
     /// Sustainability certifications.
-    #[serde(rename = "GreenSustainability", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "GreenSustainability",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub green_sustainability: Option<Vec<String>>,
 
     /// Year of green certification.
-    #[serde(rename = "GreenVerificationYear", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "GreenVerificationYear",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub green_verification_year: Option<i32>,
 
     /// Certifying organization name.
-    #[serde(rename = "GreenVerificationBody", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "GreenVerificationBody",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub green_verification_body: Option<String>,
 
     /// Certification level (e.g. "Platinum", "Gold", "85 points").
-    #[serde(rename = "GreenVerificationRating", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "GreenVerificationRating",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub green_verification_rating: Option<String>,
 
     // ── Category 21: Pricing (15 fields) ──────────────────────────────────────
-
     /// Current list price. Engine uses this as appraised value proxy if needed.
     #[serde(rename = "ListPrice", skip_serializing_if = "Option::is_none")]
     pub list_price: Option<Decimal>,
@@ -981,11 +1125,17 @@ pub struct PropertyReso {
     pub previous_list_price: Option<Decimal>,
 
     /// ListPrice ÷ LivingArea.
-    #[serde(rename = "ListPricePerSquareFoot", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "ListPricePerSquareFoot",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub list_price_per_square_foot: Option<Decimal>,
 
     /// ClosePrice ÷ LivingArea.
-    #[serde(rename = "ClosePricePerSquareFoot", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "ClosePricePerSquareFoot",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub close_price_per_square_foot: Option<Decimal>,
 
     /// Seller concessions: Yes, No.
@@ -997,7 +1147,10 @@ pub struct PropertyReso {
     pub concessions_amount: Option<Decimal>,
 
     /// Description of concession terms.
-    #[serde(rename = "ConcessionsComments", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "ConcessionsComments",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub concessions_comments: Option<String>,
 
     /// Buyer financing types: Conventional, FHA, VA, Cash, USDA, etc.
@@ -1013,11 +1166,17 @@ pub struct PropertyReso {
     pub gross_income: Option<Decimal>,
 
     /// Gross scheduled income for income properties.
-    #[serde(rename = "GrossScheduledIncome", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "GrossScheduledIncome",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub gross_scheduled_income: Option<Decimal>,
 
     /// Currently leased units in income property.
-    #[serde(rename = "NumberOfUnitsLeased", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "NumberOfUnitsLeased",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub number_of_units_leased: Option<i32>,
 
     /// Cap rate for income properties.
@@ -1025,9 +1184,11 @@ pub struct PropertyReso {
     pub cap_rate: Option<Decimal>,
 
     // ── Category 22: Key Dates (10 fields) ────────────────────────────────────
-
     /// Listing agreement execution date.
-    #[serde(rename = "ListingContractDate", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "ListingContractDate",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub listing_contract_date: Option<String>,
 
     /// Closing/settlement date.
@@ -1035,7 +1196,10 @@ pub struct PropertyReso {
     pub close_date: Option<String>,
 
     /// Offer acceptance date (contract ratification).
-    #[serde(rename = "PurchaseContractDate", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "PurchaseContractDate",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub purchase_contract_date: Option<String>,
 
     /// Date listing became publicly visible on MLS.
@@ -1063,11 +1227,13 @@ pub struct PropertyReso {
     pub days_on_market: Option<i32>,
 
     /// Total days on market across all listing periods.
-    #[serde(rename = "CumulativeDaysOnMarket", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "CumulativeDaysOnMarket",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub cumulative_days_on_market: Option<i32>,
 
     // ── Category 23: Listing Remarks (6 fields) ───────────────────────────────
-
     /// Public-facing property description.
     #[serde(rename = "PublicRemarks", skip_serializing_if = "Option::is_none")]
     pub public_remarks: Option<String>,
@@ -1093,9 +1259,11 @@ pub struct PropertyReso {
     pub syndicate_to: Option<Vec<String>>,
 
     // ── Category 24: Showing / Media (10 fields) ──────────────────────────────
-
     /// Instructions for scheduling a showing.
-    #[serde(rename = "ShowingInstructions", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "ShowingInstructions",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub showing_instructions: Option<String>,
 
     /// Lockbox placement instructions.
@@ -1115,7 +1283,10 @@ pub struct PropertyReso {
     pub showing_contact_name: Option<String>,
 
     /// Showing contact phone.
-    #[serde(rename = "ShowingContactPhone", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "ShowingContactPhone",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub showing_contact_phone: Option<String>,
 
     /// Count of photos in the Media resource.
@@ -1131,17 +1302,22 @@ pub struct PropertyReso {
     pub documents_count: Option<i32>,
 
     /// URL for unbranded virtual tour.
-    #[serde(rename = "VirtualTourURLUnbranded", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "VirtualTourURLUnbranded",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub virtual_tour_url_unbranded: Option<String>,
 
     // ── Category 25: Agent / Office (20 fields) ───────────────────────────────
-
     /// System key for listing agent (Member resource FK).
     #[serde(rename = "ListAgentKey", skip_serializing_if = "Option::is_none")]
     pub list_agent_key: Option<String>,
 
     /// Numeric form of ListAgentKey.
-    #[serde(rename = "ListAgentKeyNumeric", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "ListAgentKeyNumeric",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub list_agent_key_numeric: Option<i64>,
 
     /// MLS ID of the listing agent.
@@ -1157,11 +1333,17 @@ pub struct PropertyReso {
     pub list_agent_email: Option<String>,
 
     /// Listing agent direct phone.
-    #[serde(rename = "ListAgentDirectPhone", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "ListAgentDirectPhone",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub list_agent_direct_phone: Option<String>,
 
     /// Listing agent state license number.
-    #[serde(rename = "ListAgentStateLicense", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "ListAgentStateLicense",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub list_agent_state_license: Option<String>,
 
     /// System key for listing office (Office resource FK).
@@ -1209,7 +1391,10 @@ pub struct PropertyReso {
     pub co_list_agent_mls_id: Option<String>,
 
     /// Full name of co-listing agent.
-    #[serde(rename = "CoListAgentFullName", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "CoListAgentFullName",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub co_list_agent_full_name: Option<String>,
 
     /// System key for co-buyer's agent.
@@ -1217,7 +1402,6 @@ pub struct PropertyReso {
     pub co_buyer_agent_key: Option<String>,
 
     // ── Category 26: Flood / Insurance (4 fields) ─────────────────────────────
-
     /// FEMA flood zone designation: AE, X, VE, AO, etc.
     /// AE = high-risk annual flood zone (SFHA — requires flood insurance).
     /// X = minimal flood hazard (no flood insurance required).
@@ -1229,15 +1413,20 @@ pub struct PropertyReso {
     pub flood_zone_code: Option<String>,
 
     /// FEMA FIRM panel number for the flood map.
-    #[serde(rename = "FloodMapPanelNumber", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "FloodMapPanelNumber",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub flood_map_panel_number: Option<String>,
 
     /// Effective date of the FIRM flood map panel.
-    #[serde(rename = "FloodMapPanelEffectiveDate", skip_serializing_if = "Option::is_none")]
+    #[serde(
+        rename = "FloodMapPanelEffectiveDate",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub flood_map_panel_effective_date: Option<String>,
 
     // ── Category 27: Senior / Special (3 fields) ──────────────────────────────
-
     /// True if property is in a 55+ senior restricted community.
     #[serde(rename = "SeniorCommunityYN", skip_serializing_if = "Option::is_none")]
     pub senior_community_yn: Option<bool>,

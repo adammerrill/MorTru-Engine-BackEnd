@@ -27,10 +27,7 @@ pub enum ResoError {
 
     /// General parse/conversion failure with field context.
     #[error("failed to parse field '{field}': {detail}")]
-    ParseError {
-        field: &'static str,
-        detail: String,
-    },
+    ParseError { field: &'static str, detail: String },
 
     /// PropertyType value not in the RESO 2.0 lookup table.
     #[error("unknown RESO PropertyType: '{value}'")]

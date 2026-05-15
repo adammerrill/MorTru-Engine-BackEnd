@@ -1,14 +1,14 @@
 //! Task 3.1 gate tests — crate scaffold, error types, and 235-field struct.
 
-use reso::{
-    ResoError, ResoPropertySubType, ResoPropertyType, ResoStandardStatus, PropertyReso,
-};
+use reso::{PropertyReso, ResoError, ResoPropertySubType, ResoPropertyType, ResoStandardStatus};
 
 // ── Error type tests ──────────────────────────────────────────────────────────
 
 #[test]
 fn test_reso_error_missing_field_display() {
-    let e = ResoError::MissingField { field: "ListingKey" };
+    let e = ResoError::MissingField {
+        field: "ListingKey",
+    };
     assert!(e.to_string().contains("ListingKey"));
 }
 
@@ -24,26 +24,34 @@ fn test_reso_error_invalid_lookup_display() {
 
 #[test]
 fn test_reso_error_unknown_property_type_display() {
-    let e = ResoError::UnknownPropertyType { value: "Yacht".into() };
+    let e = ResoError::UnknownPropertyType {
+        value: "Yacht".into(),
+    };
     assert!(e.to_string().contains("Yacht"));
 }
 
 #[test]
 fn test_reso_error_unknown_property_subtype_display() {
-    let e = ResoError::UnknownPropertySubType { value: "Houseboat".into() };
+    let e = ResoError::UnknownPropertySubType {
+        value: "Houseboat".into(),
+    };
     assert!(e.to_string().contains("Houseboat"));
 }
 
 #[test]
 fn test_reso_error_invalid_coordinate_display() {
-    let e = ResoError::InvalidCoordinate { lat: 99.0, lon: -200.0 };
+    let e = ResoError::InvalidCoordinate {
+        lat: 99.0,
+        lon: -200.0,
+    };
     assert!(e.to_string().contains("99"));
 }
 
 #[test]
 fn test_reso_error_implements_std_error() {
-    let e: &dyn std::error::Error =
-        &ResoError::MissingField { field: "ListingKey" };
+    let e: &dyn std::error::Error = &ResoError::MissingField {
+        field: "ListingKey",
+    };
     let _ = e.to_string();
 }
 
@@ -149,8 +157,16 @@ fn test_standard_status_closed_parses() {
 fn test_standard_status_all_variants_roundtrip() {
     use ResoStandardStatus::*;
     for status in [
-        Active, ActiveUnderContract, Canceled, Closed, ComingSoon,
-        Delete, Expired, Incomplete, Pending, Withdrawn,
+        Active,
+        ActiveUnderContract,
+        Canceled,
+        Closed,
+        ComingSoon,
+        Delete,
+        Expired,
+        Incomplete,
+        Pending,
+        Withdrawn,
     ] {
         let s = status.to_reso_str();
         let parsed = ResoStandardStatus::from_reso_str(s).unwrap();
@@ -185,8 +201,15 @@ fn test_property_type_residential_parses() {
 fn test_property_type_all_variants_roundtrip() {
     use ResoPropertyType::*;
     for pt in [
-        Residential, ResidentialLease, ResidentialIncome, Commercial,
-        CommercialLease, CommercialSale, BusinessOpportunity, Farm, Land,
+        Residential,
+        ResidentialLease,
+        ResidentialIncome,
+        Commercial,
+        CommercialLease,
+        CommercialSale,
+        BusinessOpportunity,
+        Farm,
+        Land,
         ManufacturedInPark,
     ] {
         let s = pt.to_reso_str();
@@ -234,7 +257,10 @@ fn test_property_subtype_manufactured_home_is_eligible() {
 #[test]
 fn test_property_subtype_to_engine_type_sfr() {
     let sub = ResoPropertySubType::SingleFamilyResidence;
-    assert_eq!(sub.to_engine_type(), types::PropertyType::SingleFamilyDetached);
+    assert_eq!(
+        sub.to_engine_type(),
+        types::PropertyType::SingleFamilyDetached
+    );
 }
 
 #[test]
@@ -255,10 +281,21 @@ fn test_property_subtype_to_engine_type_duplex() {
 fn test_property_subtype_all_variants_roundtrip() {
     use ResoPropertySubType::*;
     for sub in [
-        SingleFamilyResidence, Condominium, Townhouse, Apartment,
-        Cooperative, OwnYourOwn, Duplex, Triplex, Quadruplex,
-        MobileHome, ManufacturedHome, Modular, StockCooperative,
-        Timeshare, Cabin,
+        SingleFamilyResidence,
+        Condominium,
+        Townhouse,
+        Apartment,
+        Cooperative,
+        OwnYourOwn,
+        Duplex,
+        Triplex,
+        Quadruplex,
+        MobileHome,
+        ManufacturedHome,
+        Modular,
+        StockCooperative,
+        Timeshare,
+        Cabin,
     ] {
         let s = sub.to_reso_str();
         let parsed = ResoPropertySubType::from_reso_str(s).unwrap();

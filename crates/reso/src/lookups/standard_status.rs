@@ -71,6 +71,9 @@ impl ResoStandardStatus {
     /// True if listing is in a status that indicates it may still be available.
     #[must_use]
     pub const fn is_active_or_coming_soon(self) -> bool {
-        matches!(self, Self::Active | Self::ComingSoon | Self::ActiveUnderContract)
+        matches!(
+            self,
+            Self::Active | Self::ComingSoon | Self::ActiveUnderContract
+        )
     }
 }
