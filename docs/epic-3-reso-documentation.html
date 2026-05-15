@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Epic 3 — RESO 2.0 Property Resource · MorTru Engine</title>
+<style>
+  :root {
+    --bg: #0f1117; --surface: #1a1d27; --surface2: #22263a;
+    --border: #2e3248; --accent: #5b6ef5; --accent2: #7c8ff7;
+    --green: #34c97a; --yellow: #f5c842; --red: #f5564a;
+    --text: #e4e6f0; --muted: #7b82a0; --code: #a6b0cf;
+    --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font);
+         font-size: 15px; line-height: 1.65; }
+  a { color: var(--accent2); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* Layout */
+  .layout { display: flex; min-height: 100vh; }
+  .sidebar { width: 260px; background: var(--surface); border-right: 1px solid var(--border);
+             position: sticky; top: 0; height: 100vh; overflow-y: auto; flex-shrink: 0; }
+  .main { flex: 1; max-width: 980px; padding: 48px 56px; overflow-x: hidden; }
+
+  /* Sidebar */
+  .sidebar-brand { padding: 24px 20px 16px; border-bottom: 1px solid var(--border); }
+  .sidebar-brand .title { font-size: 13px; font-weight: 700; color: var(--text); letter-spacing: .04em; text-transform: uppercase; }
+  .sidebar-brand .sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .nav-section { padding: 12px 20px 4px; font-size: 10px; font-weight: 700;
+                 color: var(--muted); letter-spacing: .1em; text-transform: uppercase; }
+  .nav-item { display: block; padding: 6px 20px; font-size: 13px; color: var(--muted);
+              cursor: pointer; border-left: 2px solid transparent; transition: all .15s; }
+  .nav-item:hover, .nav-item.active { color: var(--text); border-left-color: var(--accent);
+                                       background: rgba(91,110,245,.08); }
+  .nav-sub { padding-left: 32px; font-size: 12px; }
+
+  /* Tabs */
+  .tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 36px; }
+  .tab { padding: 10px 20px; font-size: 13px; font-weight: 500; color: var(--muted);
+         border-bottom: 2px solid transparent; cursor: pointer; transition: all .15s; }
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--accent2); border-bottom-color: var(--accent); }
+  .tab-pane { display: none; }
+  .tab-pane.active { display: block; }
+
+  /* Typography */
+  h1 { font-size: 30px; font-weight: 700; line-height: 1.2; margin-bottom: 12px; }
+  h2 { font-size: 20px; font-weight: 600; margin: 40px 0 14px; padding-bottom: 8px;
+       border-bottom: 1px solid var(--border); }
+  h3 { font-size: 16px; font-weight: 600; margin: 28px 0 10px; color: var(--accent2); }
+  h4 { font-size: 14px; font-weight: 600; margin: 20px 0 8px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+  p { margin-bottom: 14px; }
+  ul, ol { margin: 0 0 14px 20px; }
+  li { margin-bottom: 4px; }
+
+  /* Badges */
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px;
+           font-weight: 600; letter-spacing: .03em; text-transform: uppercase; }
+  .badge-green { background: rgba(52,201,122,.15); color: var(--green); }
+  .badge-yellow { background: rgba(245,200,66,.15); color: var(--yellow); }
+  .badge-red { background: rgba(245,86,74,.12); color: var(--red); }
+  .badge-blue { background: rgba(91,110,245,.15); color: var(--accent2); }
+
+  /* Status banner */
+  .status-banner { background: var(--surface); border: 1px solid var(--border);
+                   border-left: 3px solid var(--green); border-radius: 8px;
+                   padding: 16px 20px; margin-bottom: 32px; display: flex; gap: 20px; flex-wrap: wrap; }
+  .stat { display: flex; flex-direction: column; gap: 2px; }
+  .stat-val { font-size: 22px; font-weight: 700; color: var(--text); }
+  .stat-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+
+  /* Task table */
+  .task-grid { display: grid; grid-template-columns: 56px 1fr auto auto; gap: 0;
+               border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-bottom: 28px; }
+  .tg-head { background: var(--surface2); font-size: 11px; color: var(--muted);
+             font-weight: 700; text-transform: uppercase; letter-spacing: .06em;
+             padding: 10px 14px; }
+  .tg-cell { padding: 11px 14px; font-size: 13px; border-top: 1px solid var(--border); }
+  .tg-task { font-weight: 700; color: var(--accent2); font-family: var(--mono); font-size: 12px; }
+  .tg-tests { font-family: var(--mono); font-size: 12px; color: var(--green); text-align: right; }
+
+  /* Code */
+  pre { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px;
+        padding: 18px 20px; overflow-x: auto; margin: 14px 0 20px; }
+  code { font-family: var(--mono); font-size: 13px; color: var(--code); }
+  p code, li code, td code { background: var(--surface2); padding: 1px 6px; border-radius: 4px;
+                              font-size: 12px; color: var(--code); }
+
+  /* Tables */
+  table { width: 100%; border-collapse: collapse; margin: 14px 0 24px; font-size: 13px; }
+  th { background: var(--surface2); padding: 9px 14px; text-align: left; font-size: 11px;
+       font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .06em;
+       border-bottom: 1px solid var(--border); }
+  td { padding: 9px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  td:first-child { font-family: var(--mono); font-size: 12px; color: var(--code); }
+
+  /* Field category blocks */
+  .cat-block { background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+               margin-bottom: 20px; overflow: hidden; }
+  .cat-header { padding: 12px 16px; background: var(--surface2);
+                border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
+  .cat-num { font-family: var(--mono); font-size: 11px; color: var(--accent2);
+             background: rgba(91,110,245,.12); padding: 2px 7px; border-radius: 4px; }
+  .cat-name { font-weight: 600; font-size: 14px; }
+  .cat-count { margin-left: auto; font-size: 12px; color: var(--muted); }
+  .cat-fields { padding: 12px 16px; display: flex; flex-wrap: wrap; gap: 6px; }
+  .field-pill { font-family: var(--mono); font-size: 11px; background: var(--surface2);
+                border: 1px solid var(--border); border-radius: 4px; padding: 3px 8px;
+                color: var(--code); }
+
+  /* Method blocks */
+  .method { background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+            margin-bottom: 12px; overflow: hidden; }
+  .method-sig { padding: 12px 16px; font-family: var(--mono); font-size: 13px;
+                background: var(--surface2); border-bottom: 1px solid var(--border); }
+  .method-doc { padding: 12px 16px; font-size: 13px; color: var(--muted); }
+  .ret { color: var(--accent2); }
+  .fn-name { color: var(--yellow); }
+  .fn-kw { color: var(--accent2); }
+  .fn-type { color: var(--green); }
+
+  /* Callout */
+  .callout { border-radius: 8px; padding: 14px 18px; margin: 18px 0; border-left: 3px solid; }
+  .callout-info { background: rgba(91,110,245,.08); border-color: var(--accent); }
+  .callout-warn { background: rgba(245,200,66,.07); border-color: var(--yellow); }
+  .callout-danger { background: rgba(245,86,74,.08); border-color: var(--red); }
+  .callout strong { display: block; margin-bottom: 4px; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; }
+
+  /* Architecture diagram */
+  .arch { background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+          padding: 24px; margin: 20px 0; font-family: var(--mono); font-size: 12px;
+          color: var(--code); line-height: 1.9; white-space: pre; overflow-x: auto; }
+
+  /* Priority ladder */
+  .priority { display: flex; flex-direction: column; gap: 6px; margin: 14px 0 20px; }
+  .pstep { display: flex; align-items: center; gap: 12px; padding: 10px 14px;
+           background: var(--surface); border: 1px solid var(--border); border-radius: 6px; }
+  .pnum { width: 24px; height: 24px; border-radius: 50%; background: rgba(91,110,245,.2);
+          color: var(--accent2); font-size: 12px; font-weight: 700;
+          display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .plabel { font-size: 13px; flex: 1; }
+  .psub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .pstep.best .pnum { background: rgba(52,201,122,.2); color: var(--green); }
+</style>
+</head>
+<body>
+<div class="layout">
+
+<!-- ── Sidebar ─────────────────────────────────────────────────────────── -->
+<nav class="sidebar">
+  <div class="sidebar-brand">
+    <div class="title">MorTru Engine</div>
+    <div class="sub">Epic 3 · RESO 2.0</div>
+  </div>
+
+  <div class="nav-section">Overview</div>
+  <a class="nav-item active" onclick="showTab('overview')">Epic 3 Summary</a>
+  <a class="nav-item" onclick="showTab('architecture')">Architecture</a>
+
+  <div class="nav-section">RESO 2.0</div>
+  <a class="nav-item" onclick="showTab('fields')">235 Field Dictionary</a>
+  <a class="nav-item" onclick="showTab('lookups')">Lookup Catalog</a>
+
+  <div class="nav-section">API Reference</div>
+  <a class="nav-item" onclick="showTab('parse')">Parse Methods</a>
+  <a class="nav-item" onclick="showTab('enriched')">PropertyEnriched</a>
+  <a class="nav-item" onclick="showTab('fcc')">FCC Client</a>
+  <a class="nav-item" onclick="showTab('bridge')">MISMO Bridge</a>
+
+  <div class="nav-section">Design</div>
+  <a class="nav-item" onclick="showTab('decisions')">Design Decisions</a>
+  <a class="nav-item" onclick="showTab('fixtures')">Test Fixtures</a>
+</nav>
+
+<!-- ── Main content ────────────────────────────────────────────────────── -->
+<main class="main">
+
+<!-- ── Tab: Overview ─────────────────────────────────────────────────── -->
+<div class="tab-pane active" id="tab-overview">
+  <h1>Epic 3 — RESO 2.0 Property Resource</h1>
+  <p style="color:var(--muted);font-size:16px;margin-bottom:24px;">
+    Crate <code>reso</code> · RESO Data Dictionary 2.0 · MorTru Engine
+  </p>
+
+  <div class="status-banner">
+    <div class="stat"><div class="stat-val" style="color:var(--green)">✓ Complete</div><div class="stat-label">Status</div></div>
+    <div class="stat"><div class="stat-val">1,147</div><div class="stat-label">Workspace Tests</div></div>
+    <div class="stat"><div class="stat-val">235</div><div class="stat-label">RESO Fields</div></div>
+    <div class="stat"><div class="stat-val">10</div><div class="stat-label">Tasks</div></div>
+    <div class="stat"><div class="stat-val">257</div><div class="stat-label">Crate Tests</div></div>
+    <div class="stat"><div class="stat-val">0</div><div class="stat-label">Failures</div></div>
+  </div>
+
+  <h2>Task Summary</h2>
+  <div class="task-grid">
+    <div class="tg-head">Task</div>
+    <div class="tg-head">Deliverable</div>
+    <div class="tg-head">File</div>
+    <div class="tg-head" style="text-align:right">Tests</div>
+
+    <div class="tg-cell tg-task">3.1</div>
+    <div class="tg-cell">Crate scaffold — <code>PropertyReso</code> (235 fields), <code>ResoError</code>, lookup catalog</div>
+    <div class="tg-cell" style="color:var(--muted);font-size:12px"><code>property/mod.rs</code>, <code>error.rs</code>, <code>lookups/</code></div>
+    <div class="tg-cell tg-tests">32</div>
+
+    <div class="tg-cell tg-task">3.2</div>
+    <div class="tg-cell">Identity, timestamp, status, and property-type parsing helpers</div>
+    <div class="tg-cell" style="color:var(--muted);font-size:12px"><code>property/parse.rs</code></div>
+    <div class="tg-cell tg-tests">51</div>
+
+    <div class="tg-cell tg-task">3.3</div>
+    <div class="tg-cell">Address + location extraction, coordinate validation, FIPS field path</div>
+    <div class="tg-cell" style="color:var(--muted);font-size:12px"><code>property/address.rs</code></div>
+    <div class="tg-cell tg-tests">37</div>
+
+    <div class="tg-cell tg-task">3.4</div>
+    <div class="tg-cell">Physical dimensions, construction flags, lot size conversion</div>
+    <div class="tg-cell" style="color:var(--muted);font-size:12px"><code>property/physical.rs</code></div>
+    <div class="tg-cell tg-tests">26</div>
+
+    <div class="tg-cell tg-task">3.5</div>
+    <div class="tg-cell">Room counts, parking, and systems/utilities helpers</div>
+    <div class="tg-cell" style="color:var(--muted);font-size:12px"><code>property/rooms.rs</code></div>
+    <div class="tg-cell tg-tests">39</div>
+
+    <div class="tg-cell tg-task">3.6</div>
+    <div class="tg-cell">HOA normalization, tax, pricing, flood zone</div>
+    <div class="tg-cell" style="color:var(--muted);font-size:12px"><code>property/listing.rs</code></div>
+    <div class="tg-cell tg-tests">38</div>
+
+    <div class="tg-cell tg-task">3.7</div>
+    <div class="tg-cell">FCC Census Geocoder client — response types and parser</div>
+    <div class="tg-cell" style="color:var(--muted);font-size:12px"><code>fcc.rs</code></div>
+    <div class="tg-cell tg-tests">14</div>
+
+    <div class="tg-cell tg-task">3.8</div>
+    <div class="tg-cell"><code>PropertyEnriched</code> struct + <code>PropertyReso::enrich()</code></div>
+    <div class="tg-cell" style="color:var(--muted);font-size:12px"><code>enriched.rs</code></div>
+    <div class="tg-cell tg-tests">25</div>
+
+    <div class="tg-cell tg-task">3.9</div>
+    <div class="tg-cell">RESO ↔ MISMO field bridge functions</div>
+    <div class="tg-cell" style="color:var(--muted);font-size:12px"><code>bridge.rs</code></div>
+    <div class="tg-cell tg-tests">15</div>
+
+    <div class="tg-cell tg-task">3.10</div>
+    <div class="tg-cell">Epic 3 gate — 5 fixtures, all reference values, full pipeline</div>
+    <div class="tg-cell" style="color:var(--muted);font-size:12px"><code>tests/epic3_gate.rs</code></div>
+    <div class="tg-cell tg-tests">29</div>
+  </div>
+
+  <h2>Kyle TX Reference Property</h2>
+  <p>All reference values used throughout Epic 3 and downstream epics:</p>
+  <table>
+    <tr><th>Field</th><th>RESO Value</th><th>Engine Type</th><th>Value</th></tr>
+    <tr><td>ListingKey</td><td><code>ListingKey</code></td><td><code>MlsListingKey</code></td><td><code>"3yd-ABORORTX-12345678"</code></td></tr>
+    <tr><td>State</td><td><code>StateOrProvince: "TX"</code></td><td><code>StateCode::TX</code></td><td>Texas</td></tr>
+    <tr><td>County</td><td><code>CountyOrParish: "Hays"</code></td><td>—</td><td>Hays County</td></tr>
+    <tr><td>FIPS</td><td><code>TaxTract: "48209010905"</code></td><td><code>FipsCode("48209")</code></td><td>Hays County, TX</td></tr>
+    <tr><td>Lat/Lon</td><td><code>30.0394, -97.8772</code></td><td><code>(f64, f64)</code></td><td>Kyle TX centroid</td></tr>
+    <tr><td>LivingArea</td><td><code>LivingArea: 2345.0</code></td><td><code>u32</code></td><td>2,345 sq ft</td></tr>
+    <tr><td>YearBuilt</td><td><code>YearBuilt: 2018</code></td><td><code>u16</code></td><td>2018</td></tr>
+    <tr><td>ListPrice</td><td><code>ListPrice: 459000.0</code></td><td><code>Cents(45_900_000)</code></td><td>$459,000</td></tr>
+    <tr><td>OriginalList</td><td><code>OriginalListPrice: 475000.0</code></td><td><code>Cents(47_500_000)</code></td><td>$475,000 → $16k reduction</td></tr>
+    <tr><td>HOA</td><td><code>AssociationFee: 75.0, Monthly</code></td><td><code>Cents(7_500)</code></td><td>$75/mo · $900/yr</td></tr>
+    <tr><td>Tax</td><td><code>TaxAnnualAmount: 8900.0</code></td><td><code>Cents(890_000)</code></td><td>$8,900/yr</td></tr>
+    <tr><td>FloodZone</td><td><code>FloodZone: "X"</code></td><td><code>bool: false</code></td><td>No insurance required</td></tr>
+    <tr><td>EngineType</td><td><code>SubType: "Single Family Residence"</code></td><td><code>PropertyType::SingleFamilyDetached</code></td><td>1 unit</td></tr>
+  </table>
+
+  <h2>Five Canonical Fixtures</h2>
+  <table>
+    <tr><th>Fixture</th><th>Type</th><th>Key Gate Assertions</th></tr>
+    <tr><td>kyle_tx_sfr.json</td><td>SFR · Active · Kyle TX</td><td>engine=SFD, unit_count=1, hoa=$75/mo, flood=X, fips=48209</td></tr>
+    <tr><td>kyle_tx_condo.json</td><td>Condo · Active · Kyle TX</td><td>is_attached=true, hoa=$2400/yr→$200/mo, 120-unit community</td></tr>
+    <tr><td>mobile_home.json</td><td>Mobile Home · Buda TX</td><td>is_mobile_home=true, engine=MobileHome, land_lease=true</td></tr>
+    <tr><td>manufactured_home.json</td><td>Manufactured · Wimberley TX</td><td>is_mobile_home=false, engine=ManufacturedHome, lot=1.5ac=65,340sqft</td></tr>
+    <tr><td>income_property.json</td><td>Quadruplex · Austin TX</td><td>unit_count=4, engine=FourUnit, flood=AE (required), fips=48453</td></tr>
+  </table>
+</div>
+
+<!-- ── Tab: Architecture ──────────────────────────────────────────────── -->
+<div class="tab-pane" id="tab-architecture">
+  <h1>Architecture</h1>
+
+  <h2>Crate Structure</h2>
+  <div class="arch">crates/reso/
+├── Cargo.toml          deps: types, serde, serde_json, thiserror, rust_decimal
+└── src/
+    ├── lib.rs          public re-exports
+    ├── error.rs        ResoError (9 variants), ResoResult&lt;T&gt;
+    ├── fcc.rs          FccClient, FipsResolution, parse_fcc_response()
+    ├── enriched.rs     PropertyEnriched (40 typed fields + raw)
+    ├── bridge.rs       RESO ↔ MISMO bridge functions
+    ├── lookups/
+    │   ├── mod.rs
+    │   ├── property_type.rs    ResoPropertyType (10), ResoPropertySubType (15)
+    │   └── standard_status.rs  ResoStandardStatus (10)
+    └── property/
+        ├── mod.rs      PropertyReso — all 235 fields as Option&lt;T&gt;
+        ├── parse.rs    Categories 1–4: identity, timestamps, status, type
+        ├── address.rs  Categories 5–6: address, coordinates, FIPS field path
+        ├── physical.rs Categories 7–9: dimensions, construction, lot
+        ├── rooms.rs    Categories 10–12: rooms, parking, systems
+        └── listing.rs  Categories 13–21: HOA, tax, pricing, flood</div>
+
+  <h2>Data Flow</h2>
+  <div class="arch">RESO Web API JSON
+        │
+        ▼  serde_json::from_str()
+  PropertyReso              ← flat struct, 235 Option&lt;T&gt; fields
+        │
+        ▼  .enrich(fips_resolution)
+  PropertyEnriched          ← 40 typed fields + raw: Box&lt;PropertyReso&gt;
+        │
+        ├──▶ engine eligibility (Epic 7)
+        ├──▶ geo enrichment / ref_data (Epic 5)
+        └──▶ bridge::enriched_to_mismo_address()  ──▶  MISMO ingest (Epic 6)</div>
+
+  <h2>FIPS Derivation Priority</h2>
+  <div class="priority">
+    <div class="pstep best">
+      <div class="pnum">1</div>
+      <div>
+        <div class="plabel"><strong>FCC Census Geocoder API</strong> — <code>FccClient::resolve(lat, lon)</code></div>
+        <div class="psub">Most reliable · returns Block.FIPS (15-digit) → county FIPS + tract GEOID · implemented in Epic 5</div>
+      </div>
+    </div>
+    <div class="pstep">
+      <div class="pnum">2</div>
+      <div>
+        <div class="plabel"><strong>TaxTract field</strong> — <code>fips_from_fields()</code></div>
+        <div class="psub">Some MLS boards populate <code>TaxTract</code> with 11-digit census tract GEOID · first 5 digits = county FIPS</div>
+      </div>
+    </div>
+    <div class="pstep">
+      <div class="pnum">3</div>
+      <div>
+        <div class="plabel"><strong>State + county name lookup</strong></div>
+        <div class="psub">Approximate · requires <code>ref_data</code> county name table · implemented in Epic 7</div>
+      </div>
+    </div>
+    <div class="pstep">
+      <div class="pnum">—</div>
+      <div>
+        <div class="plabel" style="color:var(--muted)"><strong>None</strong> — fips_code and tract_geoid are null</div>
+        <div class="psub">Geo-dependent eligibility checks deferred until Epic 5 enrichment pipeline runs</div>
+      </div>
+    </div>
+  </div>
+
+  <h2>Key Design Decisions</h2>
+  <h3>Flat struct — no nested sub-structs</h3>
+  <p>The RESO Web API returns a flat JSON object. <code>PropertyReso</code> mirrors this exactly — one flat struct with 235 <code>Option&lt;T&gt;</code> fields and <code>#[serde(rename = "PascalCase")]</code> on every field. Nested sub-structs would require custom deserialization and add indirection at every call site.</p>
+
+  <h3>No <code>deny_unknown_fields</code></h3>
+  <p>RESO updates its Data Dictionary periodically. New fields added in DD 2.1 or DD 3.0 are silently ignored rather than causing parse failures. This is intentional — it avoids breaking changes when MLS boards add fields.</p>
+
+  <h3>All fields are <code>Option&lt;T&gt;</code></h3>
+  <p>RESO Web API responses omit fields with no value. Treating a missing field as an error would reject a large fraction of real-world listings. <code>enrich()</code> enforces required fields at the boundary instead.</p>
+
+  <h3><code>PropertyEnriched.raw</code> preserves all 235 fields</h3>
+  <p><code>Box&lt;PropertyReso&gt;</code> is moved into <code>raw</code> at the end of <code>enrich()</code> — zero copies. Any field not promoted into <code>PropertyEnriched</code> is accessible via <code>enriched.raw.field_name</code>.</p>
+
+  <h3>Acres → sq ft via <code>Decimal</code></h3>
+  <p><code>lot_size_sqft()</code> converts acres using <code>Decimal::from(43_560u32)</code>, not <code>f64</code>. This avoids the floating-point drift that would cause <code>0.2 × 43560.0</code> to produce <code>8711.999...</code> instead of exactly <code>8712</code>.</p>
+</div>
+
+<!-- ── Tab: Field Dictionary ──────────────────────────────────────────── -->
+<div class="tab-pane" id="tab-fields">
+  <h1>RESO 2.0 Field Dictionary</h1>
+  <p>All 235 <code>PropertyReso</code> fields organized by RESO Data Dictionary category. Each field is stored as <code>Option&lt;T&gt;</code>.</p>
+
+  <div class="cat-block">
+    <div class="cat-header"><span class="cat-num">Cat 1</span><span class="cat-name">Identity</span><span class="cat-count">10 fields</span></div>
+    <div class="cat-fields">
+      <span class="field-pill">ListingKey</span><span class="field-pill">ListingKeyNumeric</span><span class="field-pill">ListingId</span>
+      <span class="field-pill">SystemLocale</span><span class="field-pill">OriginatingSystemKey</span><span class="field-pill">OriginatingSystemName</span>
+      <span class="field-pill">SourceSystemKey</span><span class="field-pill">SourceSystemName</span>
+      <span class="field-pill">BridgeModificationTimestamp</span><span class="field-pill">TransactionType</span>
+    </div>
+  </div>
+
+  <div class="cat-block">
+    <div class="cat-header"><span class="cat-num">Cat 2</span><span class="cat-name">Timestamps</span><span class="cat-count">8 fields</span></div>
+    <div class="cat-fields">
+      <span class="field-pill">ModificationTimestamp</span><span class="field-pill">OriginalEntryTimestamp</span>
+      <span class="field-pill">StatusChangeTimestamp</span><span class="field-pill">PriceChangeTimestamp</span>
+      <span class="field-pill">MajorChangeTimestamp</span><span class="field-pill">PhotosChangeTimestamp</span>
+      <span class="field-pill">ContractStatusChangeDate</span><span class="field-pill">ExpirationDate</span>
+    </div>
+  </div>
+
+  <div class="cat-block">
+    <div class="cat-header"><span class="cat-num">Cat 3</span><span class="cat-name">Listing Status</span><span class="cat-count">8 fields</span></div>
+    <div class="cat-fields">
+      <span class="field-pill">StandardStatus</span><span class="field-pill">MlsStatus</span>
+      <span class="field-pill">ListingAgreement</span><span class="field-pill">Contingency</span>
+      <span class="field-pill">ContingencyDate</span><span class="field-pill">SpecialListingConditions</span>
+      <span class="field-pill">Disclosures</span><span class="field-pill">Possession</span>
+    </div>
+  </div>
+
+  <div class="cat-block">
+    <div class="cat-header"><span class="cat-num">Cat 4</span><span class="cat-name">Property Type</span><span class="cat-count">4 fields</span></div>
+    <div class="cat-fields">
+      <span class="field-pill">PropertyType</span><span class="field-pill">PropertySubType</span>
+      <span class="field-pill">StructuralCondition</span><span class="field-pill">PropertyCondition</span>
+    </div>
+  </div>
+
+  <div class="cat-block">
+    <div class="cat-header"><span class="cat-num">Cat 5</span><span class="cat-name">Address</span><span class="cat-count">22 fields</span></div>
+    <div class="cat-fields">
+      <span class="field-pill">UnparsedAddress</span><span class="field-pill">StreetNumber</span><span class="field-pill">StreetNumberNumeric</span>
+      <span class="field-pill">StreetDirPrefix</span><span class="field-pill">StreetName</span><span class="field-pill">StreetSuffix</span>
+      <span class="field-pill">StreetSuffixModifier</span><span class="field-pill">StreetDirSuffix</span>
+      <span class="field-pill">UnitNumber</span><span class="field-pill">UnitNumberType</span>
+      <span class="field-pill">City</span><span class="field-pill">CityRegion</span><span class="field-pill">StateOrProvince</span>
+      <span class="field-pill">PostalCode</span><span class="field-pill">PostalCodePlus4</span>
+      <span class="field-pill">CountyOrParish</span><span class="field-pill">Country</span>
+      <span class="field-pill">SubdivisionName</span><span class="field-pill">MLSAreaMajor</span><span class="field-pill">MLSAreaMinor</span>
+      <span class="field-pill">Directions</span><span class="field-pill">TownshipRange</span>
+    </div>
+  </div>
+
+  <div class="cat-block">
+    <div class="cat-header"><span class="cat-num">Cat 6</span><span class="cat-name">Geographic Coordinates</span><span class="cat-count">5 fields</span></div>
+    <div class="cat-fields">
+      <span class="field-pill">Latitude</span><span class="field-pill">Longitude</span><span class="field-pill">Elevation</span>
+      <span class="field-pill">ElevationUnits</span><span class="field-pill">MapCoordinate</span>
+    </div>
+  </div>
+
+  <div class="cat-block">
+    <div class="cat-header"><span class="cat-num">Cat 7–9</span><span class="cat-name">Physical · Construction · Lot</span><span class="cat-count">~48 fields</span></div>
+    <div class="cat-fields">
+      <span class="field-pill">LivingArea</span><span class="field-pill">LivingAreaUnits</span><span class="field-pill">LivingAreaSource</span>
+      <span class="field-pill">AboveGradeFinishedArea</span><span class="field-pill">BelowGradeFinishedArea</span>
+      <span class="field-pill">BelowGradeUnfinishedArea</span><span class="field-pill">BuildingAreaTotal</span>
+      <span class="field-pill">StoriesTotal</span><span class="field-pill">Levels</span>
+      <span class="field-pill">NumberOfUnitsTotal</span><span class="field-pill">NumberOfUnitsInCommunity</span>
+      <span class="field-pill">EntryLevel</span><span class="field-pill">CommonWalls</span><span class="field-pill">PropertyAttachedYN</span>
+      <span class="field-pill">YearBuilt</span><span class="field-pill">YearBuiltSource</span><span class="field-pill">YearBuiltEffective</span>
+      <span class="field-pill">NewConstructionYN</span><span class="field-pill">BuilderName</span><span class="field-pill">BuilderModel</span>
+      <span class="field-pill">StructureType</span><span class="field-pill">ArchitecturalStyle</span>
+      <span class="field-pill">ConstructionMaterials</span><span class="field-pill">FoundationDetails</span>
+      <span class="field-pill">FoundationArea</span><span class="field-pill">Roof</span>
+      <span class="field-pill">LotSizeAcres</span><span class="field-pill">LotSizeSquareFeet</span>
+      <span class="field-pill">LotSizeArea</span><span class="field-pill">LotSizeUnits</span><span class="field-pill">LotSizeDimensions</span>
+      <span class="field-pill">LotFeatures</span><span class="field-pill">FrontageLength</span>
+      <span class="field-pill">RoadFrontageType</span><span class="field-pill">RoadSurfaceType</span>
+      <span class="field-pill">LandLeaseYN</span><span class="field-pill">LandLeaseAmount</span>
+      <span class="field-pill">LandLeaseAmountFrequency</span><span class="field-pill">LandLeaseExpirationDate</span>
+    </div>
+  </div>
+
+  <div class="cat-block">
+    <div class="cat-header"><span class="cat-num">Cat 10–12</span><span class="cat-name">Rooms · Parking · Systems</span><span class="cat-count">~48 fields</span></div>
+    <div class="cat-fields">
+      <span class="field-pill">BedroomsTotal</span><span class="field-pill">BathroomsTotalDecimal</span><span class="field-pill">BathroomsTotalInteger</span>
+      <span class="field-pill">BathroomsFull</span><span class="field-pill">BathroomsHalf</span>
+      <span class="field-pill">BathroomsOneQuarter</span><span class="field-pill">BathroomsThreeQuarter</span>
+      <span class="field-pill">RoomsTotal</span><span class="field-pill">BedroomsPossible</span>
+      <span class="field-pill">Basement</span><span class="field-pill">BasementYN</span>
+      <span class="field-pill">ParkingTotal</span><span class="field-pill">GarageSpaces</span><span class="field-pill">CarportSpaces</span>
+      <span class="field-pill">CoveredSpaces</span><span class="field-pill">OpenParkingSpaces</span>
+      <span class="field-pill">ParkingFeatures</span><span class="field-pill">AttachedGarageYN</span>
+      <span class="field-pill">GarageYN</span><span class="field-pill">CarportYN</span><span class="field-pill">OpenParkingYN</span>
+      <span class="field-pill">Heating</span><span class="field-pill">HeatingYN</span><span class="field-pill">Cooling</span><span class="field-pill">CoolingYN</span>
+      <span class="field-pill">Electric</span><span class="field-pill">Gas</span>
+      <span class="field-pill">Sewer</span><span class="field-pill">WaterSource</span><span class="field-pill">Utilities</span>
+      <span class="field-pill">Appliances</span><span class="field-pill">LaundryFeatures</span>
+      <span class="field-pill">FireplacesTotal</span><span class="field-pill">FireplaceFeatures</span><span class="field-pill">FireplaceYN</span>
+      <span class="field-pill">SolarPanels</span><span class="field-pill">WindowFeatures</span><span class="field-pill">DoorFeatures</span>
+    </div>
+  </div>
+
+  <div class="cat-block">
+    <div class="cat-header"><span class="cat-num">Cat 13–21</span><span class="cat-name">HOA · Tax · Pricing · Schools · Flood · Remarks</span><span class="cat-count">~90 fields</span></div>
+    <div class="cat-fields">
+      <span class="field-pill">AssociationYN</span><span class="field-pill">AssociationFee</span><span class="field-pill">AssociationFeeFrequency</span>
+      <span class="field-pill">AssociationFeeIncludes</span><span class="field-pill">AssociationName</span>
+      <span class="field-pill">AssociationFee2</span><span class="field-pill">AssociationFeeFrequency2</span>
+      <span class="field-pill">AssociationAmenities</span><span class="field-pill">PetsAllowed</span>
+      <span class="field-pill">TaxAnnualAmount</span><span class="field-pill">TaxAssessedValue</span>
+      <span class="field-pill">TaxYear</span><span class="field-pill">TaxLegalDescription</span>
+      <span class="field-pill">ParcelNumber</span><span class="field-pill">TaxBlock</span><span class="field-pill">TaxLot</span>
+      <span class="field-pill">TaxTract</span><span class="field-pill">TaxExemptions</span>
+      <span class="field-pill">ListPrice</span><span class="field-pill">ClosePrice</span><span class="field-pill">OriginalListPrice</span>
+      <span class="field-pill">PreviousListPrice</span><span class="field-pill">Concessions</span><span class="field-pill">ConcessionsAmount</span>
+      <span class="field-pill">BuyerFinancing</span>
+      <span class="field-pill">NetOperatingIncome</span><span class="field-pill">GrossIncome</span><span class="field-pill">CapRate</span>
+      <span class="field-pill">ListingContractDate</span><span class="field-pill">CloseDate</span>
+      <span class="field-pill">DaysOnMarket</span><span class="field-pill">CumulativeDaysOnMarket</span>
+      <span class="field-pill">ElementarySchool</span><span class="field-pill">MiddleOrJuniorSchool</span>
+      <span class="field-pill">HighSchool</span><span class="field-pill">SchoolDistrict</span>
+      <span class="field-pill">FloodZone</span><span class="field-pill">FloodZoneCode</span>
+      <span class="field-pill">PublicRemarks</span><span class="field-pill">PrivateRemarks</span>
+      <span class="field-pill">ListAgentKey</span><span class="field-pill">ListAgentFullName</span>
+      <span class="field-pill">ListOfficeName</span><span class="field-pill">PhotosCount</span>
+    </div>
+  </div>
+</div>
+
+<!-- ── Tab: Lookups ───────────────────────────────────────────────────── -->
+<div class="tab-pane" id="tab-lookups">
+  <h1>Lookup Catalog</h1>
+
+  <h2>ResoPropertyType — 10 variants</h2>
+  <table>
+    <tr><th>Variant</th><th>RESO Wire String</th><th>Notes</th></tr>
+    <tr><td>Residential</td><td>"Residential"</td><td>Single-family, condo, townhouse, manufactured</td></tr>
+    <tr><td>ResidentialLease</td><td>"Residential Lease"</td><td>Rental listings</td></tr>
+    <tr><td>ResidentialIncome</td><td>"Residential Income"</td><td>2–4 unit investment properties</td></tr>
+    <tr><td>Commercial</td><td>"Commercial"</td><td></td></tr>
+    <tr><td>CommercialLease</td><td>"Commercial Lease"</td><td></td></tr>
+    <tr><td>CommercialSale</td><td>"Commercial Sale"</td><td></td></tr>
+    <tr><td>BusinessOpportunity</td><td>"Business Opportunity"</td><td></td></tr>
+    <tr><td>Farm</td><td>"Farm"</td><td></td></tr>
+    <tr><td>Land</td><td>"Land"</td><td></td></tr>
+    <tr><td>ManufacturedInPark</td><td>"Manufactured In Park"</td><td>Land-lease mobile home — always ineligible</td></tr>
+  </table>
+
+  <h2>ResoPropertySubType — 15 variants</h2>
+  <table>
+    <tr><th>Variant</th><th>RESO Wire String</th><th>→ Engine Type</th><th>MISMO</th></tr>
+    <tr><td>SingleFamilyResidence</td><td>"Single Family Residence" / "Single Family Resi"</td><td>SingleFamilyDetached</td><td>"Detached"</td></tr>
+    <tr><td>Condominium</td><td>"Condominium"</td><td>Condominium</td><td>"Condominium"</td></tr>
+    <tr><td>Townhouse</td><td>"Townhouse"</td><td>Townhouse</td><td>"Attached"</td></tr>
+    <tr><td>Apartment</td><td>"Apartment"</td><td>Condominium</td><td>"Condominium"</td></tr>
+    <tr><td>Cooperative</td><td>"Cooperative"</td><td>Cooperative</td><td>"Cooperative"</td></tr>
+    <tr><td>OwnYourOwn</td><td>"Own Your Own"</td><td>Cooperative</td><td>"Cooperative"</td></tr>
+    <tr><td>StockCooperative</td><td>"Stock Cooperative"</td><td>Cooperative</td><td>"Cooperative"</td></tr>
+    <tr><td>Duplex</td><td>"Duplex"</td><td>TwoUnit</td><td>"Detached"</td></tr>
+    <tr><td>Triplex</td><td>"Triplex"</td><td>ThreeUnit</td><td>"Detached"</td></tr>
+    <tr><td>Quadruplex</td><td>"Quadruplex"</td><td>FourUnit</td><td>"Detached"</td></tr>
+    <tr><td>MobileHome</td><td>"Mobile Home"</td><td>MobileHome ⚠️</td><td>"MobileHome"</td></tr>
+    <tr><td>ManufacturedHome</td><td>"Manufactured Home"</td><td>ManufacturedHome</td><td>"ManufacturedHousing"</td></tr>
+    <tr><td>Modular</td><td>"Modular"</td><td>SingleFamilyDetached</td><td>"Detached"</td></tr>
+    <tr><td>Cabin</td><td>"Cabin"</td><td>SingleFamilyDetached</td><td>"Detached"</td></tr>
+    <tr><td>Timeshare</td><td>"Timeshare"</td><td>SingleFamilyDetached</td><td>"Detached"</td></tr>
+  </table>
+  <div class="callout callout-danger"><strong>⚠ Always Ineligible</strong>MobileHome maps to <code>PropertyType::MobileHome</code> — personal property on leased land. Agency programs (FHA, VA, USDA, Fannie, Freddie) do not finance mobile homes on land leases.</div>
+
+  <h2>ResoStandardStatus — 10 variants</h2>
+  <table>
+    <tr><th>Variant</th><th>Wire String</th><th>is_active()</th><th>is_available_for_viewing()</th><th>is_off_market()</th></tr>
+    <tr><td>Active</td><td>"Active"</td><td>✓</td><td>✓</td><td></td></tr>
+    <tr><td>ActiveUnderContract</td><td>"Active Under Contract"</td><td></td><td>✓</td><td></td></tr>
+    <tr><td>ComingSoon</td><td>"Coming Soon"</td><td></td><td>✓</td><td></td></tr>
+    <tr><td>Pending</td><td>"Pending"</td><td></td><td></td><td></td></tr>
+    <tr><td>Closed</td><td>"Closed"</td><td></td><td></td><td></td></tr>
+    <tr><td>Expired</td><td>"Expired"</td><td></td><td></td><td>✓</td></tr>
+    <tr><td>Canceled</td><td>"Canceled"</td><td></td><td></td><td>✓</td></tr>
+    <tr><td>Withdrawn</td><td>"Withdrawn"</td><td></td><td></td><td>✓</td></tr>
+    <tr><td>Incomplete</td><td>"Incomplete"</td><td></td><td></td><td></td></tr>
+    <tr><td>Delete</td><td>"Delete"</td><td></td><td></td><td>✓</td></tr>
+  </table>
+</div>
+
+<!-- ── Tab: Parse Methods ─────────────────────────────────────────────── -->
+<div class="tab-pane" id="tab-parse">
+  <h1>Parse Methods — <code>impl PropertyReso</code></h1>
+  <p>All methods borrow <code>&amp;self</code> and return typed values derived from the raw RESO fields.</p>
+
+  <h2>Category 1 — Identity</h2>
+  <div class="method"><div class="method-sig"><span class="fn-kw">pub fn</span> <span class="fn-name">listing_key_required</span>(&amp;self) -&gt; <span class="ret">ResoResult&lt;&amp;str&gt;</span></div><div class="method-doc">Returns <code>ListingKey</code> or <code>Err(MissingField)</code>. Every RESO-compliant record must have this field.</div></div>
+  <div class="method"><div class="method-sig"><span class="fn-kw">pub fn</span> <span class="fn-name">best_key</span>(&amp;self) -&gt; <span class="ret">ResoResult&lt;&amp;str&gt;</span></div><div class="method-doc">Priority: <code>ListingKey</code> → <code>OriginatingSystemKey</code> → <code>ListingId</code>.</div></div>
+  <div class="method"><div class="method-sig"><span class="fn-kw">pub fn</span> <span class="fn-name">display_listing_id</span>(&amp;self) -&gt; <span class="ret">Option&lt;&amp;str&gt;</span></div><div class="method-doc">Human-readable MLS number. Prefers <code>ListingId</code>, falls back to <code>ListingKey</code>.</div></div>
+
+  <h2>Category 3 — Status</h2>
+  <div class="method"><div class="method-sig"><span class="fn-kw">pub fn</span> <span class="fn-name">standard_status_parsed</span>(&amp;self) -&gt; <span class="ret">ResoResult&lt;ResoStandardStatus&gt;</span></div><div class="method-doc">Parse <code>StandardStatus</code> into typed enum. Err if absent or unrecognized.</div></div>
+  <div class="method"><div class="method-sig"><span class="fn-kw">pub fn</span> <span class="fn-name">is_active</span> / <span class="fn-name">is_pending</span> / <span class="fn-name">is_closed</span> / <span class="fn-name">is_coming_soon</span>(&amp;self) -&gt; <span class="ret">bool</span></div><div class="method-doc">Status predicates — return <code>false</code> when <code>StandardStatus</code> is absent.</div></div>
+  <div class="method"><div class="method-sig"><span class="fn-kw">pub fn</span> <span class="fn-name">is_available_for_viewing</span>(&amp;self) -&gt; <span class="ret">bool</span></div><div class="method-doc">True for Active, ActiveUnderContract, ComingSoon.</div></div>
+
+  <h2>Category 4 — Property Type</h2>
+  <div class="method"><div class="method-sig"><span class="fn-kw">pub fn</span> <span class="fn-name">engine_property_type</span>(&amp;self) -&gt; <span class="ret">ResoResult&lt;types::PropertyType&gt;</span></div><div class="method-doc">Maps <code>PropertySubType</code> → engine type. Falls back to top-level <code>PropertyType</code> when sub-type absent.</div></div>
+  <div class="method"><div class="method-sig"><span class="fn-kw">pub fn</span> <span class="fn-name">is_mobile_home_ineligible</span>(&amp;self) -&gt; <span class="ret">bool</span></div><div class="method-doc">True when sub-type is <code>MobileHome</code> OR type is <code>ManufacturedInPark</code>.</div></div>
+  <div class="method"><div class="method-sig"><span class="fn-kw">pub fn</span> <span class="fn-name">residential_unit_count</span>(&amp;self) -&gt; <span class="ret">ResoResult&lt;u8&gt;</span></div><div class="method-doc">1–4 units from <code>NumberOfUnitsTotal</code> or derived from sub-type. Errors for 5+.</div></div>
+
+  <h2>Category 5–6 — Address &amp; Coordinates</h2>
+  <div class="method"><div class="method-sig"><span class="fn-kw">pub fn</span> <span class="fn-name">state_code</span>(&amp;self) -&gt; <span class="ret">ResoResult&lt;types::StateCode&gt;</span></div><div class="method-doc">Case-insensitive parse of <code>StateOrProvince</code>.</div></div>
+  <div class="method"><div class="method-sig"><span class="fn-kw">pub fn</span> <span class="fn-name">postal_code_5digit</span>(&amp;self) -&gt; <span class="ret">Option&lt;&amp;str&gt;</span></div><div class="method-doc">Strips ZIP+4 suffix. "78640-1234" → "78640".</div></div>
+  <div class="method"><div class="method-sig"><span class="fn-kw">pub fn</span> <span class="fn-name">best_address</span>(&amp;self) -&gt; <span class="ret">Option&lt;String&gt;</span></div><div class="method-doc"><code>UnparsedAddress</code> if present, else composed from components.</div></div>
+  <div class="method"><div class="method-sig"><span class="fn-kw">pub fn</span> <span class="fn-name">validated_coordinates</span>(&amp;self) -&gt; <span class="ret">ResoResult&lt;(f64, f64)&gt;</span></div><div class="method-doc">WGS 84 bounds check + null island (0,0) rejection.</div></div>
+  <div class="method"><div class="method-sig"><span class="fn-kw">pub fn</span> <span class="fn-name">fips_from_fields</span>(&amp;self) -&gt; <span class="ret">Option&lt;String&gt;</span></div><div class="method-doc">Extracts county FIPS from <code>TaxTract</code> 11-digit GEOID (first 5 digits).</div></div>
+
+  <h2>Categories 7–9 — Physical &amp; Lot</h2>
+  <div class="method"><div class="method-sig"><span class="fn-kw">pub fn</span> <span class="fn-name">year_built</span>(&amp;self) -&gt; <span class="ret">ResoResult&lt;Option&lt;u16&gt;&gt;</span></div><div class="method-doc">Validated 1800–2040. Returns <code>Err</code> outside range, <code>Ok(None)</code> if absent.</div></div>
+  <div class="method"><div class="method-sig"><span class="fn-kw">pub fn</span> <span class="fn-name">lot_size_sqft</span>(&amp;self) -&gt; <span class="ret">Option&lt;u32&gt;</span></div><div class="method-doc">Priority: <code>LotSizeSquareFeet</code> → <code>LotSizeAcres × 43,560</code> (Decimal arithmetic).</div></div>
+  <div class="method"><div class="method-sig"><span class="fn-kw">pub fn</span> <span class="fn-name">stories</span>(&amp;self) -&gt; <span class="ret">Option&lt;u8&gt;</span></div><div class="method-doc">Rounds 1.5 → 2 (split-level). Does not truncate.</div></div>
+
+  <h2>Categories 13–21 — HOA, Tax, Pricing, Flood</h2>
+  <div class="method"><div class="method-sig"><span class="fn-kw">pub fn</span> <span class="fn-name">hoa_monthly_cents</span>(&amp;self) -&gt; <span class="ret">Option&lt;Cents&gt;</span></div><div class="method-doc">Normalizes any <code>AssociationFeeFrequency</code> to a monthly Cents value. OneTime → <code>None</code>.</div></div>
+  <div class="method"><div class="method-sig"><span class="fn-kw">pub fn</span> <span class="fn-name">is_flood_insurance_required</span>(&amp;self) -&gt; <span class="ret">bool</span></div><div class="method-doc">SFHA check: <code>FloodZone</code> starts with "A" or "V". Zone "X" = false.</div></div>
+</div>
+
+<!-- ── Tab: PropertyEnriched ──────────────────────────────────────────── -->
+<div class="tab-pane" id="tab-enriched">
+  <h1>PropertyEnriched</h1>
+  <p>The output of <code>PropertyReso::enrich()</code>. Holds 40 typed fields and <code>raw: Box&lt;PropertyReso&gt;</code>.</p>
+
+  <h2>Signature</h2>
+  <pre><code>pub fn enrich(
+    self,
+    fips_resolution: Option&lt;FipsResolution&gt;,
+) -&gt; ResoResult&lt;PropertyEnriched&gt;</code></pre>
+
+  <h2>Required Fields — enrich() fails if absent</h2>
+  <table>
+    <tr><th>RESO Field</th><th>Engine Type</th><th>Error</th></tr>
+    <tr><td>ListingKey</td><td><code>types::MlsListingKey</code></td><td><code>MissingField { "ListingKey" }</code></td></tr>
+    <tr><td>StandardStatus</td><td><code>ResoStandardStatus</code></td><td><code>MissingField { "StandardStatus" }</code></td></tr>
+    <tr><td>PropertyType</td><td><code>ResoPropertyType</code></td><td><code>MissingField { "PropertyType" }</code></td></tr>
+    <tr><td>StateOrProvince</td><td><code>types::StateCode</code></td><td><code>MissingField { "StateOrProvince" }</code></td></tr>
+  </table>
+
+  <h2>All Fields</h2>
+  <table>
+    <tr><th>Field</th><th>Type</th><th>Source</th></tr>
+    <tr><td>listing_key</td><td><code>MlsListingKey</code></td><td>ListingKey (required)</td></tr>
+    <tr><td>listing_id</td><td><code>Option&lt;String&gt;</code></td><td>ListingId</td></tr>
+    <tr><td>standard_status</td><td><code>ResoStandardStatus</code></td><td>StandardStatus (required)</td></tr>
+    <tr><td>is_active</td><td><code>bool</code></td><td>standard_status == Active</td></tr>
+    <tr><td>property_type</td><td><code>ResoPropertyType</code></td><td>PropertyType (required)</td></tr>
+    <tr><td>property_sub_type</td><td><code>Option&lt;ResoPropertySubType&gt;</code></td><td>PropertySubType</td></tr>
+    <tr><td>engine_type</td><td><code>types::PropertyType</code></td><td>SubType → engine mapping</td></tr>
+    <tr><td>is_mobile_home</td><td><code>bool</code></td><td>MobileHome subtype OR ManufacturedInPark type</td></tr>
+    <tr><td>state</td><td><code>types::StateCode</code></td><td>StateOrProvince (required)</td></tr>
+    <tr><td>city</td><td><code>Option&lt;String&gt;</code></td><td>City</td></tr>
+    <tr><td>county</td><td><code>Option&lt;String&gt;</code></td><td>CountyOrParish (trimmed)</td></tr>
+    <tr><td>postal_code</td><td><code>Option&lt;String&gt;</code></td><td>PostalCode (5-digit)</td></tr>
+    <tr><td>best_address</td><td><code>Option&lt;String&gt;</code></td><td>UnparsedAddress or composed</td></tr>
+    <tr><td>latitude / longitude</td><td><code>Option&lt;f64&gt;</code></td><td>Latitude / Longitude</td></tr>
+    <tr><td>fips_code</td><td><code>Option&lt;types::FipsCode&gt;</code></td><td>FCC resolution &gt; TaxTract field</td></tr>
+    <tr><td>tract_geoid</td><td><code>Option&lt;String&gt;</code></td><td>FCC Block.FIPS[0..11]</td></tr>
+    <tr><td>unit_count</td><td><code>u8</code></td><td>NumberOfUnitsTotal or SubType (1–4)</td></tr>
+    <tr><td>living_area_sqft</td><td><code>Option&lt;u32&gt;</code></td><td>LivingArea (truncated)</td></tr>
+    <tr><td>year_built</td><td><code>Option&lt;u16&gt;</code></td><td>YearBuilt (range errors → None)</td></tr>
+    <tr><td>is_new_construction</td><td><code>bool</code></td><td>NewConstructionYN</td></tr>
+    <tr><td>is_attached</td><td><code>bool</code></td><td>PropertyAttachedYN</td></tr>
+    <tr><td>lot_size_sqft</td><td><code>Option&lt;u32&gt;</code></td><td>sqft or acres×43560</td></tr>
+    <tr><td>bedrooms</td><td><code>Option&lt;u8&gt;</code></td><td>BedroomsTotal</td></tr>
+    <tr><td>bathrooms_decimal</td><td><code>Option&lt;Decimal&gt;</code></td><td>BathroomsTotalDecimal</td></tr>
+    <tr><td>has_garage / has_pool / has_basement</td><td><code>bool</code></td><td>YN fields or collection presence</td></tr>
+    <tr><td>hoa_yn</td><td><code>bool</code></td><td>AssociationYN</td></tr>
+    <tr><td>hoa_monthly_cents</td><td><code>Option&lt;Cents&gt;</code></td><td>AssociationFee normalized</td></tr>
+    <tr><td>hoa_annual_cents</td><td><code>Option&lt;Cents&gt;</code></td><td>hoa_monthly × 12</td></tr>
+    <tr><td>tax_annual_cents</td><td><code>Option&lt;Cents&gt;</code></td><td>TaxAnnualAmount × 100</td></tr>
+    <tr><td>tax_year / parcel_number</td><td><code>Option&lt;u16&gt;</code> / <code>Option&lt;String&gt;</code></td><td>TaxYear / ParcelNumber</td></tr>
+    <tr><td>list_price / close_price</td><td><code>Option&lt;Cents&gt;</code></td><td>ListPrice / ClosePrice × 100</td></tr>
+    <tr><td>days_on_market</td><td><code>Option&lt;u32&gt;</code></td><td>DaysOnMarket</td></tr>
+    <tr><td>school_district / elementary_school / high_school</td><td><code>Option&lt;String&gt;</code></td><td>RESO school fields</td></tr>
+    <tr><td>flood_zone</td><td><code>Option&lt;String&gt;</code></td><td>FloodZone</td></tr>
+    <tr><td>flood_insurance_required</td><td><code>bool</code></td><td>FloodZone starts with A or V</td></tr>
+    <tr><td>raw</td><td><code>Box&lt;PropertyReso&gt;</code></td><td>All 235 fields (zero-copy move)</td></tr>
+  </table>
+</div>
+
+<!-- ── Tab: FCC Client ────────────────────────────────────────────────── -->
+<div class="tab-pane" id="tab-fcc">
+  <h1>FCC Census Geocoder Client</h1>
+
+  <h2>API</h2>
+  <pre><code>GET https://geo.fcc.gov/api/census/block/find
+    ?latitude={lat}&amp;longitude={lon}&amp;censusYear=2020&amp;format=json</code></pre>
+
+  <h2>Response Shape</h2>
+  <pre><code>{
+  "status": "OK",
+  "County": { "FIPS": "48209", "name": "Hays" },
+  "State":  { "FIPS": "48",    "code": "TX",   "name": "Texas" },
+  "Block":  { "FIPS": "482090109053009" }
+}</code></pre>
+  <p>Block.FIPS is 15 digits: <strong>state(2) + county(3) + tract(6) + block(4)</strong>.<br>
+  Census tract GEOID = first 11 digits = <code>"48209010905"</code>.</p>
+
+  <h2>FipsResolution</h2>
+  <table>
+    <tr><th>Field</th><th>Type</th><th>Source</th></tr>
+    <tr><td>fips_code</td><td><code>types::FipsCode</code></td><td>County.FIPS</td></tr>
+    <tr><td>county_name</td><td><code>String</code></td><td>County.name</td></tr>
+    <tr><td>state_code</td><td><code>types::StateCode</code></td><td>State.code</td></tr>
+    <tr><td>tract_geoid</td><td><code>Option&lt;String&gt;</code></td><td>Block.FIPS[0..11]</td></tr>
+  </table>
+
+  <h2>Usage in Tests</h2>
+  <pre><code>// All tests use parse_fcc_response() directly — no live HTTP
+let resolution = parse_fcc_response(r#"{
+    "status": "OK",
+    "County": { "FIPS": "48209", "name": "Hays" },
+    "State":  { "FIPS": "48", "code": "TX", "name": "Texas" },
+    "Block":  { "FIPS": "482090109053009" }
+}"#).unwrap();
+
+let enriched = reso_property.enrich(Some(resolution)).unwrap();
+assert_eq!(enriched.fips_code.unwrap().to_string(), "48209");
+assert_eq!(enriched.tract_geoid.as_deref(), Some("48209010905"));</code></pre>
+
+  <div class="callout callout-info"><strong>Epic 5 Note</strong>The HTTP call in <code>FccClient::resolve()</code> is a stub in Epic 3. The async HTTP implementation is wired into the geo enrichment pipeline in Epic 5, where the <code>tokio</code> runtime is established. All parsing logic and data types are fully tested now via <code>parse_fcc_response()</code>.</div>
+</div>
+
+<!-- ── Tab: Bridge ────────────────────────────────────────────────────── -->
+<div class="tab-pane" id="tab-bridge">
+  <h1>RESO ↔ MISMO Bridge</h1>
+  <p>Functions used by Epic 6 (ingest) to reconcile RESO MLS data with MISMO 3.4 loan files.</p>
+
+  <h2>Functions</h2>
+  <div class="method"><div class="method-sig"><span class="fn-kw">pub const fn</span> <span class="fn-name">property_sub_type_to_mismo</span>(sub: <span class="fn-type">ResoPropertySubType</span>) -&gt; <span class="ret">&amp;'static str</span></div><div class="method-doc">Maps all 15 RESO subtypes to MISMO PropertyType strings. <code>const fn</code> — zero runtime cost.</div></div>
+  <div class="method"><div class="method-sig"><span class="fn-kw">pub fn</span> <span class="fn-name">state_code_to_mismo</span>(state: <span class="fn-type">types::StateCode</span>) -&gt; <span class="ret">&amp;'static str</span></div><div class="method-doc">Passthrough to <code>StateCode::as_str()</code> — MISMO uses the same 2-letter USPS codes as RESO.</div></div>
+  <div class="method"><div class="method-sig"><span class="fn-kw">pub fn</span> <span class="fn-name">enriched_to_mismo_address</span>(p: &amp;<span class="fn-type">PropertyEnriched</span>) -&gt; <span class="ret">MismoAddressFields</span></div><div class="method-doc">Extracts address components for MISMO <code>SubjectProperty</code> container. State is always present (required by <code>enrich()</code>).</div></div>
+  <div class="method"><div class="method-sig"><span class="fn-kw">pub fn</span> <span class="fn-name">select_valuation_price</span>(p: &amp;<span class="fn-type">PropertyEnriched</span>) -&gt; <span class="ret">Option&lt;types::Cents&gt;</span></div><div class="method-doc">ClosePrice → ListPrice priority. Used as cross-check against MISMO appraised value.</div></div>
+  <div class="method"><div class="method-sig"><span class="fn-kw">pub fn</span> <span class="fn-name">hoa_for_mismo_expense</span>(p: &amp;<span class="fn-type">PropertyEnriched</span>) -&gt; <span class="ret">Option&lt;types::Cents&gt;</span></div><div class="method-doc">Monthly HOA amount for MISMO <code>HousingExpenseType</code> element. Already normalized by <code>enrich()</code>.</div></div>
+</div>
+
+<!-- ── Tab: Design Decisions ──────────────────────────────────────────── -->
+<div class="tab-pane" id="tab-decisions">
+  <h1>Design Decisions</h1>
+
+  <h3>Flat struct vs nested sub-structs</h3>
+  <p>Nested sub-structs require custom <code>Deserialize</code> implementations because RESO Web API returns a flat JSON object. A flat struct with <code>#[serde(rename)]</code> on every field handles the wire format directly with zero custom code. Navigation is via method modules (<code>address.rs</code>, <code>physical.rs</code>, etc.) not struct hierarchy.</p>
+
+  <h3>No <code>deny_unknown_fields</code></h3>
+  <p>RESO Data Dictionary releases (2.0 → 2.1 → 3.0) add new fields. MLS boards add local extensions. <code>deny_unknown_fields</code> would cause parse failures on new fields, breaking the pipeline every time RESO updates. Unknown fields are silently dropped — no data is lost because all fields we consume are already in the struct.</p>
+
+  <h3>HOA normalization in <code>hoa_monthly_cents()</code></h3>
+  <p>PITIA (Principal + Interest + Tax + Insurance + Association) calculation requires a monthly recurring figure. MLS boards use all five RESO frequencies inconsistently. Normalizing at the <code>PropertyReso</code> level means every downstream consumer gets a consistent monthly Cents value without repeating the frequency logic. <code>OneTime</code> fees (transfer/initiation fees) return <code>None</code> — they are not recurring expenses.</p>
+
+  <h3>Year built: <code>Err</code> vs graceful <code>None</code></h3>
+  <p><code>year_built()</code> returns <code>Err</code> for values outside 1800–2040 — useful for strict validation contexts. <code>enrich()</code> uses <code>year_built().unwrap_or(None)</code> to absorb the error gracefully, because an out-of-range year is a data quality issue that should not prevent the property from being analyzed.</p>
+
+  <h3>Null island coordinate rejection</h3>
+  <p>Some MLS data export pipelines geocode failed lookups to <code>(0.0, 0.0)</code> instead of leaving the field null. <code>validated_coordinates()</code> explicitly rejects this sentinel value as <code>InvalidCoordinate</code>.</p>
+
+  <h3><code>lot_size_sqft()</code> via <code>Decimal</code> arithmetic</h3>
+  <p>The conversion factor is exactly 43,560 sq ft per acre. Using <code>f64</code> arithmetic, <code>0.2 × 43560.0</code> can produce <code>8711.999999999998</code> which truncates to 8,711 instead of 8,712. Using <code>rust_decimal</code>, the multiplication is exact.</p>
+
+  <h3>FCC client: parse function separated from HTTP</h3>
+  <p>All test coverage of the FCC response format is against <code>parse_fcc_response(json)</code> — a pure function that takes a string and returns a <code>FipsResolution</code>. This gives 100% coverage of the parsing logic without any HTTP infrastructure. The stub <code>FccClient::resolve()</code> is replaced with a real async call in Epic 5.</p>
+</div>
+
+<!-- ── Tab: Fixtures ──────────────────────────────────────────────────── -->
+<div class="tab-pane" id="tab-fixtures">
+  <h1>Test Fixtures</h1>
+  <p>Five canonical JSON fixtures at <code>crates/reso/tests/fixtures/</code> cover the full space of property types the engine processes.</p>
+
+  <h3>kyle_tx_sfr.json</h3>
+  <table>
+    <tr><th>Field</th><th>Value</th></tr>
+    <tr><td>Type</td><td>Single Family Residence · Active</td></tr>
+    <tr><td>Location</td><td>1234 Mockingbird Ln, Kyle TX 78640 · Hays County</td></tr>
+    <tr><td>FIPS (field)</td><td>TaxTract "48209010905" → 48209</td></tr>
+    <tr><td>Coordinates</td><td>30.0394, -97.8772</td></tr>
+    <tr><td>Size</td><td>2,345 sqft · 4bd/2.5ba · 2-car garage · 0.2 acres</td></tr>
+    <tr><td>Year Built</td><td>2018</td></tr>
+    <tr><td>HOA</td><td>$75/mo · $900/yr</td></tr>
+    <tr><td>Tax</td><td>$8,900/yr · 2024 · Parcel 1234-5678-90</td></tr>
+    <tr><td>Price</td><td>$459,000 (↓ from $475,000 original)</td></tr>
+    <tr><td>Flood</td><td>Zone X — no insurance required</td></tr>
+    <tr><td>Schools</td><td>Hays CISD · Negley ES · Lehman HS</td></tr>
+  </table>
+
+  <h3>kyle_tx_condo.json</h3>
+  <table>
+    <tr><th>Field</th><th>Value</th></tr>
+    <tr><td>Type</td><td>Condominium · Active · Unit 304</td></tr>
+    <tr><td>Location</td><td>200 Mockingbird Ln #304, Kyle TX 78640</td></tr>
+    <tr><td>HOA</td><td>$2,400/yr → $200/mo (annually normalized)</td></tr>
+    <tr><td>Community</td><td>120-unit building · Pool · Gym · Gated</td></tr>
+    <tr><td>Attached</td><td>PropertyAttachedYN: true · CommonWalls: 2</td></tr>
+  </table>
+
+  <h3>mobile_home.json</h3>
+  <table>
+    <tr><th>Field</th><th>Value</th></tr>
+    <tr><td>Type</td><td>Mobile Home — <span class="badge badge-red">ALWAYS INELIGIBLE</span></td></tr>
+    <tr><td>Land Lease</td><td>LandLeaseYN: true · $350/mo lot rent</td></tr>
+    <tr><td>Utilities</td><td>Septic + Well (no public utilities)</td></tr>
+    <tr><td>Engine</td><td>is_mobile_home = true · engine_type = MobileHome</td></tr>
+  </table>
+
+  <h3>manufactured_home.json</h3>
+  <table>
+    <tr><th>Field</th><th>Value</th></tr>
+    <tr><td>Type</td><td>Manufactured Home — <span class="badge badge-green">ELIGIBLE</span></td></tr>
+    <tr><td>Land</td><td>1.5 acres owned · LandLeaseYN: false</td></tr>
+    <tr><td>Lot size</td><td>1.5 acres × 43,560 = 65,340 sqft</td></tr>
+    <tr><td>Buyer financing</td><td>FHA · VA · USDA · Conventional</td></tr>
+  </table>
+
+  <h3>income_property.json</h3>
+  <table>
+    <tr><th>Field</th><th>Value</th></tr>
+    <tr><td>Type</td><td>Quadruplex · 4 units</td></tr>
+    <tr><td>Location</td><td>321 Rental Row, Austin TX 78704 · Travis County</td></tr>
+    <tr><td>FIPS (field)</td><td>TaxTract "48453001801" → 48453 (Travis County)</td></tr>
+    <tr><td>Flood</td><td>Zone AE — <span class="badge badge-yellow">FLOOD INSURANCE REQUIRED</span></td></tr>
+    <tr><td>Income</td><td>NOI $42,000 · Gross $60,000 · Cap rate 5.9%</td></tr>
+    <tr><td>Price</td><td>$710,000 (↓ from $725,000)</td></tr>
+  </table>
+</div>
+
+</main>
+</div>
+
+<script>
+function showTab(id) {
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const pane = document.getElementById('tab-' + id);
+  if (pane) pane.classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
+</body>
+</html>
