@@ -130,15 +130,14 @@ jobs:
           # As each epic reaches full coverage its crate is removed from the
           # ignore list and the threshold is re-measured and raised.
           #
-          # Epic 2 (mismo): excluded — schema layer under active development.
-          # Remove 'mismo' from the pattern when Task 2.11 gate test passes.
+          # Epic 2 (mismo): INCLUDED — Task 2.12 gate test passed.
           cargo llvm-cov \
             --workspace \
             --all-features \
             --lcov --output-path lcov.info \
             --fail-under-lines 97 \
             --ignore-filename-regex \
-              '(mismo|reso|ingest|enrich|eligibility|compliance|scenarios|solver|amort|ml|orchestrator|api)[/\\]src[/\\]'
+              '(reso|ingest|enrich|eligibility|compliance|scenarios|solver|amort|ml|orchestrator|api)[/\\]src[/\\]'
       - name: Upload LCOV report
         uses: actions/upload-artifact@v4
         with:
