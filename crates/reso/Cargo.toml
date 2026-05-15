@@ -1,6 +1,6 @@
 [package]
 name             = "reso"
-description      = "RESO Data Dictionary 2.0 Property resource for listing data interchange."
+description      = "RESO Data Dictionary 2.0 Property resource — all 235 fields, lookup catalog, FCC FIPS client, and RESO ↔ MISMO bridge."
 version.workspace      = true
 edition.workspace      = true
 authors.workspace      = true
@@ -13,6 +13,11 @@ publish.workspace      = true
 workspace = true
 
 [dependencies]
-# Stub: dependencies are introduced as Epic 3 tasks land.
+types        = { workspace = true }
+serde        = { workspace = true }
+serde_json   = { workspace = true }
+thiserror    = { workspace = true }
+rust_decimal = { workspace = true }
 
 [dev-dependencies]
+serde_json = { workspace = true }
