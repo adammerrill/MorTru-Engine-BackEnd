@@ -21,6 +21,8 @@
 //! ignored — `#[serde(deny_unknown_fields)]` is intentionally NOT used
 //! to future-proof against new RESO fields without breaking changes.
 
+pub mod parse;
+
 use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
 
