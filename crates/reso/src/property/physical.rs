@@ -91,7 +91,7 @@ impl PropertyReso {
             return Ok(None);
         };
         let y = y as u16;
-        if y < MIN_YEAR_BUILT || y > MAX_YEAR_BUILT {
+        if !(MIN_YEAR_BUILT..=MAX_YEAR_BUILT).contains(&y) {
             return Err(ResoError::ParseError {
                 field: "YearBuilt",
                 detail: format!("{y} is outside the valid range {MIN_YEAR_BUILT}–{MAX_YEAR_BUILT}"),
