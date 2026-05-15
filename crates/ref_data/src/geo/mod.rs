@@ -119,7 +119,7 @@ impl GseLoanLimits {
     /// True if this loan amount would be classified as high-balance
     /// (above standard national limit but within county limit).
     #[must_use]
-    pub fn is_high_balance_amount(&self, loan_amount: Cents, year: u16) -> bool {
+    pub fn is_high_balance_amount(&self, loan_amount: Cents, _year: u16) -> bool {
         let standard = Self::STANDARD_1_UNIT_2025; // expand with historical years as needed
         loan_amount > standard && loan_amount <= self.limit_1_unit
     }
