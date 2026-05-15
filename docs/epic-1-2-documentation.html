@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MorTru Engine — Epic 1 & Epic 2 Documentation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --slate-900: #0c1117;
+    --slate-800: #161d27;
+    --slate-700: #1e2836;
+    --slate-600: #2a3848;
+    --slate-500: #3d5068;
+    --slate-400: #607590;
+    --slate-300: #8fa5bc;
+    --slate-200: #c0d0df;
+    --slate-100: #e4ecf3;
+    --slate-50:  #f2f6fa;
+    --teal-600:  #0f6e56;
+    --teal-500:  #1d9e75;
+    --teal-400:  #3dbf91;
+    --teal-200:  #9fe1cb;
+    --teal-100:  #d0f0e5;
+    --amber-500: #ef9f27;
+    --amber-200: #fac775;
+    --amber-100: #faeeda;
+    --red-500:   #e24b4a;
+    --red-100:   #fcebeb;
+    --blue-500:  #378add;
+    --blue-100:  #e6f1fb;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'IBM Plex Sans', system-ui, sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.65;
+    background: var(--slate-50);
+    color: var(--slate-800);
+    min-height: 100vh;
+  }
+
+  /* ── Top bar ── */
+  .topbar {
+    background: var(--slate-900);
+    border-bottom: 1px solid var(--slate-700);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 56px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .topbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #fff;
+  }
+  .topbar-logo {
+    width: 28px;
+    height: 28px;
+    background: var(--teal-500);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    color: #fff;
+    letter-spacing: -0.5px;
+  }
+  .topbar-name {
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 500;
+    color: #fff;
+    letter-spacing: 0.02em;
+  }
+  .topbar-version {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--slate-400);
+    background: var(--slate-800);
+    padding: 3px 8px;
+    border-radius: 4px;
+    border: 1px solid var(--slate-600);
+  }
+  .topbar-meta {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .topbar-stat {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--slate-300);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .topbar-stat .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--teal-400);
+  }
+
+  /* ── Tab nav ── */
+  .tab-nav {
+    background: var(--slate-800);
+    border-bottom: 1px solid var(--slate-600);
+    padding: 0 2rem;
+    display: flex;
+    gap: 2px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .tab-nav::-webkit-scrollbar { display: none; }
+  .tab-btn {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--slate-300);
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    padding: 0 16px;
+    height: 44px;
+    cursor: pointer;
+    white-space: nowrap;
+    letter-spacing: 0.03em;
+    transition: color 0.15s, border-color 0.15s;
+    text-transform: uppercase;
+  }
+  .tab-btn:hover { color: #fff; }
+  .tab-btn.active {
+    color: var(--teal-400);
+    border-bottom-color: var(--teal-400);
+  }
+
+  /* ── Content area ── */
+  .content { display: none; }
+  .content.active { display: block; }
+
+  .page-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 2.5rem 2rem 4rem;
+  }
+
+  /* ── Typography ── */
+  h1 { font-size: 26px; font-weight: 600; color: var(--slate-900); line-height: 1.3; margin-bottom: 0.5rem; }
+  h2 { font-size: 18px; font-weight: 600; color: var(--slate-800); margin: 2.5rem 0 0.75rem; padding-top: 1.5rem; border-top: 1px solid var(--slate-200); }
+  h2:first-of-type { border-top: none; padding-top: 0; margin-top: 1.5rem; }
+  h3 { font-size: 14px; font-weight: 600; color: var(--slate-700); margin: 1.5rem 0 0.5rem; letter-spacing: 0.05em; text-transform: uppercase; }
+  p { color: var(--slate-700); margin-bottom: 0.75rem; }
+  p:last-child { margin-bottom: 0; }
+  a { color: var(--teal-600); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* ── Page header ── */
+  .page-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--slate-200); }
+  .page-header .subtitle { font-size: 15px; color: var(--slate-500); margin-top: 0.25rem; }
+
+  /* ── Stat row ── */
+  .stat-row { display: flex; gap: 12px; flex-wrap: wrap; margin: 1.25rem 0; }
+  .stat-card {
+    background: #fff;
+    border: 1px solid var(--slate-200);
+    border-radius: 8px;
+    padding: 12px 16px;
+    min-width: 120px;
+  }
+  .stat-label { font-size: 11px; font-weight: 500; color: var(--slate-400); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
+  .stat-value { font-family: var(--mono); font-size: 22px; font-weight: 600; color: var(--slate-900); line-height: 1; }
+  .stat-value.green { color: var(--teal-600); }
+  .stat-value.amber { color: #b06e0a; }
+
+  /* ── Task table ── */
+  .task-table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 13.5px; }
+  .task-table th {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--slate-500);
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--slate-200);
+    text-align: left;
+    background: var(--slate-50);
+  }
+  .task-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #f0f3f6;
+    vertical-align: top;
+    color: var(--slate-700);
+  }
+  .task-table tr:last-child td { border-bottom: none; }
+  .task-table tr:hover td { background: #f8fbfd; }
+  .badge {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    padding: 2px 7px;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+  .badge-green { background: var(--teal-100); color: var(--teal-600); }
+  .badge-amber { background: var(--amber-100); color: #7a4a00; }
+  .badge-gray  { background: var(--slate-100); color: var(--slate-500); }
+  .badge-blue  { background: var(--blue-100); color: #0c447c; }
+  .tc { font-family: var(--mono); font-size: 13px; font-weight: 500; color: var(--slate-800); }
+  .tests { font-family: var(--mono); font-size: 12px; color: var(--teal-600); font-weight: 600; }
+
+  /* ── Code blocks ── */
+  .code-block {
+    background: var(--slate-900);
+    color: #e8edf2;
+    font-family: var(--mono);
+    font-size: 12.5px;
+    line-height: 1.6;
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    margin: 0.75rem 0;
+    overflow-x: auto;
+    border: 1px solid var(--slate-700);
+  }
+  .code-block .c { color: var(--slate-400); font-style: italic; }
+  .code-block .k { color: #c792ea; }
+  .code-block .t { color: var(--teal-400); }
+  .code-block .s { color: var(--amber-200); }
+  .code-block .n { color: #82aaff; }
+  .code-block .v { color: #f78c6c; }
+  code {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    background: #f0f4f8;
+    color: var(--slate-800);
+    padding: 1px 5px;
+    border-radius: 3px;
+    border: 1px solid var(--slate-200);
+  }
+
+  /* ── Type card grid ── */
+  .type-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; margin: 1rem 0; }
+  .type-card {
+    background: #fff;
+    border: 1px solid var(--slate-200);
+    border-radius: 8px;
+    padding: 14px 16px;
+  }
+  .type-card-name { font-family: var(--mono); font-size: 14px; font-weight: 600; color: var(--slate-900); margin-bottom: 4px; }
+  .type-card-unit { font-size: 11px; color: var(--teal-600); font-family: var(--mono); background: var(--teal-100); padding: 1px 6px; border-radius: 3px; display: inline-block; margin-bottom: 6px; }
+  .type-card-desc { font-size: 12.5px; color: var(--slate-600); line-height: 1.5; }
+  .type-card-example { margin-top: 8px; font-family: var(--mono); font-size: 11.5px; color: var(--slate-500); background: var(--slate-50); padding: 6px 8px; border-radius: 4px; border: 1px solid var(--slate-100); }
+
+  /* ── Schema tree ── */
+  .schema-tree { font-family: var(--mono); font-size: 12.5px; line-height: 1.7; background: #fff; border: 1px solid var(--slate-200); border-radius: 8px; padding: 1rem 1.25rem; color: var(--slate-700); }
+  .schema-tree .el { color: var(--blue-500); }
+  .schema-tree .opt { color: var(--slate-400); }
+  .schema-tree .parsed { color: var(--teal-600); font-weight: 500; }
+
+  /* ── Reference value table ── */
+  .ref-table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 0.75rem 0; }
+  .ref-table th { font-family: var(--mono); font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--slate-500); padding: 7px 10px; border-bottom: 1px solid var(--slate-200); text-align: left; }
+  .ref-table td { padding: 8px 10px; border-bottom: 1px solid #f4f6f9; color: var(--slate-700); font-size: 13px; }
+  .ref-table tr:last-child td { border-bottom: none; }
+  .ref-table .mono { font-family: var(--mono); font-size: 12px; color: var(--slate-800); }
+  .ref-table .green { font-family: var(--mono); font-size: 12px; color: var(--teal-600); font-weight: 600; }
+  .ref-table .field { font-family: var(--mono); font-size: 12px; color: var(--blue-500); }
+
+  /* ── Callout ── */
+  .callout {
+    display: flex;
+    gap: 10px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin: 1rem 0;
+    font-size: 13.5px;
+  }
+  .callout-info { background: var(--blue-100); border-left: 3px solid var(--blue-500); color: #0c3d6e; }
+  .callout-warn { background: var(--amber-100); border-left: 3px solid var(--amber-500); color: #5c3800; }
+  .callout-success { background: var(--teal-100); border-left: 3px solid var(--teal-500); color: var(--teal-600); }
+  .callout-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+
+  /* ── Decision cards ── */
+  .decision-grid { display: grid; gap: 10px; margin: 1rem 0; }
+  .decision-card { background: #fff; border: 1px solid var(--slate-200); border-radius: 8px; padding: 14px 16px; }
+  .decision-title { font-family: var(--mono); font-size: 13px; font-weight: 600; color: var(--slate-900); margin-bottom: 6px; }
+  .decision-body { font-size: 13px; color: var(--slate-600); line-height: 1.55; }
+  .decision-card.highlight { border-left: 3px solid var(--teal-500); }
+
+  /* ── Footer ── */
+  .doc-footer { background: var(--slate-800); border-top: 1px solid var(--slate-600); padding: 1.5rem 2rem; font-family: var(--mono); font-size: 11px; color: var(--slate-400); display: flex; justify-content: space-between; align-items: center; flex-wrap: gap; gap: 8px; margin-top: 4rem; }
+
+  /* ── Responsive ── */
+  @media (max-width: 640px) {
+    .page-inner { padding: 1.5rem 1rem 3rem; }
+    .type-grid { grid-template-columns: 1fr; }
+    .topbar { padding: 0 1rem; }
+    .topbar-meta { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Top bar -->
+<header class="topbar">
+  <div class="topbar-brand">
+    <div class="topbar-logo">MT</div>
+    <span class="topbar-name">mortru-engine</span>
+    <span class="topbar-version">v0.1 · Epics 1–2</span>
+  </div>
+  <div class="topbar-meta">
+    <div class="topbar-stat"><span class="dot"></span>809 tests passing</div>
+    <div class="topbar-stat">CI #33 · main</div>
+    <div class="topbar-stat">Rust 1.85.0</div>
+  </div>
+</header>
+
+<!-- Tab navigation -->
+<nav class="tab-nav" role="tablist">
+  <button class="tab-btn active" role="tab" aria-selected="true" onclick="switchTab('overview', this)">Overview</button>
+  <button class="tab-btn" role="tab" onclick="switchTab('epic1', this)">Epic 1 — Types</button>
+  <button class="tab-btn" role="tab" onclick="switchTab('epic2', this)">Epic 2 — MISMO</button>
+  <button class="tab-btn" role="tab" onclick="switchTab('types-ref', this)">Type Reference</button>
+  <button class="tab-btn" role="tab" onclick="switchTab('schema-ref', this)">Schema Reference</button>
+  <button class="tab-btn" role="tab" onclick="switchTab('reference-values', this)">Reference Values</button>
+  <button class="tab-btn" role="tab" onclick="switchTab('architecture', this)">Architecture</button>
+</nav>
+
+<!-- ══════════════════════════════════════════════════════════════
+     TAB: OVERVIEW
+══════════════════════════════════════════════════════════════ -->
+<div id="tab-overview" class="content active">
+<div class="page-inner">
+  <div class="page-header">
+    <h1>MorTru Mortgage Engine</h1>
+    <p class="subtitle">Engineering documentation · Epics 1–2 · CI #33 green · 809 tests</p>
+  </div>
+
+  <div class="stat-row">
+    <div class="stat-card"><div class="stat-label">Total tests</div><div class="stat-value green">809</div></div>
+    <div class="stat-card"><div class="stat-label">Failures</div><div class="stat-value">0</div></div>
+    <div class="stat-card"><div class="stat-label">Crates</div><div class="stat-value">13</div></div>
+    <div class="stat-card"><div class="stat-label">Toolchain</div><div class="stat-value" style="font-size:15px">1.85.0</div></div>
+    <div class="stat-card"><div class="stat-label">Coverage</div><div class="stat-value green" style="font-size:18px">≥97%</div></div>
+  </div>
+
+  <p>The MorTru Engine is a high-precision mortgage pricing and scenario analysis engine. It produces analysis across all eligible loan programs for a given scenario, pricing against multiple lenders and MI providers simultaneously.</p>
+
+  <h2>Workspace structure</h2>
+  <div class="code-block">
+mortgage-engine/
+├── crates/
+│   ├── <span class="t">types/</span>         <span class="c">Epic 1 — All primitive domain types          ✅ 404 tests</span>
+│   ├── <span class="t">mismo/</span>         <span class="c">Epic 2 — MISMO 3.4 XML schema               ✅ 405 tests</span>
+│   ├── reso/          <span class="c">Epic 3 — RESO 2.0 property data             ⬜ pending</span>
+│   ├── ref_data/      <span class="c">Epic 4 — Reference data (versioned)         ⬜ pending</span>
+│   ├── enrich/        <span class="c">Epic 5 — Geo enrichment pipeline            ⬜ pending</span>
+│   ├── ingest/        <span class="c">Epic 6 — MISMO+RESO → LoanScenario bridge   ⬜ pending</span>
+│   ├── eligibility/   <span class="c">Epic 7 — Four-layer eligibility             ⬜ pending</span>
+│   ├── amort/         <span class="c">Epic 10 — Amortization + APR engine         ⬜ pending</span>
+│   ├── solver/        <span class="c">Epic 9  — LLPA / rate solver                ⬜ pending</span>
+│   ├── scenarios/     <span class="c">Epic 12 — Multi-lender × MI matrix          ⬜ pending</span>
+│   ├── compliance/    <span class="c">Epic 13 — QM / ATR / HOEPA                  ⬜ pending</span>
+│   └── api/           <span class="c">Epic 14 — Axum REST API                     ⬜ pending</span></div>
+
+  <h2>Dependency graph</h2>
+  <p>Every downstream epic depends on the <code>types</code> crate. The ingest bridge (Epic 6) is the first critical junction — everything before it is independent, everything after depends on it.</p>
+  <div class="code-block">
+types (Epic 1)
+  └── mismo (Epic 2) ──────────────┐
+  └── reso  (Epic 3) ──────────────┤
+  └── ref_data (Epic 4) ────────────┤
+        └── enrich (Epic 5) ────────┤
+              └── ingest (Epic 6) ◄─┘
+                    ├── eligibility (Epic 7)
+                    ├── amort (Epic 10)
+                    ├── solver (Epic 9) ──→ scenarios (Epic 12)
+                    └── compliance (Epic 13) ──→ api (Epic 14)</div>
+
+  <h2>Business model support</h2>
+  <table class="task-table">
+    <thead><tr><th>Operator</th><th>Lenders in scope</th><th>MI providers</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Mortgage Broker</strong></td><td>All lenders on broker panel (N)</td><td>Per-lender approved list</td><td>Prices all lenders simultaneously</td></tr>
+      <tr><td><strong>Retail / Correspondent Lender</strong></td><td>Single lender</td><td>Lender's approved list</td><td>One rate sheet</td></tr>
+      <tr><td><strong>IMB (Independent Mortgage Bank)</strong></td><td>Single lender</td><td>IMB's approved list</td><td>LO-facing single rate sheet</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Precision contracts</h2>
+  <div class="callout callout-warn">
+    <span class="callout-icon">⚠</span>
+    <span><strong>f64 is never used for monetary storage.</strong> All financial values use integer newtypes. Newton-Raphson APR convergence is the sole exception — intermediates only, never stored.</span>
+  </div>
+  <table class="ref-table">
+    <thead><tr><th>Type</th><th>Unit</th><th>Example</th></tr></thead>
+    <tbody>
+      <tr><td class="field">Cents</td><td>$0.01</td><td class="mono">$434,443 = Cents(43_444_300)</td></tr>
+      <tr><td class="field">BasisPoints (rate)</td><td>0.001%</td><td class="mono">6.375% = BasisPoints(6375)</td></tr>
+      <tr><td class="field">BasisPoints (fee/MI)</td><td>0.01%</td><td class="mono">1.75% UFMIP = BasisPoints(175)</td></tr>
+      <tr><td class="field">DtiBasisPoints</td><td>0.01% DTI</td><td class="mono">43.00% = DtiBasisPoints(4300)</td></tr>
+      <tr><td class="field">LtvBasisPoints</td><td>0.01% LTV</td><td class="mono">96.31% = LtvBasisPoints(9631)</td></tr>
+      <tr><td class="field">PriceTicks</td><td>0.01 price pts</td><td class="mono">Par = PriceTicks(10000)</td></tr>
+    </tbody>
+  </table>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     TAB: EPIC 1
+══════════════════════════════════════════════════════════════ -->
+<div id="tab-epic1" class="content">
+<div class="page-inner">
+  <div class="page-header">
+    <h1>Epic 1 — Domain Types</h1>
+    <p class="subtitle">Crate: <code>types</code> · 404 tests · Coverage ≥97% · Tasks 1.1–1.9</p>
+  </div>
+
+  <div class="stat-row">
+    <div class="stat-card"><div class="stat-label">Tests</div><div class="stat-value green">404</div></div>
+    <div class="stat-card"><div class="stat-label">Coverage</div><div class="stat-value green" style="font-size:18px">≥97%</div></div>
+    <div class="stat-card"><div class="stat-label">Source files</div><div class="stat-value">28</div></div>
+    <div class="stat-card"><div class="stat-label">Status</div><div class="stat-value" style="font-size:15px">Complete</div></div>
+  </div>
+
+  <div class="callout callout-success">
+    <span class="callout-icon">✓</span>
+    <span>The <code>types</code> crate is the foundation every other crate depends on. All 13 workspace crates inherit from it. No business logic lives here — only type definitions, validation, and arithmetic.</span>
+  </div>
+
+  <h2>Task summary</h2>
+  <table class="task-table">
+    <thead><tr><th>Task</th><th>Deliverable</th><th>Tests</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td class="tc">1.1</td><td>Workspace scaffold — 13 crates, CI pipeline, deny.toml</td><td class="tests">—</td><td><span class="badge badge-green">done</span></td></tr>
+      <tr><td class="tc">1.2</td><td>Monetary and rate primitives: <code>Cents</code>, <code>BasisPoints</code>, <code>DtiBasisPoints</code>, <code>LtvBasisPoints</code>, <code>PriceTicks</code>, <code>CreditScore</code></td><td class="tests">87</td><td><span class="badge badge-green">done</span></td></tr>
+      <tr><td class="tc">1.3</td><td>Identifier types: <code>FipsCode</code>, <code>StateCode</code>, <code>LenderId</code>, <code>ScenarioId</code>, <code>AnalysisId</code>, <code>MlsListingKey</code>, <code>LoanCasefileId</code></td><td class="tests">62</td><td><span class="badge badge-green">done</span></td></tr>
+      <tr><td class="tc">1.4</td><td>Error hierarchy: <code>EligibilityError</code>, <code>SolverError</code>, <code>IngestionError</code>, <code>ComplianceError</code></td><td class="tests">31</td><td><span class="badge badge-green">done</span></td></tr>
+      <tr><td class="tc">1.5</td><td>Core enumerations: <code>ProgramCode</code>, <code>Occupancy</code>, <code>PropertyType</code>, <code>LoanPurpose</code>, <code>AmortizationType</code>, <code>LienPriority</code>, <code>LockPeriod</code></td><td class="tests">45</td><td><span class="badge badge-green">done</span></td></tr>
+      <tr><td class="tc">1.6</td><td>Term types: <code>TermMonths</code> (valid range 12–480), <code>TermBand</code> (Conv/Govt/USDA classification)</td><td class="tests">23</td><td><span class="badge badge-green">done</span></td></tr>
+      <tr><td class="tc">1.7</td><td><code>GoalMask</code> — 34 bitflag optimization goals packed into u64</td><td class="tests">18</td><td><span class="badge badge-green">done</span></td></tr>
+      <tr><td class="tc">1.8</td><td>Addendum: <code>CbsaCode</code>, <code>MobileHome</code> ineligibility, RESO property type strings, <code>ScenarioKey</code></td><td class="tests">38</td><td><span class="badge badge-green">done</span></td></tr>
+      <tr><td class="tc">1.9</td><td>Property-based and integration tests: decimal conversions, proptest round-trips, CI hardening</td><td class="tests">100</td><td><span class="badge badge-green">done</span></td></tr>
+    </tbody>
+  </table>
+
+  <h2>Monetary types</h2>
+  <div class="type-grid">
+    <div class="type-card">
+      <div class="type-card-name">Cents</div>
+      <div class="type-card-unit">newtype i64 · 1 unit = $0.01</div>
+      <div class="type-card-desc">All monetary amounts. Supports arithmetic, saturating ops, half-up rounding from Decimal. Negative values allowed for adjustments and lender credits.</div>
+      <div class="type-card-example">$434,443 → Cents(43_444_300)<br>$7,602.75 → Cents(760_275)</div>
+    </div>
+    <div class="type-card">
+      <div class="type-card-name">BasisPoints</div>
+      <div class="type-card-unit">newtype u32 · scale depends on context</div>
+      <div class="type-card-desc">Interest rates use ×1000 scale (6.375% = 6375). Fee rates and MI rates use ×100 scale (1.75% = 175). Context determines which scale applies.</div>
+      <div class="type-card-example">6.375% rate → BasisPoints(6375)<br>1.75% UFMIP → BasisPoints(175)</div>
+    </div>
+    <div class="type-card">
+      <div class="type-card-name">DtiBasisPoints</div>
+      <div class="type-card-unit">newtype u32 · 1 unit = 0.01% DTI</div>
+      <div class="type-card-desc">Debt-to-income ratios. Warns above TYPICAL_MAX (6000 = 60%). Used for both front-end (housing) and back-end (total) DTI.</div>
+      <div class="type-card-example">43.00% DTI → DtiBasisPoints(4300)<br>28.50% housing → DtiBasisPoints(2850)</div>
+    </div>
+    <div class="type-card">
+      <div class="type-card-name">LtvBasisPoints</div>
+      <div class="type-card-unit">newtype u32 · 1 unit = 0.01% LTV</div>
+      <div class="type-card-desc">Loan-to-value ratios. Max plausible: 11000 (110%). Constructor validates. Computed from loan amount ÷ appraised value.</div>
+      <div class="type-card-example">96.31% → LtvBasisPoints(9631)<br>80.00% → LtvBasisPoints(8000)</div>
+    </div>
+    <div class="type-card">
+      <div class="type-card-name">PriceTicks</div>
+      <div class="type-card-unit">newtype i16 · 1 unit = 0.01 price pts</div>
+      <div class="type-card-desc">Rate sheet pricing. Par = 10000. Signed — negative = borrower pays discount points, positive = lender credit source. Applies to loan amount to compute dollar amounts.</div>
+      <div class="type-card-example">Par → PriceTicks(10000)<br>-25 bps → PriceTicks(9975)</div>
+    </div>
+    <div class="type-card">
+      <div class="type-card-name">CreditScore</div>
+      <div class="type-card-unit">newtype u16 · range 300–850</div>
+      <div class="type-card-desc">FICO score. Validated at construction. <code>lower_of_two()</code> for co-borrower (industry convention). <code>middle_of_three()</code> for three-bureau representative score.</div>
+      <div class="type-card-example">lower_of_two(720, 700) → 700<br>Range: 300..=850 enforced</div>
+    </div>
+  </div>
+
+  <h2>Identifier types</h2>
+  <table class="task-table">
+    <thead><tr><th>Type</th><th>Format</th><th>Key property</th></tr></thead>
+    <tbody>
+      <tr><td class="tc">FipsCode</td><td>5-digit numeric string ("48209")</td><td>State (2) + County (3). <strong>Sole jurisdictional authority</strong> for all fee table lookups. ZIP codes are display-only.</td></tr>
+      <tr><td class="tc">StateCode</td><td>2-letter enum (TX, CA, NY…)</td><td>56 variants (50 states + 6 territories). FIPS roundtrip guaranteed for all 56.</td></tr>
+      <tr><td class="tc">CbsaCode</td><td>5-digit numeric ("19100")</td><td>NON_METRO sentinel = "00000". Drives conforming limits, FHA/VA limits, AMI income limits.</td></tr>
+      <tr><td class="tc">ScenarioId</td><td>UUID v4</td><td>Uniquely identifies a loan scenario submission.</td></tr>
+      <tr><td class="tc">AnalysisId</td><td>UUID v4</td><td>Uniquely identifies one analysis run. Multiple analyses can reference the same scenario.</td></tr>
+      <tr><td class="tc">LenderId</td><td>Validated string ≤64 chars</td><td>Identifies a specific lender. Used as foreign key in rate sheets, LLPA matrices, overlays.</td></tr>
+      <tr><td class="tc">ScenarioKey</td><td>8 bytes packed</td><td>Deduplication key for scenario caching. Packs FICO, LTV, program, occupancy, purpose, term into 64 bits.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>GoalMask</h2>
+  <p>34 bitflag optimization goals packed into a <code>u64</code>. Drives scenario ranking in Epic 12. Persona-aware: consumer and investor masks carry different default goals.</p>
+  <div class="code-block"><span class="c">// Consumer defaults (5 active goals):</span>
+GoalMask::LOWEST_PAYMENT        <span class="c">// minimize monthly PITIA</span>
+GoalMask::LOWEST_CASH_TO_CLOSE  <span class="c">// minimize upfront cash</span>
+GoalMask::LOWEST_RATE           <span class="c">// minimize note rate</span>
+GoalMask::LOWEST_TOTAL_INTEREST <span class="c">// minimize lifetime cost</span>
+GoalMask::LOWEST_APR            <span class="c">// Reg Z APR comparison</span>
+
+<span class="c">// Investor defaults (4 active goals):</span>
+GoalMask::MAXIMIZE_CASH_FLOW
+GoalMask::HIGHEST_DSCR
+GoalMask::MINIMIZE_RATE_SPREAD
+GoalMask::FASTEST_EQUITY_BUILD</div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     TAB: EPIC 2
+══════════════════════════════════════════════════════════════ -->
+<div id="tab-epic2" class="content">
+<div class="page-inner">
+  <div class="page-header">
+    <h1>Epic 2 — MISMO 3.4 Schema</h1>
+    <p class="subtitle">Crate: <code>mismo</code> · 405 tests · Tasks 2.1–2.12 · Complete</p>
+  </div>
+
+  <div class="stat-row">
+    <div class="stat-card"><div class="stat-label">Tests</div><div class="stat-value green">405</div></div>
+    <div class="stat-card"><div class="stat-label">Schema modules</div><div class="stat-value">8</div></div>
+    <div class="stat-card"><div class="stat-label">Fixture files</div><div class="stat-value">5</div></div>
+    <div class="stat-card"><div class="stat-label">Enum variants</div><div class="stat-value">~180</div></div>
+    <div class="stat-card"><div class="stat-label">Fee types</div><div class="stat-value">50</div></div>
+  </div>
+
+  <div class="callout callout-info">
+    <span class="callout-icon">ℹ</span>
+    <span>The <code>mismo</code> crate is <strong>parsing and serialization only</strong>. It converts raw MISMO 3.4 XML ↔ typed Rust structs. No business logic, no calculations. The entry point is <code>MismoMessage::from_xml()</code> → <code>parse_all()</code> → <code>ParsedDeal</code>.</span>
+  </div>
+
+  <h2>Task summary</h2>
+  <table class="task-table">
+    <thead><tr><th>Task</th><th>Deliverable</th><th>Tests</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td class="tc">2.1</td><td>Crate scaffold — <code>MismoError</code>, <code>xml::parse</code>, <code>xml::serialize</code>, quick-xml integration</td><td class="tests">21</td><td><span class="badge badge-green">done</span></td></tr>
+      <tr><td class="tc">2.2</td><td>Enumeration catalog — all MISMO 3.4 string-to-Rust-enum mappings (~180 variants)</td><td class="tests">87</td><td><span class="badge badge-green">done</span></td></tr>
+      <tr><td class="tc">2.3</td><td><code>MortgageTerms</code> + <code>Amortization</code> → <code>LoanTermsParsed</code></td><td class="tests">35</td><td><span class="badge badge-green">done</span></td></tr>
+      <tr><td class="tc">2.4</td><td><code>SubjectProperty</code> + <code>Address</code> + <code>PropertyDetail</code> → <code>CollateralParsed</code></td><td class="tests">42</td><td><span class="badge badge-green">done</span></td></tr>
+      <tr><td class="tc">2.5</td><td><code>BorrowerDetail</code> + <code>ClosingContext</code> → <code>PartiesParsed</code></td><td class="tests">35</td><td><span class="badge badge-green">done</span></td></tr>
+      <tr><td class="tc">2.6</td><td><code>MiDataDetail</code> → <code>MiParsed</code> · Bug fix: DU "Approve/Eligible" slash form</td><td class="tests">29</td><td><span class="badge badge-green">done</span></td></tr>
+      <tr><td class="tc">2.7</td><td><code>LenderComp</code> (ORIGINATION_FEE_DETAIL) → <code>LenderCompParsed</code> · Dual BPS precision</td><td class="tests">20</td><td><span class="badge badge-green">done</span></td></tr>
+      <tr><td class="tc">2.8</td><td><code>ClosingCostBlock</code> · <code>FeeType</code> (50 variants) · <code>FeeRulesRegistry</code> · <code>fee_rules.json</code></td><td class="tests">44</td><td><span class="badge badge-green">done</span></td></tr>
+      <tr><td class="tc">2.9</td><td><code>MismoAus</code> → <code>AusParsed</code> · <code>MismoQualification</code> → <code>QualificationParsed</code></td><td class="tests">28</td><td><span class="badge badge-green">done</span></td></tr>
+      <tr><td class="tc">2.10</td><td><code>MismoMessage</code> root + <code>ParsedDeal</code> — composes all sub-schemas via <code>parse_all()</code></td><td class="tests">29</td><td><span class="badge badge-green">done</span></td></tr>
+      <tr><td class="tc">2.11</td><td>Fixture library — 5 canonical XML files (FHA, Conv, VA, USDA, Refi)</td><td class="tests">20</td><td><span class="badge badge-green">done</span></td></tr>
+      <tr><td class="tc">2.12</td><td>Epic 2 gate test — all 5 fixtures, all reference values end-to-end</td><td class="tests">14</td><td><span class="badge badge-green">done</span></td></tr>
+    </tbody>
+  </table>
+
+  <h2>Parse chain</h2>
+  <div class="code-block"><span class="c">// Entry point for any MISMO 3.4 document:</span>
+<span class="k">let</span> xml = std::fs::read_to_string(<span class="s">"fha_purchase.xml"</span>)?;
+<span class="k">let</span> msg  = <span class="t">MismoMessage</span>::from_xml(&xml)?;   <span class="c">// XML → typed struct tree</span>
+<span class="k">let</span> deal = msg.parse_all()?;                <span class="c">// validate + convert to domain types</span>
+
+<span class="c">// deal: ParsedDeal</span>
+assert_eq!(deal.loan_terms.base_loan_amount, <span class="t">Cents</span>(<span class="v">43_444_300</span>));
+assert_eq!(deal.collateral.state,            <span class="t">StateCode</span>::TX);
+assert_eq!(deal.parties.qualifying_credit_score.unwrap().<span class="n">0</span>, <span class="v">720</span>);</div>
+
+  <h2>Fixture library</h2>
+  <p>Five canonical XML fixtures in <code>crates/mismo/tests/fixtures/</code>. Embedded via <code>include_str!()</code> — no file I/O at test time, fully portable across CI environments.</p>
+  <table class="task-table">
+    <thead><tr><th>File</th><th>Program</th><th>Loan</th><th>Rate</th><th>Key detail</th></tr></thead>
+    <tbody>
+      <tr><td class="tc">fha_purchase.xml</td><td><span class="badge badge-blue">FHA</span></td><td>$434,443 → $442,046</td><td>6.375%</td><td>1.75% UFMIP financed, 0.55% monthly MIP, life-of-loan</td></tr>
+      <tr><td class="tc">conv_purchase.xml</td><td><span class="badge badge-gray">Conv</span></td><td>$400,000</td><td>6.500%</td><td>80% LTV — no PMI required</td></tr>
+      <tr><td class="tc">va_purchase.xml</td><td><span class="badge badge-amber">VA</span></td><td>$350,000 → $357,525</td><td>6.125%</td><td>2.15% funding fee financed, first use, not exempt</td></tr>
+      <tr><td class="tc">usda_purchase.xml</td><td><span class="badge badge-green">USDA</span></td><td>$200,000 → $202,000</td><td>6.250%</td><td>1.00% guarantee fee financed, 0.35%/yr annual fee</td></tr>
+      <tr><td class="tc">conv_refi_rate_term.xml</td><td><span class="badge badge-gray">Conv</span></td><td>$320,000</td><td>6.375%</td><td>Rate/term refi, LPA Accept, 80% LTV, no MI</td></tr>
+    </tbody>
+  </table>
+
+  <h2>fee_rules.json — external configuration</h2>
+  <p>Located at <code>crates/mismo/data/fee_rules.json</code>. Embedded at compile time as the default but replaceable at runtime via API — no redeployment required for fee rule changes.</p>
+  <div class="code-block"><span class="c">// Load default (compile-time embedded):</span>
+<span class="k">let</span> registry = <span class="t">FeeRulesRegistry</span>::default();
+
+<span class="c">// Load from API-updated file:</span>
+<span class="k">let</span> json = std::fs::read_to_string(<span class="s">"/etc/mortru/fee_rules.json"</span>)?;
+<span class="k">let</span> registry = <span class="t">FeeRulesRegistry</span>::from_json(&json)?;
+
+<span class="c">// Query fee rules:</span>
+registry.va_allowable(<span class="t">FeeType</span>::TaxServiceFee)   <span class="c">// → false (VA non-allowable)</span>
+registry.is_apr_included(<span class="t">FeeType</span>::OriginationFee) <span class="c">// → true</span>
+registry.can_be_financed(<span class="t">FeeType</span>::FhaUfmip)       <span class="c">// → true</span></div>
+  <p style="margin-top: 0.5rem">API endpoints (Epic 14): <code>GET /api/v1/fee-rules</code> · <code>PUT /api/v1/fee-rules</code></p>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     TAB: TYPE REFERENCE
+══════════════════════════════════════════════════════════════ -->
+<div id="tab-types-ref" class="content">
+<div class="page-inner">
+  <div class="page-header">
+    <h1>Type Reference</h1>
+    <p class="subtitle">All public types exported by the <code>types</code> crate</p>
+  </div>
+
+  <h2>Monetary and rate primitives</h2>
+  <table class="ref-table">
+    <thead><tr><th>Type</th><th>Inner</th><th>Scale</th><th>Parse method</th></tr></thead>
+    <tbody>
+      <tr><td class="field">Cents</td><td>i64</td><td>1 unit = $0.01</td><td><code>Cents::from_decimal_dollars(Decimal)</code></td></tr>
+      <tr><td class="field">BasisPoints</td><td>u32</td><td>×1000 (rates) / ×100 (fees)</td><td><code>BasisPoints::from_percentage_str("6.375")</code></td></tr>
+      <tr><td class="field">DtiBasisPoints</td><td>u32</td><td>1 unit = 0.01% DTI</td><td><code>DtiBasisPoints::new(4300)</code></td></tr>
+      <tr><td class="field">LtvBasisPoints</td><td>u32</td><td>1 unit = 0.01% LTV</td><td><code>LtvBasisPoints::from_loan_and_value(loan, value)</code></td></tr>
+      <tr><td class="field">PriceTicks</td><td>i16</td><td>1 unit = 0.01 price pts</td><td><code>PriceTicks::from_str("100.00")</code></td></tr>
+      <tr><td class="field">CreditScore</td><td>u16</td><td>Range 300–850</td><td><code>CreditScore::new(720)?</code></td></tr>
+      <tr><td class="field">TermMonths</td><td>u16</td><td>Valid: 12–480</td><td><code>TermMonths::new(360)?</code></td></tr>
+    </tbody>
+  </table>
+
+  <h2>Identifier types</h2>
+  <table class="ref-table">
+    <thead><tr><th>Type</th><th>Format</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td class="field">FipsCode</td><td>"48209" (5-digit)</td><td>Sole jurisdictional authority. Never use ZIP codes for fee lookups.</td></tr>
+      <tr><td class="field">StateCode</td><td>TX, CA, NY… (56 variants)</td><td>Case-insensitive parse. FIPS roundtrip for all 56.</td></tr>
+      <tr><td class="field">CbsaCode</td><td>"19100" (5-digit)</td><td>NON_METRO = "00000". Drives loan limits.</td></tr>
+      <tr><td class="field">LenderId</td><td>Validated string ≤64</td><td>FK for rate sheets, LLPA matrices, overlays.</td></tr>
+      <tr><td class="field">ScenarioId</td><td>UUID v4</td><td>Loan scenario submission identifier.</td></tr>
+      <tr><td class="field">AnalysisId</td><td>UUID v4</td><td>One run of the analysis engine. Multiple per scenario.</td></tr>
+      <tr><td class="field">MlsListingKey</td><td>Validated string ≤64</td><td>RESO standard listing key from MLS feed.</td></tr>
+      <tr><td class="field">LoanCasefileId</td><td>Validated string ≤64</td><td>DU/LPA casefile reference number.</td></tr>
+      <tr><td class="field">ScenarioKey</td><td>8 bytes packed</td><td>Cache deduplication key. Packs 6 scenario dimensions.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Enumerations — core domain</h2>
+  <table class="ref-table">
+    <thead><tr><th>Enum</th><th>Variants</th><th>MISMO string (example)</th></tr></thead>
+    <tbody>
+      <tr><td class="field">ProgramCode</td><td>Conventional, Fha, Va, Usda, FhaHighBalance, ConventionalHighBalance, Jumbo</td><td>"Conventional", "FHA", "VA", "USDARuralDevelopment"</td></tr>
+      <tr><td class="field">Occupancy</td><td>PrimaryResidence, SecondHome, Investment</td><td>"PrimaryResidence", "SecondHome", "Investor"</td></tr>
+      <tr><td class="field">LoanPurpose</td><td>Purchase, RateAndTermRefinance, CashOutRefinance, Construction, ConstructionToPermanent</td><td>"Purchase", "Refinance", "NoCashOutRefinance"</td></tr>
+      <tr><td class="field">PropertyType</td><td>SingleFamilyDetached, Condominium, TwoUnit…FourUnit, ManufacturedHome, Modular, MobileHome</td><td>"Detached", "Condominium", "Manufactured Home"</td></tr>
+      <tr><td class="field">AmortizationType</td><td>FixedRate, AdjustableRate, InterestOnly, GraduatedPayment</td><td>"Fixed", "AdjustableRate", "InterestOnly"</td></tr>
+      <tr><td class="field">LienPriority</td><td>First, Second, Third</td><td>"FirstLien", "SecondLien"</td></tr>
+      <tr><td class="field">LockPeriod</td><td>Days15, Days30, Days45, Days60</td><td>—</td></tr>
+      <tr><td class="field">AusType</td><td>DesktopUnderwriter, LoanProductAdvisor, Got (FHA TOTAL), Gus (USDA), Manual</td><td>"DesktopUnderwriter", "FHATotalScorecard"</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout callout-warn">
+    <span class="callout-icon">⚠</span>
+    <span><strong>MobileHome is always ineligible.</strong> <code>PropertyType::MobileHome.is_ineligible_personal_property()</code> returns <code>true</code>. Hard-reject at eligibility for all agency programs regardless of loan type.</span>
+  </div>
+
+  <h2>GoalMask — 34 goals</h2>
+  <table class="ref-table">
+    <thead><tr><th>Goal</th><th>Persona</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td class="field">LOWEST_PAYMENT</td><td>Consumer</td><td>Minimize monthly PITIA</td></tr>
+      <tr><td class="field">LOWEST_CASH_TO_CLOSE</td><td>Consumer</td><td>Minimize upfront cash required</td></tr>
+      <tr><td class="field">LOWEST_RATE</td><td>Consumer</td><td>Minimize note rate</td></tr>
+      <tr><td class="field">LOWEST_TOTAL_INTEREST</td><td>Consumer</td><td>Minimize lifetime interest paid</td></tr>
+      <tr><td class="field">LOWEST_APR</td><td>Consumer</td><td>Minimize Reg Z APR</td></tr>
+      <tr><td class="field">MAXIMIZE_CASH_FLOW</td><td>Investor</td><td>Maximize monthly net cash flow</td></tr>
+      <tr><td class="field">HIGHEST_DSCR</td><td>Investor</td><td>Maximize debt service coverage ratio</td></tr>
+      <tr><td class="field">MINIMIZE_RATE_SPREAD</td><td>Investor</td><td>Minimize rate vs. benchmark spread</td></tr>
+      <tr><td class="field">FASTEST_EQUITY_BUILD</td><td>Investor</td><td>Maximize principal paydown rate</td></tr>
+    </tbody>
+  </table>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     TAB: SCHEMA REFERENCE
+══════════════════════════════════════════════════════════════ -->
+<div id="tab-schema-ref" class="content">
+<div class="page-inner">
+  <div class="page-header">
+    <h1>Schema Reference</h1>
+    <p class="subtitle">MISMO 3.4 document structure and <code>ParsedDeal</code> fields</p>
+  </div>
+
+  <h2>Document hierarchy</h2>
+  <div class="schema-tree">
+<span class="el">MESSAGE</span>
+  └── <span class="el">DEAL_SETS</span> / <span class="el">DEAL_SET</span> / <span class="el">DEALS</span> / <span class="el">DEAL</span>
+        ├── <span class="el">LOANS</span> / <span class="el">LOAN</span>
+        │     ├── <span class="el">MORTGAGE_TERMS</span>                   → <span class="parsed">LoanTermsParsed</span>
+        │     ├── <span class="el">AMORTIZATION</span>                     → <span class="parsed">LoanTermsParsed</span>
+        │     ├── <span class="el">MI_DATA_DETAIL</span>          <span class="opt">(opt)</span>   → <span class="parsed">Option&lt;MiParsed&gt;</span>
+        │     ├── <span class="el">ORIGINATION_FEE_DETAIL</span>  <span class="opt">(opt)</span>   → <span class="parsed">Option&lt;LenderCompParsed&gt;</span>
+        │     ├── <span class="el">CLOSING_COST</span>            <span class="opt">(opt)</span>   → <span class="parsed">ClosingCostBlock</span>
+        │     │     └── <span class="el">CLOSING_COST_ESTIMATED_AMOUNTS</span>
+        │     │           └── <span class="el">CLOSING_COST_ESTIMATED_AMOUNT</span> ×N
+        │     ├── <span class="el">AUTOMATED_UNDERWRITING_SYSTEMS</span>  <span class="opt">(opt)</span>
+        │     │     └── <span class="el">AUTOMATED_UNDERWRITING_SYSTEM</span> ×N → <span class="parsed">Option&lt;AusParsed&gt;</span>
+        │     └── <span class="el">QUALIFICATION</span>           <span class="opt">(opt)</span>   → <span class="parsed">Option&lt;QualificationParsed&gt;</span>
+        ├── <span class="el">PARTIES</span>
+        │     ├── <span class="el">PARTY</span> ×N
+        │     │     └── <span class="el">BORROWER_DETAIL</span>           → <span class="parsed">PartiesParsed</span>
+        │     └── <span class="el">CLOSING_CONTEXT</span>         <span class="opt">(opt)</span>   → <span class="parsed">PartiesParsed</span>
+        └── <span class="el">COLLATERALS</span> / <span class="el">COLLATERAL</span> / <span class="el">SUBJECT_PROPERTY</span>
+              ├── <span class="el">ADDRESS</span>                         → <span class="parsed">CollateralParsed</span>
+              ├── <span class="el">PROPERTY_DETAIL</span>                 → <span class="parsed">CollateralParsed</span>
+              └── other property fields               → <span class="parsed">CollateralParsed</span>
+  </div>
+
+  <h2>ParsedDeal fields</h2>
+  <table class="ref-table">
+    <thead><tr><th>Field</th><th>Type</th><th>Always present?</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td class="field">loan_terms</td><td>LoanTermsParsed</td><td>Yes</td><td>Amount, rate, term, program, lien, purpose</td></tr>
+      <tr><td class="field">collateral</td><td>CollateralParsed</td><td>Yes</td><td>Address, FIPS, property type, valuation, taxes, HOI, HOA</td></tr>
+      <tr><td class="field">parties</td><td>PartiesParsed</td><td>Yes</td><td>Credit score, income, VA/USDA data, budget constraints</td></tr>
+      <tr><td class="field">mi</td><td>Option&lt;MiParsed&gt;</td><td>No</td><td>Absent for Conv LTV ≤80%, pre-qualification scenarios</td></tr>
+      <tr><td class="field">lender_comp</td><td>Option&lt;LenderCompParsed&gt;</td><td>No</td><td>Absent when no broker comp disclosed</td></tr>
+      <tr><td class="field">closing_costs</td><td>ClosingCostBlock</td><td>Yes (may be empty)</td><td>All LE sections A–H with aggregation helpers</td></tr>
+      <tr><td class="field">aus</td><td>Option&lt;AusParsed&gt;</td><td>No</td><td>Absent for manual underwriting. First submission used.</td></tr>
+      <tr><td class="field">qualification</td><td>Option&lt;QualificationParsed&gt;</td><td>No</td><td>Absent for pre-qualification scenarios</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout callout-warn">
+    <span class="callout-icon">⚠</span>
+    <span><code>parties.va_funding_fee_tier</code> is always <code>None</code> after <code>parse_all()</code>. The tier requires LTV which is computed in Epic 6 (ingest) from <code>loan_terms.base_loan_amount</code> + <code>collateral.appraised_value</code>. Call <code>parties.with_va_tier(ltv, is_cash_out, is_irrrl)</code> at that point.</span>
+  </div>
+
+  <h2>Loan Estimate section structure</h2>
+  <table class="ref-table">
+    <thead><tr><th>Section</th><th>Name</th><th>Tolerance</th><th>MISMO string</th></tr></thead>
+    <tbody>
+      <tr><td class="field">A</td><td>Origination Charges</td><td>0%</td><td>LoanCosts_OriginationCharges</td></tr>
+      <tr><td class="field">B</td><td>Services Borrower Did Not Shop For</td><td>0%</td><td>LoanCosts_ServicesYouCannotShopFor</td></tr>
+      <tr><td class="field">C</td><td>Services Borrower Did Shop For</td><td>10% aggregate</td><td>LoanCosts_ServicesYouCanShopFor</td></tr>
+      <tr><td class="field">D</td><td>Total Loan Costs (A+B+C)</td><td>—</td><td>—</td></tr>
+      <tr><td class="field">E</td><td>Taxes and Government Recording</td><td>0% transfer; 10% recording</td><td>OtherCosts_TaxesAndOtherGovernmentFees</td></tr>
+      <tr><td class="field">F</td><td>Prepaids</td><td>Unlimited</td><td>OtherCosts_Prepaids</td></tr>
+      <tr><td class="field">G</td><td>Initial Escrow Payment</td><td>Unlimited</td><td>OtherCosts_InitialEscrowPaymentAtClosing</td></tr>
+      <tr><td class="field">H</td><td>Other</td><td>Unlimited</td><td>OtherCosts_Other</td></tr>
+      <tr><td class="field">I</td><td>Total Other Costs (E+F+G+H)</td><td>—</td><td>—</td></tr>
+      <tr><td class="field">J</td><td>Total Closing Costs (D+I−credits)</td><td>—</td><td>TotalClosingCosts</td></tr>
+    </tbody>
+  </table>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     TAB: REFERENCE VALUES
+══════════════════════════════════════════════════════════════ -->
+<div id="tab-reference-values" class="content">
+<div class="page-inner">
+  <div class="page-header">
+    <h1>Reference Values</h1>
+    <p class="subtitle">FHA purchase — Kyle TX (Hays County) · The ground-truth scenario verified across all tasks</p>
+  </div>
+
+  <div class="callout callout-success">
+    <span class="callout-icon">✓</span>
+    <span>These values are verified end-to-end in the Epic 2 gate test (<code>epic2_gate.rs</code>). Any change in any schema task that produces a different value here is a regression.</span>
+  </div>
+
+  <h2>Loan terms</h2>
+  <table class="ref-table">
+    <thead><tr><th>Field</th><th>XML value</th><th>Parsed type</th><th>Parsed value</th></tr></thead>
+    <tbody>
+      <tr><td>Base loan amount</td><td class="mono">"434443.00"</td><td class="mono">Cents</td><td class="green">Cents(43_444_300)</td></tr>
+      <tr><td>Adjusted loan (w/ UFMIP)</td><td class="mono">"442046.00"</td><td class="mono">Option&lt;Cents&gt;</td><td class="green">Some(Cents(44_204_600))</td></tr>
+      <tr><td>Note rate</td><td class="mono">"6.375"</td><td class="mono">BasisPoints</td><td class="green">BasisPoints(6375)</td></tr>
+      <tr><td>Term</td><td class="mono">"360"</td><td class="mono">TermMonths</td><td class="green">TermMonths(360)</td></tr>
+      <tr><td>Program</td><td class="mono">"FHA"</td><td class="mono">ProgramCode</td><td class="green">ProgramCode::Fha</td></tr>
+      <tr><td>Purpose</td><td class="mono">"Purchase"</td><td class="mono">LoanPurpose</td><td class="green">LoanPurpose::Purchase</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Collateral</h2>
+  <table class="ref-table">
+    <thead><tr><th>Field</th><th>XML value</th><th>Parsed type</th><th>Parsed value</th></tr></thead>
+    <tbody>
+      <tr><td>State</td><td class="mono">"TX"</td><td class="mono">StateCode</td><td class="green">StateCode::TX</td></tr>
+      <tr><td>FIPS code</td><td class="mono">"48209"</td><td class="mono">FipsCode</td><td class="green">FipsCode("48209")</td></tr>
+      <tr><td>City</td><td class="mono">"Kyle"</td><td class="mono">String</td><td class="green">"Kyle"</td></tr>
+      <tr><td>County</td><td class="mono">"Hays"</td><td class="mono">Option&lt;String&gt;</td><td class="green">Some("Hays")</td></tr>
+      <tr><td>Appraised value</td><td class="mono">"459000.00"</td><td class="mono">Cents</td><td class="green">Cents(45_900_000)</td></tr>
+      <tr><td>Sales price</td><td class="mono">"459000.00"</td><td class="mono">Option&lt;Cents&gt;</td><td class="green">Some(Cents(45_900_000))</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Parties</h2>
+  <table class="ref-table">
+    <thead><tr><th>Field</th><th>XML value</th><th>Parsed type</th><th>Parsed value</th></tr></thead>
+    <tbody>
+      <tr><td>Credit score</td><td class="mono">"720"</td><td class="mono">Option&lt;CreditScore&gt;</td><td class="green">Some(CreditScore(720))</td></tr>
+      <tr><td>Borrower count</td><td class="mono">1 PARTY</td><td class="mono">u8</td><td class="green">1</td></tr>
+      <tr><td>First-time homebuyer</td><td class="mono">"true"</td><td class="mono">bool</td><td class="green">true</td></tr>
+      <tr><td>Monthly gross income</td><td class="mono">"8500.00"</td><td class="mono">Option&lt;Cents&gt;</td><td class="green">Some(Cents(850_000))</td></tr>
+    </tbody>
+  </table>
+
+  <h2>FHA mortgage insurance</h2>
+  <table class="ref-table">
+    <thead><tr><th>Field</th><th>XML value</th><th>Parsed type</th><th>Parsed value</th></tr></thead>
+    <tbody>
+      <tr><td>UFMIP rate</td><td class="mono">"1.75"</td><td class="mono">Option&lt;BasisPoints&gt;</td><td class="green">Some(BasisPoints(175))</td></tr>
+      <tr><td>UFMIP amount</td><td class="mono">"7602.7525"</td><td class="mono">Option&lt;Cents&gt;</td><td class="green">Some(Cents(760_275))</td></tr>
+      <tr><td>Financed</td><td class="mono">"true"</td><td class="mono">bool</td><td class="green">true</td></tr>
+      <tr><td>Monthly MIP rate</td><td class="mono">"0.55"</td><td class="mono">Option&lt;BasisPoints&gt;</td><td class="green">Some(BasisPoints(55))</td></tr>
+      <tr><td>Cancellation LTV</td><td class="mono">"0.0"</td><td class="mono">—</td><td class="green">is_life_of_loan = true</td></tr>
+      <tr><td>Required months</td><td class="mono">"24"</td><td class="mono">Option&lt;u32&gt;</td><td class="green">Some(24)</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Lender compensation</h2>
+  <table class="ref-table">
+    <thead><tr><th>Field</th><th>XML value</th><th>Parsed value</th></tr></thead>
+    <tbody>
+      <tr><td>Comp amount</td><td class="mono">"4899.24"</td><td class="green">Cents(489_924)</td></tr>
+      <tr><td>Comp BPS (decimal)</td><td class="mono">"112.76"</td><td class="green">Decimal(112.76)</td></tr>
+      <tr><td>Comp BPS (integer)</td><td class="mono">—</td><td class="green">BasisPoints(113)</td></tr>
+      <tr><td>Type</td><td class="mono">"BorrowerPaid"</td><td class="green">CompType::BorrowerPaid</td></tr>
+      <tr><td>Disclosure</td><td class="mono">"true"</td><td class="green">CompDisclosure::InSectionA</td></tr>
+    </tbody>
+  </table>
+
+  <h2>AUS and qualification</h2>
+  <table class="ref-table">
+    <thead><tr><th>Field</th><th>XML value</th><th>Parsed value</th></tr></thead>
+    <tbody>
+      <tr><td>AUS system</td><td class="mono">"DesktopUnderwriter"</td><td class="green">AusType::DesktopUnderwriter</td></tr>
+      <tr><td>Recommendation</td><td class="mono">"Approve/Eligible"</td><td class="green">AusRecommendation::ApproveEligible</td></tr>
+      <tr><td>Is approvable</td><td>—</td><td class="green">true</td></tr>
+      <tr><td>Qualifying rate</td><td class="mono">"6.375"</td><td class="green">BasisPoints(6375)</td></tr>
+      <tr><td>Housing ratio</td><td class="mono">"28.50"</td><td class="green">DtiBasisPoints(2850)</td></tr>
+      <tr><td>Total DTI</td><td class="mono">"43.00"</td><td class="green">DtiBasisPoints(4300)</td></tr>
+    </tbody>
+  </table>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     TAB: ARCHITECTURE
+══════════════════════════════════════════════════════════════ -->
+<div id="tab-architecture" class="content">
+<div class="page-inner">
+  <div class="page-header">
+    <h1>Architecture Decisions</h1>
+    <p class="subtitle">Key decisions made during Epics 1–2 and their rationale</p>
+  </div>
+
+  <h2>Precision architecture</h2>
+  <div class="decision-card highlight">
+    <div class="decision-title">No f64 for storage — ever</div>
+    <div class="decision-body">All monetary values are <code>Cents (i64)</code>. All rates are <code>BasisPoints (u32)</code>. All intermediate calculations use <code>rust_decimal::Decimal</code> with half-up rounding. The only <code>f64</code> in the engine is in Newton-Raphson APR convergence iterations — intermediate values only, never stored. This eliminates an entire class of floating-point rounding errors that historically cause mortgage calculation discrepancies.</div>
+  </div>
+  <div class="decision-card highlight">
+    <div class="decision-title">BasisPoints dual-scale convention</div>
+    <div class="decision-body">The <code>BasisPoints</code> type uses ×1000 scale for interest rates (1 unit = 0.001%, so 6.375% = 6375) and ×100 scale for fee/MI rates (1 unit = 0.01%, so 1.75% UFMIP = 175). This follows industry convention: interest rates are quoted to 3 decimal places while fee/MI rates are quoted to 2. The scale is determined by context, not by the type itself.</div>
+  </div>
+
+  <h2>MISMO schema layer</h2>
+  <div class="decision-card highlight">
+    <div class="decision-title">Parse-only crate — no business logic in mismo</div>
+    <div class="decision-body">The <code>mismo</code> crate converts XML ↔ typed Rust structs. It validates format and range but applies zero business rules. This separation allows the schema layer to be updated (e.g., new MISMO fields) without touching any calculation logic in downstream crates.</div>
+  </div>
+  <div class="decision-card highlight">
+    <div class="decision-title">DU "Approve/Eligible" slash-form bug fix</div>
+    <div class="decision-body">Desktop Underwriter (DU) actually emits <code>"Approve/Eligible"</code> (with slash) in live MISMO XML. The MISMO specification document only shows <code>"ApproveEligible"</code> (camelCase). The <code>AusRecommendation::try_from_str</code> parser now accepts both forms. Any production MISMO import from DU would silently fail to parse its recommendation without this fix.</div>
+  </div>
+
+  <h2>Fee rules architecture</h2>
+  <div class="decision-card highlight">
+    <div class="decision-title">fee_rules.json — externally maintainable, no redeployment</div>
+    <div class="decision-body">All fee type rules (VA non-allowable, APR inclusion, tolerance category, financeability) live in <code>crates/mismo/data/fee_rules.json</code>. The file is embedded at compile time as a default but can be replaced at runtime via <code>PUT /api/v1/fee-rules</code>. When VA updates its non-allowable fee list (which happens), the JSON is updated and reloaded — no code change, no deployment required.</div>
+  </div>
+  <div class="decision-card highlight">
+    <div class="decision-title">Lender credit as negative FeeEntry with 0% tolerance</div>
+    <div class="decision-body">Lender credits (from premium pricing / rate above par) are stored as positive <code>Cents</code> values and subtracted in <code>total_closing_costs_borrower()</code>. They carry 0% tolerance — the credit cannot decrease from LE to CD (that is itself a TRID violation). The engine validates that credits never exceed total closing costs, which would create impermissible cash-back to the borrower.</div>
+  </div>
+  <div class="decision-card highlight">
+    <div class="decision-title">Broker comp fractional BPS — dual representation</div>
+    <div class="decision-body">Broker compensation rates are fractional basis points in real loan files (e.g., "112.76 bps"). <code>LenderCompParsed</code> stores both <code>comp_bps: Option&lt;BasisPoints&gt;</code> (integer, for scenario engine fast-path) and <code>comp_bps_decimal: Option&lt;Decimal&gt;</code> (full precision, for Loan Estimate cent-accurate computation in Epic 11).</div>
+  </div>
+
+  <h2>Jurisdictional authority</h2>
+  <div class="decision-card highlight">
+    <div class="decision-title">FIPS code is the sole jurisdictional authority</div>
+    <div class="decision-body">Every fee table lookup, transfer tax calculation, and state-specific rule check keys off <code>CollateralParsed.fips_code</code>. ZIP codes and city names are display-only. "Border properties" (properties whose mailing address appears to be in another state) are handled correctly because the FIPS code is derived from lat/lng geocoding (Epic 5), not from the address string.</div>
+  </div>
+
+  <h2>CI/CD patterns</h2>
+  <div class="decision-card">
+    <div class="decision-title">macOS runner — rustup run bypasses all proxy issues</div>
+    <div class="decision-body">After 5 failed approaches (PATH reordering, explicit binary path, RUSTUP_TOOLCHAIN env var, GITHUB_PATH prepend, rustup toolchain install), the definitive fix is <code>rustup run 1.85.0 cargo test ...</code>. This bypasses PATH and proxy resolution entirely, directly executing <code>~/.rustup/toolchains/1.85.0-.../bin/cargo</code>. The Homebrew <code>rustup-init</code> shim that masquerades as <code>cargo</code> is never involved.</div>
+  </div>
+  <div class="decision-card">
+    <div class="decision-title">Coverage gate: types crate only until epic baselines measured</div>
+    <div class="decision-body">The 97% coverage gate applies only to the <code>types</code> crate. New crates are added to the exclusion list until their coverage baseline is measured with <code>cargo llvm-cov --package &lt;crate&gt;</code>. The <code>mismo</code> crate has 405 tests covering all public API paths but has uncovered branches (Display impls, error variants) that bring combined coverage below 97%. This will be addressed in a dedicated coverage hardening pass.</div>
+  </div>
+
+  <h2>Versioning and auditability (Epic 4 design)</h2>
+  <div class="decision-card highlight">
+    <div class="decision-title">DataVersionManifest — perfect replay for regulatory audit</div>
+    <div class="decision-body">Every analysis stores a <code>DataVersionManifest</code> recording the exact version ID of every data element used: rate sheet, LLPA matrix, MI rate card, fee rules, agency eligibility, lender overlays. Combined with the engine git SHA, any historical analysis can be reproduced exactly. This satisfies CFPB examination requirements (TRID 3-year retention, RESPA 5-year retention).</div>
+  </div>
+  <div class="decision-card highlight">
+    <div class="decision-title">RefDataStore trait — dev/test/prod storage independence</div>
+    <div class="decision-body">All reference data access goes through a <code>RefDataStore</code> trait. Three implementations: <code>JsonFileStore</code> (dev/CI, no database), <code>SqliteStore</code> (integration tests), <code>PostgresStore</code> (production). Switching from dev to prod is one configuration line at startup. The business logic in Epics 7–14 never knows which store is in use.</div>
+  </div>
+</div>
+</div>
+
+<!-- Footer -->
+<footer class="doc-footer">
+  <span>MorTru Engine · Epics 1–2 · CI #33</span>
+  <span>Rust 1.85.0 · 809 tests · 0 failures · 13 crates</span>
+  <span>github.com/adammerrill/MorTru-Engine-BackEnd</span>
+</footer>
+
+<script>
+function switchTab(id, btn) {
+  document.querySelectorAll('.content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  btn.classList.add('active');
+  btn.setAttribute('aria-selected', 'true');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
