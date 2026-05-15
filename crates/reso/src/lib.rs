@@ -47,14 +47,15 @@
 //! - Task 3.13: Epic 3 gate test
 
 pub mod error;
+pub mod fcc;
 pub mod lookups;
 pub mod property;
 
-// Task 3.10-3.12 modules land as those tasks are delivered:
-// pub mod fcc;
+// Task 3.10-3.11 modules land as those tasks are delivered:
 // pub mod enriched;
 // pub mod bridge;
 
 pub use error::{ResoError, ResoResult};
+pub use fcc::{parse_fcc_response, FccClient, FipsResolution};
 pub use lookups::{ResoPropertySubType, ResoPropertyType, ResoStandardStatus};
 pub use property::PropertyReso;

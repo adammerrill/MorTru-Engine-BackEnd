@@ -22,6 +22,7 @@
 //! to future-proof against new RESO fields without breaking changes.
 
 pub mod address;
+pub mod listing;
 pub mod parse;
 pub mod physical;
 pub mod rooms;
