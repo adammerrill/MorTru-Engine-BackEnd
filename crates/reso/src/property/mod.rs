@@ -23,6 +23,8 @@
 
 pub mod address;
 pub mod parse;
+pub mod physical;
+pub mod rooms;
 
 use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
