@@ -3,10 +3,7 @@
 //!
 //! All tests use the JsonFileStore with seed data in `crates/ref_data/data/`.
 
-use ref_data::{
-    AllProgramRules, JsonFileStore, ProgramEligibilityRules, RefDataStore, StateHoiRate,
-    NATIONAL_FALLBACK_RATE_BPS,
-};
+use ref_data::{JsonFileStore, RefDataStore, StateHoiRate, NATIONAL_FALLBACK_RATE_BPS};
 use types::{Cents, CreditScore, DtiBasisPoints, LtvBasisPoints, ProgramCode};
 
 /// Path to the test data directory shipped with the crate.
