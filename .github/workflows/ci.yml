@@ -84,20 +84,21 @@ jobs:
         # Running 'rustup default 1.85.0' relinks every proxy binary in
         # ~/.cargo/bin/ to the correct toolchain regardless of cache state.
       - name: Relink Rust 1.85.0 toolchain after cache restore
-        # Swatinem/rust-cache restores $CARGO_HOME/bin. On macOS, the binary
-        # at $CARGO_HOME/bin/cargo ends up as Homebrew's rustup-init shim
-        # regardless of PATH ordering, RUSTUP_TOOLCHAIN env vars, or explicit
-        # $HOME/.cargo/bin/cargo — all three approaches have been tried and all
-        # resolve to rustup-init entering setup mode.
+        # Swatinem/rust-cache clobbers ~/.cargo/bin/* with proxy shims that
+        # resolve to Homebrew's rustup-init. Both 'cargo' and 'rustc' are
+        # affected, so even 'rustup run 1.85.0 cargo' fails because cargo
+        # internally calls 'rustc -vV' which also hits the Homebrew shim.
         #
-        # The only reliable fix: 'rustup run 1.85.0 cargo' bypasses PATH and
-        # proxy resolution entirely and directly executes the cargo binary from
-        # ~/.rustup/toolchains/1.85.0-.../bin/cargo. rustup itself works fine
-        # (the relink step proves it) — only the cargo proxy is broken.
+        # Fix: add the actual toolchain bin/ directory (in ~/.rustup, which
+        # Swatinem does NOT cache) to GITHUB_PATH. This ensures the real
+        # cargo, rustc, rustdoc etc. are found BEFORE any proxy.
         run: |
           rustup toolchain install 1.85.0 --no-self-update --profile minimal
           rustup default 1.85.0
-      - run: rustup run 1.85.0 cargo test --workspace --all-features --no-fail-fast
+          RUSTUP_DIR="${RUSTUP_HOME:-$HOME/.rustup}"
+          TOOLCHAIN=$(ls "$RUSTUP_DIR/toolchains/" | grep "^1.85.0-" | head -1)
+          echo "$RUSTUP_DIR/toolchains/$TOOLCHAIN/bin" >> "$GITHUB_PATH"
+      - run: cargo test --workspace --all-features --no-fail-fast
 
   # ── Coverage gate (≥100% on non-stub crates) ───────────────────────────────
   # Owner: types crate maintainer
