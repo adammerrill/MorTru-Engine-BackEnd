@@ -4,14 +4,19 @@
 //! Task 4.4 verifies SqliteStore produces identical results to JsonFileStore
 //! for all RefDataStore methods, plus SQLite-specific behaviours.
 
+#[cfg(feature = "sqlite")]
 use chrono::NaiveDate;
+#[cfg(feature = "sqlite")]
 use ref_data::{JsonFileStore, RefDataStore};
+#[cfg(feature = "sqlite")]
 use types::{Cents, ProgramCode};
 
+#[cfg(feature = "sqlite")]
 fn data_dir() -> std::path::PathBuf {
     std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("data")
 }
 
+#[cfg(feature = "sqlite")]
 fn json_store() -> JsonFileStore {
     JsonFileStore::new(data_dir())
 }

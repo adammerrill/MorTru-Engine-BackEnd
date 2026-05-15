@@ -1,6 +1,6 @@
 //! Tasks 4.11 (CBSA/MSA crosswalk) + 4.12 (Texas HOI by ZIP).
 
-use ref_data::{CbsaDesignation, JsonFileStore, RefDataStore, ZipHoiRate};
+use ref_data::{CbsaDesignation, JsonFileStore, RefDataStore};
 use types::Cents;
 
 fn store() -> JsonFileStore {
