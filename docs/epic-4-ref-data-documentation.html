@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Epic 4 — Reference Data · MorTru Engine</title>
+<style>
+  :root {
+    --bg: #0f1117; --surface: #1a1d27; --surface2: #22263a;
+    --border: #2e3248; --accent: #5b6ef5; --accent2: #7c8ff7;
+    --green: #34c97a; --yellow: #f5c842; --red: #f5564a;
+    --teal: #2ecfd4; --orange: #f59642;
+    --text: #e4e6f0; --muted: #7b82a0; --code: #a6b0cf;
+    --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font); font-size: 15px; line-height: 1.65; }
+  a { color: var(--accent2); text-decoration: none; }
+
+  .layout { display: flex; min-height: 100vh; }
+  .sidebar { width: 264px; background: var(--surface); border-right: 1px solid var(--border);
+             position: sticky; top: 0; height: 100vh; overflow-y: auto; flex-shrink: 0; }
+  .main { flex: 1; max-width: 1000px; padding: 48px 56px; overflow-x: hidden; }
+
+  .sidebar-brand { padding: 24px 20px 16px; border-bottom: 1px solid var(--border); }
+  .sidebar-brand .title { font-size: 13px; font-weight: 700; color: var(--text); letter-spacing: .04em; text-transform: uppercase; }
+  .sidebar-brand .sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .nav-section { padding: 12px 20px 4px; font-size: 10px; font-weight: 700; color: var(--muted); letter-spacing: .1em; text-transform: uppercase; }
+  .nav-item { display: block; padding: 6px 20px; font-size: 13px; color: var(--muted); cursor: pointer; border-left: 2px solid transparent; transition: all .15s; }
+  .nav-item:hover, .nav-item.active { color: var(--text); border-left-color: var(--accent); background: rgba(91,110,245,.08); }
+
+  .tab-pane { display: none; }
+  .tab-pane.active { display: block; }
+
+  h1 { font-size: 30px; font-weight: 700; line-height: 1.2; margin-bottom: 12px; }
+  h2 { font-size: 20px; font-weight: 600; margin: 40px 0 14px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+  h3 { font-size: 16px; font-weight: 600; margin: 28px 0 10px; color: var(--accent2); }
+  h4 { font-size: 13px; font-weight: 700; margin: 20px 0 8px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+  p { margin-bottom: 14px; }
+  ul, ol { margin: 0 0 14px 20px; }
+  li { margin-bottom: 4px; }
+
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; letter-spacing: .03em; text-transform: uppercase; }
+  .badge-green  { background: rgba(52,201,122,.15);  color: var(--green);  }
+  .badge-yellow { background: rgba(245,200,66,.15);  color: var(--yellow); }
+  .badge-blue   { background: rgba(91,110,245,.15);  color: var(--accent2);}
+  .badge-teal   { background: rgba(46,207,212,.12);  color: var(--teal);   }
+  .badge-muted  { background: var(--surface2);       color: var(--muted);  border: 1px solid var(--border); }
+
+  .status-banner { background: var(--surface); border: 1px solid var(--border);
+                   border-left: 3px solid var(--yellow); border-radius: 8px;
+                   padding: 16px 20px; margin-bottom: 32px; display: flex; gap: 24px; flex-wrap: wrap; }
+  .stat { display: flex; flex-direction: column; gap: 2px; }
+  .stat-val { font-size: 22px; font-weight: 700; color: var(--text); }
+  .stat-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+
+  .task-grid { display: grid; grid-template-columns: 60px 1fr 100px auto; gap: 0;
+               border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-bottom: 28px; }
+  .tg-head { background: var(--surface2); font-size: 11px; color: var(--muted);
+             font-weight: 700; text-transform: uppercase; letter-spacing: .06em; padding: 10px 14px; }
+  .tg-cell { padding: 11px 14px; font-size: 13px; border-top: 1px solid var(--border); vertical-align: top; }
+  .tg-task { font-weight: 700; color: var(--accent2); font-family: var(--mono); font-size: 12px; }
+
+  pre { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px;
+        padding: 18px 20px; overflow-x: auto; margin: 14px 0 20px; }
+  code { font-family: var(--mono); font-size: 13px; color: var(--code); }
+  p code, li code, td code { background: var(--surface2); padding: 1px 6px; border-radius: 4px; font-size: 12px; color: var(--code); }
+
+  table { width: 100%; border-collapse: collapse; margin: 14px 0 24px; font-size: 13px; }
+  th { background: var(--surface2); padding: 9px 14px; text-align: left; font-size: 11px;
+       font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .06em;
+       border-bottom: 1px solid var(--border); }
+  td { padding: 9px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  td:first-child { font-family: var(--mono); font-size: 12px; color: var(--code); }
+
+  .source-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+                 margin-bottom: 20px; overflow: hidden; }
+  .sc-header { padding: 14px 18px; background: var(--surface2); border-bottom: 1px solid var(--border);
+               display: flex; align-items: center; gap: 12px; }
+  .sc-num { font-family: var(--mono); font-size: 11px; color: var(--accent2);
+            background: rgba(91,110,245,.12); padding: 2px 8px; border-radius: 4px; font-weight: 700; }
+  .sc-title { font-weight: 600; font-size: 15px; flex: 1; }
+  .sc-body { padding: 16px 18px; }
+  .sc-meta { display: grid; grid-template-columns: 100px 1fr; gap: 6px 12px; font-size: 13px; margin-bottom: 12px; }
+  .sc-key { color: var(--muted); font-size: 12px; }
+  .sc-val { color: var(--text); }
+
+  .method { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 10px; overflow: hidden; }
+  .method-sig { padding: 11px 16px; font-family: var(--mono); font-size: 13px; background: var(--surface2); border-bottom: 1px solid var(--border); }
+  .method-doc { padding: 10px 16px; font-size: 13px; color: var(--muted); }
+  .ret { color: var(--accent2); }
+  .fn-name { color: var(--yellow); }
+  .fn-kw { color: var(--accent2); }
+  .fn-type { color: var(--green); }
+
+  .callout { border-radius: 8px; padding: 14px 18px; margin: 18px 0; border-left: 3px solid; }
+  .callout-info   { background: rgba(91,110,245,.08);  border-color: var(--accent); }
+  .callout-warn   { background: rgba(245,200,66,.07);  border-color: var(--yellow); }
+  .callout-danger { background: rgba(245,86,74,.08);   border-color: var(--red);    }
+  .callout-teal   { background: rgba(46,207,212,.07);  border-color: var(--teal);   }
+  .callout strong { display: block; margin-bottom: 4px; font-size: 11px; text-transform: uppercase; letter-spacing: .06em; }
+
+  .arch { background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+          padding: 22px; margin: 18px 0; font-family: var(--mono); font-size: 12px;
+          color: var(--code); line-height: 1.9; white-space: pre; overflow-x: auto; }
+
+  .check-seq { counter-reset: step; }
+  .step { display: flex; gap: 14px; margin-bottom: 14px; align-items: flex-start; }
+  .step-num { width: 28px; height: 28px; border-radius: 50%; background: rgba(91,110,245,.15);
+              color: var(--accent2); font-size: 13px; font-weight: 700; display: flex;
+              align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  .step-body { flex: 1; }
+  .step-title { font-weight: 600; margin-bottom: 4px; }
+  .step-detail { font-size: 13px; color: var(--muted); }
+
+  .prog-chip { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 11px;
+               font-weight: 600; margin: 2px; }
+  .prog-fha  { background: rgba(52,201,122,.15);  color: var(--green);  }
+  .prog-va   { background: rgba(91,110,245,.15);  color: var(--accent2);}
+  .prog-usda { background: rgba(46,207,212,.12);  color: var(--teal);   }
+  .prog-conv { background: rgba(245,200,66,.12);  color: var(--yellow); }
+  .prog-hp   { background: rgba(245,150,66,.12);  color: var(--orange); }
+</style>
+</head>
+<body>
+<div class="layout">
+
+<!-- ── Sidebar ─────────────────────────────────────────────────────────────── -->
+<nav class="sidebar">
+  <div class="sidebar-brand">
+    <div class="title">MorTru Engine</div>
+    <div class="sub">Epic 4 · Reference Data</div>
+  </div>
+
+  <div class="nav-section">Overview</div>
+  <a class="nav-item active" onclick="show('overview')">Epic 4 Summary</a>
+  <a class="nav-item" onclick="show('architecture')">Crate Architecture</a>
+
+  <div class="nav-section">Data Sources</div>
+  <a class="nav-item" onclick="show('sources')">All 8 Sources</a>
+  <a class="nav-item" onclick="show('usda')">USDA Deep-Dive</a>
+
+  <div class="nav-section">Type Reference</div>
+  <a class="nav-item" onclick="show('types')">Geo Types</a>
+  <a class="nav-item" onclick="show('versioning')">Versioning System</a>
+
+  <div class="nav-section">API</div>
+  <a class="nav-item" onclick="show('store')">RefDataStore Trait</a>
+  <a class="nav-item" onclick="show('geo')">GeoEligibility API</a>
+
+  <div class="nav-section">Build Plan</div>
+  <a class="nav-item" onclick="show('tasks')">Task Roadmap</a>
+</nav>
+
+<!-- ── Main ────────────────────────────────────────────────────────────────── -->
+<main class="main">
+
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<div class="tab-pane active" id="tab-overview">
+  <h1>Epic 4 — Versioned Reference Data</h1>
+  <p style="color:var(--muted);font-size:16px;margin-bottom:24px;">
+    Crate <code>ref_data</code> · Geographic &amp; Program Eligibility · MorTru Engine
+  </p>
+
+  <div class="status-banner">
+    <div class="stat"><div class="stat-val" style="color:var(--yellow)">In Progress</div><div class="stat-label">Status</div></div>
+    <div class="stat"><div class="stat-val">31</div><div class="stat-label">Tests (Task 4.1)</div></div>
+    <div class="stat"><div class="stat-val">20</div><div class="stat-label">Total Tasks</div></div>
+    <div class="stat"><div class="stat-val">1</div><div class="stat-label">Complete</div></div>
+    <div class="stat"><div class="stat-val">19</div><div class="stat-label">Remaining</div></div>
+  </div>
+
+  <h2>Why Reference Data is the Engine's Critical Path</h2>
+  <p>A property address alone is not enough to determine loan eligibility. Every agency program has geographic constraints that are evaluated <strong>before</strong> any borrower qualification. Getting these wrong results in loans that fail in underwriting — or worse, fund incorrectly.</p>
+
+  <table>
+    <tr><th>Program</th><th>Geographic Check</th><th>Income Check</th><th>Data Source</th></tr>
+    <tr>
+      <td><span class="prog-chip prog-fha">FHA</span></td>
+      <td>Loan amount ≤ county FHA limit (1–4 unit)</td>
+      <td>None</td>
+      <td>HUD FHA Mortgage Limits</td>
+    </tr>
+    <tr>
+      <td><span class="prog-chip prog-va">VA</span></td>
+      <td>Limit applies only with reduced entitlement</td>
+      <td>None</td>
+      <td>FHFA Conforming Limits</td>
+    </tr>
+    <tr>
+      <td><span class="prog-chip prog-conv">Conventional</span></td>
+      <td>Loan ≤ conforming limit; high-balance flag</td>
+      <td>None</td>
+      <td>FHFA Conforming Limits</td>
+    </tr>
+    <tr>
+      <td><span class="prog-chip prog-usda">USDA SFGH</span></td>
+      <td>Property in eligible rural area (shapefile)</td>
+      <td>Household ≤ 115% AMI (all adults)</td>
+      <td>USDA RD shapefile + income limits</td>
+    </tr>
+    <tr>
+      <td><span class="prog-chip prog-hp">HomeReady / Home Possible</span></td>
+      <td>None (any conforming county)</td>
+      <td>Borrower ≤ 80% AMI; waived in low-income tracts</td>
+      <td>HUD/FFIEC AMI tract data</td>
+    </tr>
+  </table>
+
+  <p>All five checks key off <strong>FIPS code</strong> (county-level) and/or <strong>census tract GEOID</strong> (11-digit). ZIP codes are never used for eligibility — they are non-jurisdictional and can span county lines.</p>
+
+  <h2>Task Summary</h2>
+  <div class="task-grid">
+    <div class="tg-head">Task</div>
+    <div class="tg-head">Deliverable</div>
+    <div class="tg-head">Status</div>
+    <div class="tg-head">Tests</div>
+
+    <div class="tg-cell tg-task">4.1</div>
+    <div class="tg-cell">Crate scaffold — all geo types, <code>RefDataStore</code> trait, versioning types</div>
+    <div class="tg-cell"><span class="badge badge-green">✓ Done</span></div>
+    <div class="tg-cell" style="font-family:var(--mono);color:var(--green)">31</div>
+
+    <div class="tg-cell tg-task">4.2</div>
+    <div class="tg-cell"><code>JsonFileStore</code> impl — file-backed store for dev &amp; CI</div>
+    <div class="tg-cell"><span class="badge badge-muted">Pending</span></div>
+    <div class="tg-cell" style="font-family:var(--mono);color:var(--muted)">~20</div>
+
+    <div class="tg-cell tg-task">4.3</div>
+    <div class="tg-cell">Migration framework — 12 SQL files defining all schema objects</div>
+    <div class="tg-cell"><span class="badge badge-muted">Pending</span></div>
+    <div class="tg-cell" style="font-family:var(--mono);color:var(--muted)">~8</div>
+
+    <div class="tg-cell tg-task">4.4</div>
+    <div class="tg-cell"><code>SqliteStore</code> impl — in-process SQLite for integration tests</div>
+    <div class="tg-cell"><span class="badge badge-muted">Pending</span></div>
+    <div class="tg-cell" style="font-family:var(--mono);color:var(--muted)">~15</div>
+
+    <div class="tg-cell tg-task">4.5</div>
+    <div class="tg-cell">FHA loan limits loader + typed query (<code>FhaLoanLimits</code>)</div>
+    <div class="tg-cell"><span class="badge badge-muted">Pending</span></div>
+    <div class="tg-cell" style="font-family:var(--mono);color:var(--muted)">~20</div>
+
+    <div class="tg-cell tg-task">4.6</div>
+    <div class="tg-cell">GSE conforming limits + high-balance designation (<code>GseLoanLimits</code>)</div>
+    <div class="tg-cell"><span class="badge badge-muted">Pending</span></div>
+    <div class="tg-cell" style="font-family:var(--mono);color:var(--muted)">~20</div>
+
+    <div class="tg-cell tg-task">4.7</div>
+    <div class="tg-cell">USDA rural eligibility — shapefile → census tract lookup table</div>
+    <div class="tg-cell"><span class="badge badge-muted">Pending</span></div>
+    <div class="tg-cell" style="font-family:var(--mono);color:var(--muted)">~15</div>
+
+    <div class="tg-cell tg-task">4.8</div>
+    <div class="tg-cell">USDA MFH by tract — CSV loader (7,303 records)</div>
+    <div class="tg-cell"><span class="badge badge-muted">Pending</span></div>
+    <div class="tg-cell" style="font-family:var(--mono);color:var(--muted)">~12</div>
+
+    <div class="tg-cell tg-task">4.9</div>
+    <div class="tg-cell">USDA income limits — SFGH 115% AMI by family size (1–8)</div>
+    <div class="tg-cell"><span class="badge badge-muted">Pending</span></div>
+    <div class="tg-cell" style="font-family:var(--mono);color:var(--muted)">~18</div>
+
+    <div class="tg-cell tg-task">4.10</div>
+    <div class="tg-cell">AMI tract data — 50/80/100/115% AMI, low-income tract flag</div>
+    <div class="tg-cell"><span class="badge badge-muted">Pending</span></div>
+    <div class="tg-cell" style="font-family:var(--mono);color:var(--muted)">~18</div>
+
+    <div class="tg-cell tg-task">4.11</div>
+    <div class="tg-cell">CBSA/MSA crosswalk — FIPS → MSA classification</div>
+    <div class="tg-cell"><span class="badge badge-muted">Pending</span></div>
+    <div class="tg-cell" style="font-family:var(--mono);color:var(--muted)">~12</div>
+
+    <div class="tg-cell tg-task">4.12</div>
+    <div class="tg-cell">Texas HOI premiums by ZIP code</div>
+    <div class="tg-cell"><span class="badge badge-muted">Pending</span></div>
+    <div class="tg-cell" style="font-family:var(--mono);color:var(--muted)">~10</div>
+
+    <div class="tg-cell tg-task">4.13</div>
+    <div class="tg-cell">FHA MIP rates — monthly premium table + UFMIP single premium</div>
+    <div class="tg-cell"><span class="badge badge-muted">Pending</span></div>
+    <div class="tg-cell" style="font-family:var(--mono);color:var(--muted)">~18</div>
+
+    <div class="tg-cell tg-task">4.14</div>
+    <div class="tg-cell">VA funding fee table — all veteran/loan-type combinations</div>
+    <div class="tg-cell"><span class="badge badge-muted">Pending</span></div>
+    <div class="tg-cell" style="font-family:var(--mono);color:var(--muted)">~15</div>
+
+    <div class="tg-cell tg-task">4.15</div>
+    <div class="tg-cell">Conventional MI coverage requirements + LLPA matrices</div>
+    <div class="tg-cell"><span class="badge badge-muted">Pending</span></div>
+    <div class="tg-cell" style="font-family:var(--mono);color:var(--muted)">~20</div>
+
+    <div class="tg-cell tg-task">4.16</div>
+    <div class="tg-cell">LenderProfile + LenderOverlays (program restrictions per lender)</div>
+    <div class="tg-cell"><span class="badge badge-muted">Pending</span></div>
+    <div class="tg-cell" style="font-family:var(--mono);color:var(--muted)">~15</div>
+
+    <div class="tg-cell tg-task">4.17</div>
+    <div class="tg-cell">MI Provider + MiRateCard + MiProviderOverlays</div>
+    <div class="tg-cell"><span class="badge badge-muted">Pending</span></div>
+    <div class="tg-cell" style="font-family:var(--mono);color:var(--muted)">~15</div>
+
+    <div class="tg-cell tg-task">4.18</div>
+    <div class="tg-cell">RateSheet + LLPA matrix (volatile intraday data)</div>
+    <div class="tg-cell"><span class="badge badge-muted">Pending</span></div>
+    <div class="tg-cell" style="font-family:var(--mono);color:var(--muted)">~15</div>
+
+    <div class="tg-cell tg-task">4.19</div>
+    <div class="tg-cell"><code>GeoEligibility</code> unified query API — single call for all 5 programs</div>
+    <div class="tg-cell"><span class="badge badge-muted">Pending</span></div>
+    <div class="tg-cell" style="font-family:var(--mono);color:var(--muted)">~25</div>
+
+    <div class="tg-cell tg-task">4.20</div>
+    <div class="tg-cell">Epic 4 gate — all 5 fixture scenarios pass full geographic eligibility</div>
+    <div class="tg-cell"><span class="badge badge-muted">Pending</span></div>
+    <div class="tg-cell" style="font-family:var(--mono);color:var(--muted)">~30</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<div class="tab-pane" id="tab-architecture">
+  <h1>Crate Architecture</h1>
+
+  <h2>Module Structure</h2>
+  <div class="arch">crates/ref_data/
+├── Cargo.toml          deps: types, serde, serde_json, thiserror, rust_decimal, chrono
+└── src/
+    ├── lib.rs          public re-exports, update cadence table, task roadmap
+    ├── error.rs        RefDataError (8 variants), RefDataResult&lt;T&gt;
+    ├── versioning.rs   VersionId, Versioned&lt;T&gt;, DataVersionManifest
+    ├── geo/
+    │   └── mod.rs      FhaLoanLimits, GseLoanLimits, UsdaruralEligibility,
+    │                   UsdaIncomeLimit, AmiTractData, UsdaMfhByTract, GeoEligibility
+    └── store/
+        └── mod.rs      RefDataStore trait (async), JsonFileStore stub</div>
+
+  <h2>Storage Backend Strategy</h2>
+  <p>All data access goes through the <code>RefDataStore</code> trait. The implementation changes based on environment — the calling code never changes:</p>
+  <table>
+    <tr><th>Backend</th><th>Task</th><th>Use Case</th><th>Dependencies</th></tr>
+    <tr><td>JsonFileStore</td><td>4.2</td><td>Dev, CI, unit tests — no database</td><td>serde_json only</td></tr>
+    <tr><td>SqliteStore</td><td>4.4</td><td>Integration tests — in-process</td><td>sqlx + SQLite</td></tr>
+    <tr><td>PostgresStore</td><td>Production</td><td>Production — PostGIS for USDA polygons</td><td>sqlx + tokio-postgres</td></tr>
+  </table>
+
+  <h2>Update Cadences</h2>
+  <table>
+    <tr><th>Data</th><th>Source</th><th>Cadence</th><th>Volatility</th></tr>
+    <tr><td>FHA loan limits</td><td>HUD</td><td>Annually (Nov → Jan 1)</td><td><span class="badge badge-green">Stable</span></td></tr>
+    <tr><td>GSE conforming limits</td><td>FHFA</td><td>Annually (Nov → Jan 1)</td><td><span class="badge badge-green">Stable</span></td></tr>
+    <tr><td>USDA rural eligibility</td><td>USDA/Census</td><td>Every 10 years + interim</td><td><span class="badge badge-green">Stable</span></td></tr>
+    <tr><td>USDA income limits (SFGH)</td><td>USDA RD</td><td>Annually (Oct/Nov)</td><td><span class="badge badge-green">Stable</span></td></tr>
+    <tr><td>Area Median Income (AMI)</td><td>HUD/FFIEC</td><td>Annually</td><td><span class="badge badge-green">Stable</span></td></tr>
+    <tr><td>FHA MIP rates</td><td>HUD</td><td>As published (rare)</td><td><span class="badge badge-yellow">Occasional</span></td></tr>
+    <tr><td>VA funding fees</td><td>VA</td><td>As published (rare)</td><td><span class="badge badge-yellow">Occasional</span></td></tr>
+    <tr><td>Conv MI coverage reqs</td><td>GSEs</td><td>As published</td><td><span class="badge badge-yellow">Occasional</span></td></tr>
+    <tr><td>LLPA matrices</td><td>FNMA/FHLMC</td><td>Monthly</td><td><span class="badge badge-teal">Monthly</span></td></tr>
+    <tr><td>MI rate cards</td><td>MI providers</td><td>Weekly/intraday</td><td><span class="badge badge-yellow" style="color:var(--orange)">Volatile</span></td></tr>
+    <tr><td>Rate sheets</td><td>Individual lenders</td><td>Daily/intraday</td><td><span class="badge badge-yellow" style="color:var(--red)">Very Volatile</span></td></tr>
+    <tr><td>Lender overlays</td><td>Per lender</td><td>As published</td><td><span class="badge badge-yellow">Occasional</span></td></tr>
+    <tr><td>Texas HOI premiums</td><td>TDOI</td><td>Annually</td><td><span class="badge badge-green">Stable</span></td></tr>
+    <tr><td>CBSA/MSA crosswalk</td><td>Census/OMB</td><td>Every 3–5 years</td><td><span class="badge badge-green">Stable</span></td></tr>
+  </table>
+
+  <h2>Data Flow into the Engine</h2>
+  <div class="arch">FIPS code + census tract GEOID
+          │
+          ▼  RefDataStore::geo_eligibility()
+    GeoEligibility            ← all 5 program geographic checks in one call
+          │
+          ├──▶ Epic 7 (eligibility)  fha_loan_within_limit()
+          │                          gse_loan_status() → (eligible, is_high_balance)
+          │                          usda_income_eligible()
+          │                          hp_income_eligible()
+          │
+          └──▶ Epic 10 (payment)     gse_limit → high-balance LLPA tier
+                                     usda_income_limits → USDA pass/fail gate</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<div class="tab-pane" id="tab-sources">
+  <h1>Reference Data Sources</h1>
+
+  <div class="source-card">
+    <div class="sc-header">
+      <span class="sc-num">4.5</span>
+      <span class="sc-title">FHA Loan Limits</span>
+      <span class="badge badge-green">HUD Annual</span>
+    </div>
+    <div class="sc-body">
+      <div class="sc-meta">
+        <span class="sc-key">Source</span><span class="sc-val">HUD FHA Mortgage Limits database</span>
+        <span class="sc-key">URL</span><span class="sc-val">huduser.gov/portal/datasets/fha/fha_limits/</span>
+        <span class="sc-key">Format</span><span class="sc-val">CSV download, also HUD API</span>
+        <span class="sc-key">Updated</span><span class="sc-val">Annually in November; effective January 1</span>
+        <span class="sc-key">Key</span><span class="sc-val">5-digit county FIPS + effective year</span>
+      </div>
+      <p>The FHA floor and ceiling are set at 65% and 150% of the national conforming limit respectively. Every county receives a limit between these bounds based on local median home prices.</p>
+      <table>
+        <tr><th>Limit Type</th><th>1-Unit (2025)</th><th>Applies To</th></tr>
+        <tr><td>Floor (FLOOR)</td><td>$524,225</td><td>Lower-cost counties — national minimum</td></tr>
+        <tr><td>Standard (STANDARD)</td><td>Varies by county</td><td>Most of the country</td></tr>
+        <tr><td>Ceiling (HIGH_COST)</td><td>$1,209,750</td><td>AK, HI, GU, USVI + select high-cost MSAs</td></tr>
+      </table>
+      <div class="callout callout-warn"><strong>Engine note</strong>The UFMIP-financed loan amount (base loan + upfront MIP) must fit within the county limit — not just the base loan. This distinction matters: a $522,000 loan + 1.75% UFMIP = $531,135 adjusted, which exceeds the floor limit.</div>
+    </div>
+  </div>
+
+  <div class="source-card">
+    <div class="sc-header">
+      <span class="sc-num">4.6</span>
+      <span class="sc-title">GSE Conforming Loan Limits</span>
+      <span class="badge badge-green">FHFA Annual</span>
+    </div>
+    <div class="sc-body">
+      <div class="sc-meta">
+        <span class="sc-key">Source</span><span class="sc-val">FHFA Conforming Loan Limit data</span>
+        <span class="sc-key">URL</span><span class="sc-val">fhfa.gov/data/conforming-loan-limit</span>
+        <span class="sc-key">Format</span><span class="sc-val">Excel and CSV download</span>
+        <span class="sc-key">Updated</span><span class="sc-val">Annually in November; effective January 1</span>
+        <span class="sc-key">Key</span><span class="sc-val">5-digit county FIPS + effective year</span>
+      </div>
+      <table>
+        <tr><th>Loan Type</th><th>1-Unit (2025)</th><th>2-Unit</th><th>3-Unit</th><th>4-Unit</th></tr>
+        <tr><td>Standard national</td><td>$806,500</td><td>$1,032,650</td><td>$1,248,150</td><td>$1,551,250</td></tr>
+        <tr><td>High-cost maximum</td><td>$1,209,750</td><td>$1,548,975</td><td>$1,872,225</td><td>$2,326,875</td></tr>
+      </table>
+      <p><strong>High-balance designation:</strong> Any county where <code>limit_1_unit &gt; $806,500</code> is a high-cost county. Loans between the standard limit and the county limit are "high-balance conforming" — eligible for FNMA/FHLMC purchase but subject to specific LLPAs.</p>
+      <p><strong>VA use:</strong> Post–Blue Water Navy Act (2020), veterans with <em>full entitlement</em> have no loan limit. The conforming limit applies only for veterans with <em>reduced/impaired entitlement</em> (e.g. existing VA loan not paid off).</p>
+    </div>
+  </div>
+
+  <div class="source-card">
+    <div class="sc-header">
+      <span class="sc-num">4.7</span>
+      <span class="sc-title">USDA Rural Housing Eligibility (Shapefile)</span>
+      <span class="badge badge-teal">Census-cycle + interim</span>
+    </div>
+    <div class="sc-body">
+      <div class="sc-meta">
+        <span class="sc-key">Source</span><span class="sc-val">USDA Rural Development GIS</span>
+        <span class="sc-key">File</span><span class="sc-val">SFH_MFH_Ineligible20180823.zip — 2,607 polygons</span>
+        <span class="sc-key">What it is</span><span class="sc-val">Urban/suburban areas INELIGIBLE for USDA SFH programs</span>
+        <span class="sc-key">Updated</span><span class="sc-val">Every 10 years (Census) + interim updates</span>
+        <span class="sc-key">Key</span><span class="sc-val">11-digit census tract GEOID or lat/lon coordinates</span>
+      </div>
+      <div class="callout callout-danger"><strong>⚠ Critical Inversion</strong>The shapefile contains INELIGIBLE areas. A property is USDA-eligible if it does NOT fall within any of the 2,607 polygons. "Green" on the USDA public eligibility map means ineligible, not eligible.</div>
+      <pre><code>// From USDA eligibility.js source code:
+if (results.length === 0) {
+    isEligible = "IS";      // ← NOT in any ineligible polygon → ELIGIBLE
+}
+if (results.length > 0) {
+    isEligible = "IS NOT";  // ← IN an ineligible polygon → INELIGIBLE
+}</code></pre>
+    </div>
+  </div>
+
+  <div class="source-card">
+    <div class="sc-header">
+      <span class="sc-num">4.8</span>
+      <span class="sc-title">USDA Multi-Family Housing by Census Tract (CSV)</span>
+      <span class="badge badge-muted">Static dataset</span>
+    </div>
+    <div class="sc-body">
+      <div class="sc-meta">
+        <span class="sc-key">File</span><span class="sc-val">USDA_Rural_Housing_by_Tract_6332152967305738155.csv</span>
+        <span class="sc-key">Records</span><span class="sc-val">7,303 census tracts with active USDA MFH projects</span>
+        <span class="sc-key">Key</span><span class="sc-val">11-digit census tract GEOID</span>
+      </div>
+      <p>Tracts in this dataset with <code>total_projects &gt; 0</code> are confirmed rural by USDA's own approval history. They serve as supplementary evidence for edge cases where the ineligible shapefile check produces borderline results.</p>
+      <p>Project types: EL (Elderly) · FA (Family) · CG (Congregate) · GH (Group Home) · MX (Mixed-use)</p>
+    </div>
+  </div>
+
+  <div class="source-card">
+    <div class="sc-header">
+      <span class="sc-num">4.9</span>
+      <span class="sc-title">USDA Income Limits — SFGH 115% AMI</span>
+      <span class="badge badge-green">USDA Annual</span>
+    </div>
+    <div class="sc-body">
+      <div class="sc-meta">
+        <span class="sc-key">Source</span><span class="sc-val">USDA Rural Development Income Limits</span>
+        <span class="sc-key">Program</span><span class="sc-val">Section 502 Guaranteed (SFGH) — the standard mortgage program</span>
+        <span class="sc-key">Updated</span><span class="sc-val">Annually October/November</span>
+        <span class="sc-key">Key</span><span class="sc-val">5-digit county FIPS + household size (1–8)</span>
+      </div>
+      <div class="callout callout-warn"><strong>USDA vs FHA/VA/Conventional income definition</strong>USDA household income = ALL adults residing in the home, including non-borrowers. A non-borrower adult child counts. FHA, VA, and Conventional use only the borrowers on the loan note.</div>
+      <table>
+        <tr><th>Program</th><th>Section</th><th>Income Limit</th><th>In Scope?</th></tr>
+        <tr><td>Guaranteed (SFGH)</td><td>502 Guaranteed</td><td>115% of AMI</td><td><span class="badge badge-green">Yes — primary</span></td></tr>
+        <tr><td>Direct (SFHD)</td><td>502 Direct</td><td>50–80% of AMI</td><td><span class="badge badge-muted">No — govt lending</span></td></tr>
+        <tr><td>Repair/Rehab</td><td>504</td><td>50% of AMI</td><td><span class="badge badge-muted">No — out of scope</span></td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="source-card">
+    <div class="sc-header">
+      <span class="sc-num">4.10</span>
+      <span class="sc-title">Area Median Income (AMI) by Census Tract</span>
+      <span class="badge badge-green">HUD/FFIEC Annual</span>
+    </div>
+    <div class="sc-body">
+      <div class="sc-meta">
+        <span class="sc-key">Source</span><span class="sc-val">HUD AMI data + FFIEC Census flat file</span>
+        <span class="sc-key">Updated</span><span class="sc-val">Annually</span>
+        <span class="sc-key">Key</span><span class="sc-val">11-digit census tract GEOID + effective year</span>
+      </div>
+      <table>
+        <tr><th>Threshold</th><th>Programs</th></tr>
+        <tr><td>50% AMI</td><td>Very Low Income — USDA Direct, HUD programs</td></tr>
+        <tr><td>80% AMI</td><td>Low Income — HomeReady / Home Possible income limit</td></tr>
+        <tr><td>100% AMI</td><td>Area median — the benchmark for all computations</td></tr>
+        <tr><td>115% AMI</td><td>USDA SFGH limit (computed: ami_100pct × 1.15)</td></tr>
+        <tr><td>120% AMI</td><td>Some state bond programs</td></tr>
+      </table>
+      <p><strong>HomeReady / Home Possible income limit waiver:</strong> If the census tract median income ≤ 80% of the MSA median income, the tract is classified as a "low-income tract" and there is <em>no income limit</em> for HomeReady/HomePossible borrowers in that tract. Both FNMA and FHLMC use identical rules per their voluntary alignment.</p>
+    </div>
+  </div>
+
+  <div class="source-card">
+    <div class="sc-header">
+      <span class="sc-num">4.11–4.12</span>
+      <span class="sc-title">CBSA/MSA Crosswalk + Texas HOI Premiums</span>
+      <span class="badge badge-muted">Supplemental</span>
+    </div>
+    <div class="sc-body">
+      <p><strong>CBSA/MSA Crosswalk (4.11):</strong> Maps county FIPS to CBSA code, MSA status, and metropolitan/micropolitan designation. Used for USDA rural determination (populations in MSAs above 35,000 are presumptively ineligible) and USDA income limit lookups (limits are per-county or per-MSA).</p>
+      <p><strong>Texas HOI Premiums (4.12):</strong> Average annual homeowner's insurance premium by ZIP code for Texas properties. Keyed by ZIP (not FIPS) because HOI is an actuarial estimate, not a regulatory fee tied to a specific jurisdiction. Only Texas initially; other states use a national estimator.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<div class="tab-pane" id="tab-usda">
+  <h1>USDA Rural Eligibility — Deep Dive</h1>
+  <p>The USDA check is the most complex geographic eligibility check in the engine. It requires understanding three separate data sources and how they interact.</p>
+
+  <h2>The Three USDA Data Sources</h2>
+
+  <h3>1. Ineligible Area Shapefile (primary — Task 4.7)</h3>
+  <p>The source of truth. 2,607 polygons covering urban and suburban areas. A property is USDA-eligible if its coordinates fall <em>outside</em> all polygons.</p>
+  <p><strong>ArcGIS layer:</strong> <code>layerID = 4</code> → <code>"RHS_SFH_MFH_IELG_2011"</code> (Rural Housing Service, Single Family Housing / Multi-Family Housing, Ineligible, 2011 vintage, 2018-08-23 update)</p>
+
+  <h3>2. MFH by Tract CSV (supplemental — Task 4.8)</h3>
+  <p>7,303 census tracts where USDA has active multi-family housing projects. These tracts are confirmed rural by USDA's own project approval history. Used to resolve edge cases at shapefile polygon boundaries.</p>
+
+  <h3>3. USDA Income Limits (gate — Task 4.9)</h3>
+  <p>Even when a property passes the geographic eligibility check, the household income must be ≤ 115% of AMI. The income limits are per-county, per-family-size (8 sizes), annually updated.</p>
+
+  <h2>Pre-computation Strategy (Task 4.7)</h2>
+  <p>Rather than running a live PostGIS query for every property, the engine pre-computes eligibility for all ~74,000 2020 Census tracts and stores results in <code>usda_rural_eligibility</code>. The pre-computation pipeline:</p>
+  <ol>
+    <li>Load <code>SFH_MFH_Ineligible.shp</code> into PostGIS</li>
+    <li>Download TIGER/Line tract boundaries for all 50 states + DC</li>
+    <li>For each tract: check if centroid falls within any ineligible polygon → <code>is_sfh_eligible</code></li>
+    <li>Compute <code>pct_eligible</code>: % of tract area outside ineligible zones (for boundary tracts)</li>
+    <li>Cross-reference with MFH CSV: tracts with USDA projects that appear ineligible are flagged for manual review</li>
+  </ol>
+  <div class="callout callout-teal"><strong>Production vs test</strong>Pre-computation runs once when new shapefile data is released (roughly every 10 years + interim updates). The <code>JsonFileStore</code> for tests contains the pre-computed results for the 5 fixture properties. The production <code>PostgresStore</code> holds all ~74,000 tracts.</div>
+
+  <h2>The Complete USDA Eligibility Check Sequence</h2>
+  <div class="check-seq">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <div class="step-title">Property coordinates available?</div>
+        <div class="step-detail">FCC geocoder must have run (Epic 5). Without <code>tract_geoid</code>, all USDA checks return conservative: ineligible.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <div class="step-title">Geographic eligibility check</div>
+        <div class="step-detail"><code>usda_rural_eligibility.is_sfh_eligible WHERE geoid = tract_geoid</code>. If false → USDA ineligible; stop here.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <div class="step-title">Income limit check</div>
+        <div class="step-detail"><code>annual_household_income ≤ usda_income_limits.limit_size_{household_size}</code>. Uses ALL adults in home, including non-borrowers. If over limit → USDA ineligible.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <div class="step-title">Property type check</div>
+        <div class="step-detail">Only 1–2 unit residential properties. Must be owner-occupied primary residence. No investment properties, no mobile homes on leased land.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-body">
+        <div class="step-title">USDA eligible ✓</div>
+        <div class="step-detail">Proceed to USDA-specific pricing (guarantee fee, annual fee).</div>
+      </div>
+    </div>
+  </div>
+
+  <h2>Reference Fixture Values</h2>
+  <table>
+    <tr><th>Property</th><th>Tract GEOID</th><th>USDA SFH?</th><th>Reason</th></tr>
+    <tr><td>Kyle TX SFR</td><td>48209010905</td><td><span class="badge badge-green">Eligible</span></td><td>Hays County — rural/suburban fringe, not in ineligible polygon</td></tr>
+    <tr><td>Kyle TX Condo</td><td>48209010906</td><td><span class="badge badge-green">Eligible</span></td><td>Same county, check required per tract</td></tr>
+    <tr><td>Mobile Home</td><td>TBD</td><td><span class="badge badge-yellow">Geography OK</span></td><td>Property type ineligible regardless of geography</td></tr>
+    <tr><td>Manufactured Home</td><td>48209950100</td><td><span class="badge badge-green">Eligible</span></td><td>Rural Wimberley area; manufactured homes eligible with owned land</td></tr>
+    <tr><td>Quadruplex Austin</td><td>48453001801</td><td><span class="badge badge-muted">Ineligible</span></td><td>Travis County urban area — falls within ineligible polygon</td></tr>
+  </table>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<div class="tab-pane" id="tab-types">
+  <h1>Geo Type Reference</h1>
+  <p>All types defined in <code>src/geo/mod.rs</code> (Task 4.1). Structs are <code>Serialize + Deserialize</code> via serde for JSON file store compatibility.</p>
+
+  <h2>FhaLoanLimits</h2>
+  <table>
+    <tr><th>Field</th><th>Type</th><th>Description</th></tr>
+    <tr><td>fips_code</td><td><code>String</code></td><td>5-digit county FIPS (e.g. "48209")</td></tr>
+    <tr><td>state_abbr</td><td><code>String</code></td><td>2-letter state (e.g. "TX")</td></tr>
+    <tr><td>county_name</td><td><code>String</code></td><td>Human-readable county name</td></tr>
+    <tr><td>limit_type</td><td><code>FhaLimitType</code></td><td>Floor, Standard, or HighCost</td></tr>
+    <tr><td>limit_1_unit</td><td><code>Cents</code></td><td>Max FHA loan for SFR/condo/townhouse</td></tr>
+    <tr><td>limit_2_unit</td><td><code>Cents</code></td><td>Max FHA loan for duplex</td></tr>
+    <tr><td>limit_3_unit</td><td><code>Cents</code></td><td>Max FHA loan for triplex</td></tr>
+    <tr><td>limit_4_unit</td><td><code>Cents</code></td><td>Max FHA loan for quadruplex</td></tr>
+    <tr><td>effective_year</td><td><code>u16</code></td><td>Year these limits apply</td></tr>
+  </table>
+  <div class="method">
+    <div class="method-sig"><span class="fn-kw">pub fn</span> <span class="fn-name">limit_for</span>(&amp;self, unit_count: <span class="fn-type">u8</span>) -&gt; <span class="ret">Cents</span></div>
+    <div class="method-doc">Returns limit for 1–4 units. Panics if unit_count is 0 or &gt;4 — the engine should have rejected invalid property types before this point.</div>
+  </div>
+
+  <h2>GseLoanLimits</h2>
+  <table>
+    <tr><th>Field</th><th>Type</th><th>Description</th></tr>
+    <tr><td>fips_code</td><td><code>String</code></td><td>5-digit county FIPS</td></tr>
+    <tr><td>cbsa_name</td><td><code>Option&lt;String&gt;</code></td><td>CBSA/MSA name if applicable</td></tr>
+    <tr><td>limit_1_unit .. limit_4_unit</td><td><code>Cents</code></td><td>Max conforming amount by unit count</td></tr>
+    <tr><td>is_high_cost</td><td><code>bool</code></td><td>True when limit_1_unit &gt; $806,500</td></tr>
+    <tr><td>effective_year</td><td><code>u16</code></td><td></td></tr>
+  </table>
+  <div class="method">
+    <div class="method-sig"><span class="fn-kw">pub const</span> STANDARD_1_UNIT_2025: <span class="fn-type">Cents</span> = Cents(80_650_000)</div>
+    <div class="method-doc">$806,500 — the 2025 standard national conforming limit. High-balance designation threshold.</div>
+  </div>
+  <div class="method">
+    <div class="method-sig"><span class="fn-kw">pub fn</span> <span class="fn-name">is_high_balance_amount</span>(&amp;self, loan_amount: <span class="fn-type">Cents</span>, _year: <span class="fn-type">u16</span>) -&gt; <span class="ret">bool</span></div>
+    <div class="method-doc">True if loan_amount &gt; standard national limit AND ≤ county limit. These loans qualify for FNMA/FHLMC purchase with high-balance LLPAs applied.</div>
+  </div>
+
+  <h2>UsdaruralEligibility</h2>
+  <table>
+    <tr><th>Field</th><th>Type</th><th>Description</th></tr>
+    <tr><td>geoid</td><td><code>String</code></td><td>11-digit census tract GEOID</td></tr>
+    <tr><td>fips_code</td><td><code>String</code></td><td>5-digit county FIPS</td></tr>
+    <tr><td>is_sfh_eligible</td><td><code>bool</code></td><td>True = NOT within any USDA ineligible polygon</td></tr>
+    <tr><td>is_mfh_eligible</td><td><code>bool</code></td><td>True for Multi-Family Housing (usually same as SFH)</td></tr>
+    <tr><td>pct_eligible</td><td><code>Option&lt;f64&gt;</code></td><td>% of tract area outside ineligible zones (None = centroid only)</td></tr>
+    <tr><td>source_version</td><td><code>String</code></td><td>Shapefile vintage e.g. "2018-08-23"</td></tr>
+  </table>
+
+  <h2>UsdaIncomeLimit</h2>
+  <table>
+    <tr><th>Field</th><th>Type</th><th>Description</th></tr>
+    <tr><td>fips_code</td><td><code>String</code></td><td>5-digit county FIPS</td></tr>
+    <tr><td>program</td><td><code>String</code></td><td>Always "SFGH" — Section 502 Guaranteed</td></tr>
+    <tr><td>limit_size_1 .. limit_size_8</td><td><code>Cents</code></td><td>Max annual household income for 1–8 person household</td></tr>
+    <tr><td>effective_date</td><td><code>NaiveDate</code></td><td>Date these limits became effective</td></tr>
+  </table>
+  <div class="method">
+    <div class="method-sig"><span class="fn-kw">pub fn</span> <span class="fn-name">limit_for_size</span>(&amp;self, size: <span class="fn-type">u8</span>) -&gt; <span class="ret">RefDataResult&lt;Cents&gt;</span></div>
+    <div class="method-doc">Returns income limit for household of <code>size</code> persons (1–8). Returns <code>Err(InvalidHouseholdSize)</code> for 0 or &gt;8.</div>
+  </div>
+
+  <h2>AmiTractData</h2>
+  <table>
+    <tr><th>Field</th><th>Type</th><th>Description</th></tr>
+    <tr><td>geoid</td><td><code>String</code></td><td>11-digit census tract GEOID</td></tr>
+    <tr><td>ami_100pct</td><td><code>Option&lt;Cents&gt;</code></td><td>Area median income (100% benchmark)</td></tr>
+    <tr><td>ami_50pct</td><td><code>Option&lt;Cents&gt;</code></td><td>Very low income threshold</td></tr>
+    <tr><td>ami_80pct</td><td><code>Option&lt;Cents&gt;</code></td><td>Low income / HomeReady income limit</td></tr>
+    <tr><td>ami_115pct</td><td><code>Option&lt;Cents&gt;</code></td><td>USDA SFGH limit (ami_100pct × 1.15)</td></tr>
+    <tr><td>is_low_income_tract</td><td><code>bool</code></td><td>Tract median ≤ 80% MSA median → HomeReady waiver</td></tr>
+    <tr><td>hp_income_limit_waived</td><td><code>bool</code></td><td>is_low_income_tract + any HP-specific waiver logic</td></tr>
+    <tr><td>effective_year</td><td><code>u16</code></td><td></td></tr>
+  </table>
+
+  <h2>GeoEligibility</h2>
+  <p>Assembled by <code>RefDataStore::geo_eligibility()</code> — combines all sources in one call for the eligibility engine.</p>
+  <div class="method">
+    <div class="method-sig"><span class="fn-kw">pub fn</span> <span class="fn-name">fha_loan_within_limit</span>(&amp;self, adjusted_loan: <span class="fn-type">Cents</span>, unit_count: <span class="fn-type">u8</span>) -&gt; <span class="ret">bool</span></div>
+    <div class="method-doc">True if adjusted_loan ≤ county FHA limit. Uses the UFMIP-financed amount (not base loan).</div>
+  </div>
+  <div class="method">
+    <div class="method-sig"><span class="fn-kw">pub fn</span> <span class="fn-name">gse_loan_status</span>(&amp;self, loan_amount: <span class="fn-type">Cents</span>, unit_count: <span class="fn-type">u8</span>) -&gt; <span class="ret">(bool, bool)</span></div>
+    <div class="method-doc">Returns (is_conforming_eligible, is_high_balance). High-balance = above standard national limit but within county limit.</div>
+  </div>
+  <div class="method">
+    <div class="method-sig"><span class="fn-kw">pub fn</span> <span class="fn-name">usda_income_eligible</span>(&amp;self, annual_household_income: <span class="fn-type">Cents</span>, household_size: <span class="fn-type">u8</span>) -&gt; <span class="ret">bool</span></div>
+    <div class="method-doc">True if household income ≤ SFGH 115% AMI limit. Uses ALL adult income, not just borrower income.</div>
+  </div>
+  <div class="method">
+    <div class="method-sig"><span class="fn-kw">pub fn</span> <span class="fn-name">hp_income_eligible</span>(&amp;self, annual_borrower_income: <span class="fn-type">Cents</span>) -&gt; <span class="ret">bool</span></div>
+    <div class="method-doc">True if eligible for HomeReady/HomePossible. Automatically returns true for low-income census tracts (waived income limit).</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<div class="tab-pane" id="tab-versioning">
+  <h1>Versioning System</h1>
+  <p>Defined in <code>src/versioning.rs</code>. Every piece of reference data is wrapped in <code>Versioned&lt;T&gt;</code>. Every analysis stores a <code>DataVersionManifest</code>.</p>
+
+  <div class="callout callout-teal"><strong>Why this matters</strong>CFPB examination requires perfect replay of any historical loan analysis. If LLPA matrices changed between when a loan was quoted and when it funded, the examiner needs to see exactly which matrix was in effect. The manifest + engine git SHA enables exact reproduction of any analysis.</div>
+
+  <h2>VersionId</h2>
+  <p>Format: <code>"{table}:{effective_date}"</code></p>
+  <pre><code>let v = VersionId::new("fha_loan_limits", NaiveDate::from_ymd_opt(2025, 1, 1).unwrap());
+assert_eq!(v.as_str(), "fha_loan_limits:2025-01-01");</code></pre>
+
+  <h2>Versioned&lt;T&gt;</h2>
+  <pre><code>pub struct Versioned&lt;T&gt; {
+    pub version_id:     VersionId,
+    pub effective_date: NaiveDate,
+    pub data:           T,          // FhaLoanLimits, GseLoanLimits, etc.
+}</code></pre>
+
+  <h2>DataVersionManifest</h2>
+  <p>Stored alongside every loan analysis result. Captures which version of each data source was active when the analysis ran.</p>
+  <pre><code>pub struct DataVersionManifest {
+    pub engine_sha:             Option&lt;String&gt;,   // git commit SHA
+    pub fha_loan_limits:        Option&lt;VersionId&gt;,
+    pub gse_loan_limits:        Option&lt;VersionId&gt;,
+    pub usda_rural_eligibility: Option&lt;VersionId&gt;,
+    pub usda_income_limits:     Option&lt;VersionId&gt;,
+    pub ami_tract_data:         Option&lt;VersionId&gt;,
+    pub fha_mip_rates:          Option&lt;VersionId&gt;,
+    pub va_funding_fees:        Option&lt;VersionId&gt;,
+    pub mi_coverage_reqs:       Option&lt;VersionId&gt;,
+    pub llpa_matrices:          HashMap&lt;String, VersionId&gt;, // per lender
+    pub mi_rate_cards:          HashMap&lt;String, VersionId&gt;, // per provider
+    pub rate_sheets:            HashMap&lt;String, VersionId&gt;, // per lender
+    pub created_at:             Option&lt;DateTime&lt;Utc&gt;&gt;,
+}</code></pre>
+  <div class="method">
+    <div class="method-sig"><span class="fn-kw">pub fn</span> <span class="fn-name">is_complete_for_program</span>(&amp;self, is_usda: <span class="fn-type">bool</span>, is_va: <span class="fn-type">bool</span>) -&gt; <span class="ret">bool</span></div>
+    <div class="method-doc">Returns true if all required data elements have a version recorded. USDA and VA elements are only required when those programs are being evaluated.</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<div class="tab-pane" id="tab-store">
+  <h1>RefDataStore Trait</h1>
+  <p>Defined in <code>src/store/mod.rs</code>. Every data access goes through this interface — the engine never talks to a backend directly.</p>
+
+  <pre><code>pub trait RefDataStore: Send + Sync {
+    fn fha_loan_limits(&self, fips_code: &str, year: u16)
+        -> RefDataResult&lt;Versioned&lt;FhaLoanLimits&gt;&gt;;
+
+    fn gse_loan_limits(&self, fips_code: &str, year: u16)
+        -> RefDataResult&lt;Versioned&lt;GseLoanLimits&gt;&gt;;
+
+    fn usda_rural_eligibility(&self, geoid: &str)
+        -> RefDataResult&lt;Option&lt;UsdaruralEligibility&gt;&gt;;
+
+    fn usda_income_limits(&self, fips_code: &str, effective_date: NaiveDate)
+        -> RefDataResult&lt;Versioned&lt;UsdaIncomeLimit&gt;&gt;;
+
+    fn usda_mfh_by_tract(&self, geoid: &str)
+        -> RefDataResult&lt;Option&lt;UsdaMfhByTract&gt;&gt;;
+
+    fn ami_tract_data(&self, geoid: &str, year: u16)
+        -> RefDataResult&lt;Option&lt;Versioned&lt;AmiTractData&gt;&gt;&gt;;
+
+    // ── Single-call unified API ──────────────────────────────────────────
+    fn geo_eligibility(&self, fips_code: &str, tract_geoid: Option&lt;&str&gt;, year: u16)
+        -> RefDataResult&lt;GeoEligibility&gt;;
+
+    fn current_version(&self, dataset: &str)
+        -> RefDataResult&lt;VersionId&gt;;
+}</code></pre>
+
+  <h2>Semantic Contract</h2>
+  <ul>
+    <li>All methods return the data <em>as-of</em> the requested year, using the most recent version available that is ≤ the requested year.</li>
+    <li>Methods return <code>Err(NotFound)</code> when no data exists for that FIPS/year — callers must handle this explicitly.</li>
+    <li><code>usda_rural_eligibility</code> and <code>usda_mfh_by_tract</code> return <code>Option</code> — a missing tract record is conservative-ineligible, not an error.</li>
+    <li><code>geo_eligibility</code> assembles all sources in one call; implementations are expected to batch the underlying lookups.</li>
+  </ul>
+
+  <h2>RefDataError Variants</h2>
+  <table>
+    <tr><th>Variant</th><th>When Raised</th></tr>
+    <tr><td>NotFound { data_type, fips, year }</td><td>No record for this FIPS/year combination</td></tr>
+    <tr><td>UsdaIncomeLimitNotFound { fips, household_size }</td><td>No USDA income limit for this county</td></tr>
+    <tr><td>InvalidHouseholdSize(u8)</td><td>Household size 0 or &gt;8 passed to limit_for_size()</td></tr>
+    <tr><td>InvalidGeoid(String)</td><td>Census tract GEOID not 11 digits</td></tr>
+    <tr><td>Storage(String)</td><td>Backend I/O error (file not found, SQL error)</td></tr>
+    <tr><td>DataIntegrity { table, detail }</td><td>Unexpected null or type mismatch in data</td></tr>
+    <tr><td>Json { file, source }</td><td>JSON deserialization failed from file store</td></tr>
+    <tr><td>StaleManifest(String)</td><td>Manifest references a version no longer in the store</td></tr>
+  </table>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<div class="tab-pane" id="tab-geo">
+  <h1>GeoEligibility API</h1>
+  <p>The single call that powers all geographic eligibility decisions for a property. Epic 7 (eligibility engine) calls this once per scenario and runs all program checks from the result.</p>
+
+  <h2>Query Pattern</h2>
+  <pre><code>// Called once when a scenario is created:
+let geo = store.geo_eligibility(
+    "48209",              // county FIPS from FCC resolution or TaxTract field
+    Some("48209010905"),  // census tract GEOID from FCC Block.FIPS[0..11]
+    2025,                 // effective year for loan limits
+)?;
+
+// Then consumed by the eligibility engine:
+let fha_ok   = geo.fha_loan_within_limit(adjusted_loan, 1);
+let (conv_ok, is_hb) = geo.gse_loan_status(loan_amount, 1);
+let usda_geo = geo.usda_sfh_eligible;
+let usda_inc = geo.usda_income_eligible(household_income, 3);
+let hp_ok    = geo.hp_income_eligible(borrower_income);</code></pre>
+
+  <h2>Complete Eligibility Check Sequence</h2>
+  <div class="check-seq">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <div class="step-title"><span class="prog-chip prog-fha">FHA</span> <span class="prog-chip prog-conv">VA</span> <span class="prog-chip prog-conv">Conventional</span> — Loan Amount vs County Limit</div>
+        <div class="step-detail">
+          FHA: <code>adjusted_loan ≤ fha_limit_{n}_unit</code> (UFMIP-financed amount)<br>
+          Conventional: <code>loan ≤ gse_limit_{n}_unit</code> → if between standard &amp; county limit → high-balance flag<br>
+          VA: Skip if full entitlement; else check <code>loan ≤ gse_limit_1_unit</code>
+        </div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <div class="step-title"><span class="prog-chip prog-usda">USDA</span> — Geographic Rural Eligibility</div>
+        <div class="step-detail">Check <code>usda_sfh_eligible = true</code>. If false → USDA ineligible, skip all remaining USDA checks. Requires tract_geoid from FCC resolution.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <div class="step-title"><span class="prog-chip prog-usda">USDA</span> — Household Income Check</div>
+        <div class="step-detail">Check <code>annual_household_income ≤ usda_income_limits[household_size-1]</code>. Household income = ALL adults in home, including non-borrowers.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <div class="step-title"><span class="prog-chip prog-hp">HomeReady / Home Possible</span> — AMI Income Check</div>
+        <div class="step-detail">If <code>hp_income_limit_waived = true</code> (low-income tract) → no limit. Otherwise: <code>borrower_income ≤ ami_80pct</code>.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-body">
+        <div class="step-title"><span class="prog-chip prog-conv">Conventional</span> — High-Balance Designation</div>
+        <div class="step-detail">Set <code>is_high_balance = loan &gt; STANDARD_1_UNIT_2025 AND gse_is_high_cost</code>. Triggers high-balance LLPA tiers in Epic 10.</div>
+      </div>
+    </div>
+  </div>
+
+  <h2>Reference Values — Kyle TX (FIPS 48209, Tract 48209010905)</h2>
+  <table>
+    <tr><th>Field</th><th>Value</th><th>Source</th></tr>
+    <tr><td>fha_limit_1_unit</td><td>$524,225 (Floor)</td><td>HUD 2025 — Hays County</td></tr>
+    <tr><td>fha_limit_4_unit</td><td>$1,007,575</td><td>HUD 2025</td></tr>
+    <tr><td>gse_limit_1_unit</td><td>$806,500 (Standard)</td><td>FHFA 2025</td></tr>
+    <tr><td>gse_is_high_cost</td><td>false</td><td>Hays County is not high-cost</td></tr>
+    <tr><td>usda_sfh_eligible</td><td>true</td><td>Kyle/Hays County — outside ineligible polygons</td></tr>
+    <tr><td>usda_income_limits[2]</td><td>≈ $103,500/yr</td><td>USDA 2025 — 3-person, Hays County</td></tr>
+    <tr><td>ami_80pct</td><td>≈ $78,400</td><td>HUD/FFIEC 2025 — tract 48209010905</td></tr>
+    <tr><td>hp_income_limit_waived</td><td>false</td><td>Not a low-income census tract</td></tr>
+  </table>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<div class="tab-pane" id="tab-tasks">
+  <h1>Task Roadmap — Tasks 4.2–4.20</h1>
+
+  <h2>Storage Infrastructure (4.2–4.4)</h2>
+  <h3>Task 4.2 — JsonFileStore Implementation</h3>
+  <p>Implement all <code>RefDataStore</code> trait methods for <code>JsonFileStore</code>. Data files live in <code>data/ref_data/*.json</code>. No database required — this is the store used in all unit tests and CI. Each method reads a JSON file, deserializes into the appropriate type, and applies the year filter.</p>
+  <p>JSON file naming: <code>{dataset}_{year}.json</code> e.g. <code>fha_loan_limits_2025.json</code>. The store scans available files to satisfy the "most recent ≤ requested year" contract.</p>
+
+  <h3>Task 4.3 — Migration Framework</h3>
+  <p>12 SQL migration files defining the production schema, ordered and versioned. Built with <code>sqlx</code> migrate. Files land in <code>migrations/</code> at the workspace root.</p>
+  <pre><code>migrations/
+  0001_initial_types.sql         CREATE TYPE fha_limit_type AS ENUM (...)
+  0002_fha_loan_limits.sql       CREATE TABLE fha_loan_limits (...)
+  0003_gse_loan_limits.sql       CREATE TABLE gse_loan_limits (...)
+  0004_usda_rural_eligibility.sql
+  0005_usda_income_limits.sql
+  0006_usda_mfh_by_tract.sql
+  0007_ami_tract_data.sql
+  0008_texas_hoi_premiums.sql
+  0009_fha_mip_rates.sql
+  0010_va_funding_fees.sql
+  0011_mi_coverage_requirements.sql
+  0012_lender_and_rate_data.sql</code></pre>
+
+  <h3>Task 4.4 — SqliteStore Implementation</h3>
+  <p>Implement <code>RefDataStore</code> for SQLite via <code>sqlx</code>. Used in integration tests. The <code>geo_eligibility()</code> method issues one query per table and assembles the <code>GeoEligibility</code> struct.</p>
+
+  <h2>Loan Limits (4.5–4.6)</h2>
+  <h3>Task 4.5 — FHA Loan Limits</h3>
+  <p>CSV loader, JSON serialization, and <code>RefDataStore::fha_loan_limits()</code> implementation. Reference data files for all ~3,200 US counties. Tests verify Hays County TX, Travis County TX, and a high-cost county (e.g. San Francisco).</p>
+
+  <h3>Task 4.6 — GSE Conforming Limits</h3>
+  <p>Same pattern as Task 4.5. Tests verify <code>is_high_balance_amount()</code> correctly classifies loans above $806,500 but within county limit. Tests cover: standard county (Hays TX), high-cost county (San Francisco CA), and VA entitlement scenario.</p>
+
+  <h2>USDA Data (4.7–4.9)</h2>
+  <h3>Task 4.7 — USDA Rural Eligibility Pre-computation</h3>
+  <p>Bulk pre-computation of census tract eligibility from the shapefile. For the engine test suite, a curated JSON file covers the 5 fixture census tracts. Full production computation via PostGIS is documented and scripted but not part of the Rust test suite.</p>
+
+  <h3>Task 4.8 — USDA MFH by Tract</h3>
+  <p>CSV loader for the 7,303-record multi-family housing dataset. <code>has_usda_projects()</code>, <code>has_elderly_housing()</code>, <code>has_family_housing()</code> methods. Tests verify known tracts with active projects.</p>
+
+  <h3>Task 4.9 — USDA Income Limits</h3>
+  <p>Income limits for all 8 household sizes, by county. Key tests: 3-person household in Hays County TX passes/fails at income boundary; <code>limit_for_size(0)</code> returns <code>InvalidHouseholdSize</code>; <code>limit_for_size(9)</code> same.</p>
+
+  <h2>AMI Data (4.10–4.11)</h2>
+  <h3>Task 4.10 — AMI Tract Data</h3>
+  <p>Census-tract-level AMI at 50/80/100/115/120% thresholds. Low-income tract flag derived from FFIEC census file. <code>hp_income_limit_waived</code> field drives HomeReady/HomePossible income limit bypass.</p>
+
+  <h3>Task 4.11 — CBSA/MSA Crosswalk</h3>
+  <p>Maps county FIPS to CBSA code, MSA classification, and metropolitan/micropolitan status. Used for USDA rural determination and income limit lookups that key off MSA instead of county.</p>
+
+  <h2>Insurance &amp; Fees (4.12–4.15)</h2>
+  <h3>Task 4.13 — FHA MIP Rates</h3>
+  <p>Monthly premium rates (basis points per year) by LTV bracket, loan term, and loan amount tier. Upfront MIP (UFMIP) at 1.75%. Annual cancellation rules (11-year vs lifetime). Tests verify 2023 rate changes are correctly versioned.</p>
+
+  <h3>Task 4.14 — VA Funding Fee</h3>
+  <p>Fee matrix by: first use vs subsequent use, down payment tier (0–5%, 5–10%, 10%+), purchase vs IRRRL vs cash-out. Disability exemption flag. Financed into the loan amount.</p>
+
+  <h3>Task 4.15 — Conv MI Coverage + LLPA Matrices</h3>
+  <p>FNMA/FHLMC MI coverage requirements by LTV bracket. LLPA matrices: credit score × LTV pricing grid, plus high-balance, investment, condo, manufactured home adjustments.</p>
+
+  <h2>Lender &amp; Rate Data (4.16–4.18)</h2>
+  <h3>Task 4.16–4.17 — Lender Profiles, MI Providers</h3>
+  <p>Per-lender overlay restrictions (minimum FICO, max LTV, ineligible property types, state restrictions). MI provider rate cards by LTV × term × coverage level.</p>
+
+  <h3>Task 4.18 — Rate Sheets</h3>
+  <p>Intraday lender rate sheets: par rate + YSP curve for each loan product. Volatile — requires intraday versioning with sub-hour timestamps.</p>
+
+  <h2>Integration (4.19–4.20)</h2>
+  <h3>Task 4.19 — GeoEligibility Unified Query</h3>
+  <p>Full implementation of <code>RefDataStore::geo_eligibility()</code> for both <code>JsonFileStore</code> and <code>SqliteStore</code>. Batches all underlying queries. Returns complete <code>GeoEligibility</code> struct. Test: single call with Kyle TX fixtures produces all expected values.</p>
+
+  <h3>Task 4.20 — Epic 4 Gate</h3>
+  <p>All 5 fixture scenarios pass the complete geographic eligibility check sequence. Gate assertions:</p>
+  <ul>
+    <li>Kyle TX SFR: FHA eligible ($459k &lt; $524k floor), Conventional eligible (not high-balance), USDA eligible (geography + income at $103k household for 3-person)</li>
+    <li>Kyle TX Condo: Same limits; verify condo project type doesn't affect geo limits</li>
+    <li>Mobile Home: FHA ineligible (property type rejection before geo), USDA ineligible (property type)</li>
+    <li>Manufactured Home: FHA eligible; USDA eligible (owned land, no land lease)</li>
+    <li>Quadruplex Austin: FHA 4-unit limit applies ($1,007,575); Travis County FIPS (48453); USDA ineligible (urban Austin); Flood zone AE doesn't affect loan limits</li>
+  </ul>
+</div>
+
+</main>
+</div>
+
+<script>
+function show(id) {
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const pane = document.getElementById('tab-' + id);
+  if (pane) pane.classList.add('active');
+  if (event && event.target) event.target.classList.add('active');
+}
+</script>
+</body>
+</html>
