@@ -1,0 +1,50 @@
+[
+  {
+    "geoid": "48209010905",
+    "fips_code": "48209",
+    "state_abbr": "TX",
+    "county_name": "Hays",
+    "tract_name": "Census Tract 109.05, Hays County, TX",
+    "ami_100pct": 9583300,
+    "ami_50pct": 4791700,
+    "ami_80pct": 7666700,
+    "ami_115pct": 11020800,
+    "ami_120pct": 11500000,
+    "ami_140pct": 13416700,
+    "is_low_income_tract": false,
+    "hp_income_limit_waived": false,
+    "effective_year": 2025
+  },
+  {
+    "geoid": "48209010906",
+    "fips_code": "48209",
+    "state_abbr": "TX",
+    "county_name": "Hays",
+    "tract_name": "Census Tract 109.06, Hays County, TX",
+    "ami_100pct": 8750000,
+    "ami_50pct": 4375000,
+    "ami_80pct": 7000000,
+    "ami_115pct": 10062500,
+    "ami_120pct": 10500000,
+    "ami_140pct": 12250000,
+    "is_low_income_tract": false,
+    "hp_income_limit_waived": false,
+    "effective_year": 2025
+  },
+  {
+    "geoid": "48453001801",
+    "fips_code": "48453",
+    "state_abbr": "TX",
+    "county_name": "Travis",
+    "tract_name": "Census Tract 18.01, Travis County, TX",
+    "ami_100pct": 10416700,
+    "ami_50pct": 5208300,
+    "ami_80pct": 8333300,
+    "ami_115pct": 11979200,
+    "ami_120pct": 12500000,
+    "ami_140pct": 14583300,
+    "is_low_income_tract": false,
+    "hp_income_limit_waived": false,
+    "effective_year": 2025
+  }
+]

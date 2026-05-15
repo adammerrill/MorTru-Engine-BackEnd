@@ -1,78 +1,64 @@
-//! `RefDataStore` trait — the single access point for all reference data.
+//! `RefDataStore` trait + `JsonFileStore` implementation.
 //!
-//! The engine never talks to a database directly. Every data fetch goes
-//! through this trait, which enables:
-//!
-//! - `JsonFileStore` in dev and CI (no database, fast tests)
-//! - `SqliteStore` for integration tests
-//! - `PostgresStore` for production
-//!
-//! Switching environments is one line of startup configuration.
+//! All reference data access goes through this trait. Swap the implementation
+//! to change backends without touching any other crate.
+
+use std::path::PathBuf;
 
 use crate::{
-    error::RefDataResult,
+    error::{RefDataError, RefDataResult},
     geo::{
         AmiTractData, FhaLoanLimits, GeoEligibility, GseLoanLimits, UsdaIncomeLimit,
         UsdaMfhByTract, UsdaruralEligibility,
     },
-    versioning::VersionId,
+    hoi_rates::StateHoiRate,
+    program_rules::{AllProgramRules, ProgramEligibilityRules},
+    versioning::{VersionId, Versioned},
 };
+use types::ProgramCode;
 
-/// The single interface for all reference data access.
+// ── RefDataStore trait ────────────────────────────────────────────────────────
+
+/// Single interface for all reference data access.
 ///
-/// All methods return owned data; the store handles caching internally.
-/// Every method returns the data as-of the requested effective year,
-/// using the most recent version available that is ≤ the year.
+/// Implementations: [`JsonFileStore`] (dev/CI), SqliteStore (integration),
+/// PostgresStore (production).
 pub trait RefDataStore: Send + Sync {
-    // ── Loan limits ──────────────────────────────────────────────────────────
-
-    /// FHA loan limits for a county.
+    // ── Loan limits ───────────────────────────────────────────────────────────
     fn fha_loan_limits(
         &self,
         fips_code: &str,
         year: u16,
-    ) -> RefDataResult<crate::versioning::Versioned<FhaLoanLimits>>;
-
-    /// GSE conforming loan limits for a county.
+    ) -> RefDataResult<Versioned<FhaLoanLimits>>;
     fn gse_loan_limits(
         &self,
         fips_code: &str,
         year: u16,
-    ) -> RefDataResult<crate::versioning::Versioned<GseLoanLimits>>;
+    ) -> RefDataResult<Versioned<GseLoanLimits>>;
 
-    // ── USDA ─────────────────────────────────────────────────────────────────
-
-    /// USDA rural eligibility for a census tract.
-    /// Returns None if no tract data is available (treat as ineligible).
+    // ── USDA ──────────────────────────────────────────────────────────────────
     fn usda_rural_eligibility(&self, geoid: &str) -> RefDataResult<Option<UsdaruralEligibility>>;
-
-    /// USDA SFGH income limits for a county.
     fn usda_income_limits(
         &self,
         fips_code: &str,
         effective_date: chrono::NaiveDate,
-    ) -> RefDataResult<crate::versioning::Versioned<UsdaIncomeLimit>>;
-
-    /// USDA MFH projects for a census tract (may be None).
+    ) -> RefDataResult<Versioned<UsdaIncomeLimit>>;
     fn usda_mfh_by_tract(&self, geoid: &str) -> RefDataResult<Option<UsdaMfhByTract>>;
 
-    // ── AMI ──────────────────────────────────────────────────────────────────
-
-    /// Area Median Income data for a census tract.
+    // ── AMI ───────────────────────────────────────────────────────────────────
     fn ami_tract_data(
         &self,
         geoid: &str,
         year: u16,
-    ) -> RefDataResult<Option<crate::versioning::Versioned<AmiTractData>>>;
+    ) -> RefDataResult<Option<Versioned<AmiTractData>>>;
+
+    // ── Program eligibility rules (Task 4.21) ─────────────────────────────────
+    fn program_rules(&self, program: ProgramCode) -> RefDataResult<ProgramEligibilityRules>;
+
+    // ── HOI estimation (Task 4.22) ────────────────────────────────────────────
+    fn state_hoi_rate(&self, state_abbr: &str, year: u16) -> RefDataResult<StateHoiRate>;
 
     // ── Unified geo-eligibility query ─────────────────────────────────────────
-
-    /// Assemble all geographic eligibility data for one property in a single
-    /// call. Implementations should batch the underlying data fetches.
-    ///
-    /// `tract_geoid` is the 11-digit census tract GEOID from FCC resolution.
-    /// Pass `None` if FCC has not been called yet — USDA and AMI checks will
-    /// return conservative (ineligible / no limit) results.
     fn geo_eligibility(
         &self,
         fips_code: &str,
@@ -80,30 +66,305 @@ pub trait RefDataStore: Send + Sync {
         year: u16,
     ) -> RefDataResult<GeoEligibility>;
 
-    // ── Version tracking ─────────────────────────────────────────────────────
-
-    /// Current version ID for a named dataset. Used to build a
-    /// [`DataVersionManifest`] for each analysis.
+    // ── Version tracking ──────────────────────────────────────────────────────
     fn current_version(&self, dataset: &str) -> RefDataResult<VersionId>;
 }
 
-// ── Stub JsonFileStore (Tasks 4.1-4.2) ───────────────────────────────────────
+// ── JsonFileStore ─────────────────────────────────────────────────────────────
 
 /// JSON-file-backed store for development and CI.
 ///
-/// Data lives in `data/ref_data/*.json`. No database required.
-/// This is the store used in ALL `ref_data` tests.
+/// Data files live under `data_dir/`. File naming convention:
+///
+/// | Dataset | File |
+/// |---|---|
+/// | FHA loan limits | `fha_limits_{year}.json` |
+/// | GSE conforming limits | `gse_limits_{year}.json` |
+/// | USDA rural eligibility | `usda_rural_eligibility.json` |
+/// | USDA income limits | `usda_income_limits_{year}.json` |
+/// | USDA MFH by tract | `usda_mfh_by_tract.json` |
+/// | AMI tract data | `ami_tract_data_{year}.json` |
+/// | Program eligibility rules | `program_rules.json` |
+/// | State HOI rates | `state_hoi_rates_{year}.json` |
 #[derive(Debug)]
 pub struct JsonFileStore {
-    pub data_dir: std::path::PathBuf,
+    pub data_dir: PathBuf,
 }
 
 impl JsonFileStore {
     /// Create a store pointing at `data_dir`.
     #[must_use]
-    pub fn new(data_dir: impl Into<std::path::PathBuf>) -> Self {
+    pub fn new(data_dir: impl Into<PathBuf>) -> Self {
         Self {
             data_dir: data_dir.into(),
         }
+    }
+
+    /// Read and parse a JSON file relative to `data_dir`.
+    fn read_json<T: serde::de::DeserializeOwned>(&self, filename: &str) -> RefDataResult<T> {
+        let path = self.data_dir.join(filename);
+        let content = std::fs::read_to_string(&path)
+            .map_err(|e| RefDataError::Storage(format!("cannot read {}: {e}", path.display())))?;
+        serde_json::from_str(&content).map_err(|e| RefDataError::Json {
+            file: filename.to_owned(),
+            source: e,
+        })
+    }
+
+    /// Find the most recent year file ≤ `year` using a naming pattern.
+    ///
+    /// Scans `data_dir` for files matching `{prefix}_{year}.json` and returns
+    /// the content of the most recent year that is ≤ the requested year.
+    fn read_versioned_json<T: serde::de::DeserializeOwned>(
+        &self,
+        prefix: &str,
+        year: u16,
+    ) -> RefDataResult<(u16, T)> {
+        let entries = std::fs::read_dir(&self.data_dir)
+            .map_err(|e| RefDataError::Storage(format!("cannot read data_dir: {e}")))?;
+
+        let mut best_year: Option<u16> = None;
+        for entry in entries.flatten() {
+            let name = entry.file_name();
+            let name = name.to_string_lossy();
+            if let Some(rest) = name.strip_prefix(&format!("{prefix}_")) {
+                if let Some(yr_str) = rest.strip_suffix(".json") {
+                    if let Ok(yr) = yr_str.parse::<u16>() {
+                        if yr <= year {
+                            match best_year {
+                                None => best_year = Some(yr),
+                                Some(b) if yr > b => best_year = Some(yr),
+                                _ => {}
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        let found_year = best_year.ok_or_else(|| {
+            RefDataError::Storage(format!("no {prefix} file found for year ≤ {year}"))
+        })?;
+        let filename = format!("{prefix}_{found_year}.json");
+        let data = self.read_json(&filename)?;
+        Ok((found_year, data))
+    }
+}
+
+impl RefDataStore for JsonFileStore {
+    // ── FHA loan limits ───────────────────────────────────────────────────────
+
+    fn fha_loan_limits(
+        &self,
+        fips_code: &str,
+        year: u16,
+    ) -> RefDataResult<Versioned<FhaLoanLimits>> {
+        let (found_year, records): (u16, Vec<FhaLoanLimits>) =
+            self.read_versioned_json("fha_limits", year)?;
+        let data = records
+            .into_iter()
+            .find(|r| r.fips_code == fips_code)
+            .ok_or_else(|| RefDataError::NotFound {
+                data_type: "FhaLoanLimits",
+                fips: fips_code.to_owned(),
+                year: found_year,
+            })?;
+        let eff = chrono::NaiveDate::from_ymd_opt(i32::from(found_year), 1, 1).unwrap_or_default();
+        Ok(Versioned::new("fha_loan_limits", eff, data))
+    }
+
+    // ── GSE conforming limits ─────────────────────────────────────────────────
+
+    fn gse_loan_limits(
+        &self,
+        fips_code: &str,
+        year: u16,
+    ) -> RefDataResult<Versioned<GseLoanLimits>> {
+        let (found_year, records): (u16, Vec<GseLoanLimits>) =
+            self.read_versioned_json("gse_limits", year)?;
+        let data = records
+            .into_iter()
+            .find(|r| r.fips_code == fips_code)
+            .ok_or_else(|| RefDataError::NotFound {
+                data_type: "GseLoanLimits",
+                fips: fips_code.to_owned(),
+                year: found_year,
+            })?;
+        let eff = chrono::NaiveDate::from_ymd_opt(i32::from(found_year), 1, 1).unwrap_or_default();
+        Ok(Versioned::new("gse_loan_limits", eff, data))
+    }
+
+    // ── USDA ──────────────────────────────────────────────────────────────────
+
+    fn usda_rural_eligibility(&self, geoid: &str) -> RefDataResult<Option<UsdaruralEligibility>> {
+        let records: Vec<UsdaruralEligibility> = self.read_json("usda_rural_eligibility.json")?;
+        Ok(records.into_iter().find(|r| r.geoid == geoid))
+    }
+
+    fn usda_income_limits(
+        &self,
+        fips_code: &str,
+        effective_date: chrono::NaiveDate,
+    ) -> RefDataResult<Versioned<UsdaIncomeLimit>> {
+        let year = effective_date
+            .format("%Y")
+            .to_string()
+            .parse::<u16>()
+            .unwrap_or(2025);
+        let (found_year, records): (u16, Vec<UsdaIncomeLimit>) =
+            self.read_versioned_json("usda_income_limits", year)?;
+        let data = records
+            .into_iter()
+            .find(|r| r.fips_code == fips_code)
+            .ok_or_else(|| RefDataError::NotFound {
+                data_type: "UsdaIncomeLimit",
+                fips: fips_code.to_owned(),
+                year: found_year,
+            })?;
+        let eff = chrono::NaiveDate::from_ymd_opt(i32::from(found_year), 10, 1).unwrap_or_default();
+        Ok(Versioned::new("usda_income_limits", eff, data))
+    }
+
+    fn usda_mfh_by_tract(&self, geoid: &str) -> RefDataResult<Option<UsdaMfhByTract>> {
+        let records: Vec<UsdaMfhByTract> = self.read_json("usda_mfh_by_tract.json")?;
+        Ok(records.into_iter().find(|r| r.geoid == geoid))
+    }
+
+    // ── AMI ───────────────────────────────────────────────────────────────────
+
+    fn ami_tract_data(
+        &self,
+        geoid: &str,
+        year: u16,
+    ) -> RefDataResult<Option<Versioned<AmiTractData>>> {
+        let (found_year, records): (u16, Vec<AmiTractData>) =
+            self.read_versioned_json("ami_tract_data", year)?;
+        let eff = chrono::NaiveDate::from_ymd_opt(i32::from(found_year), 1, 1).unwrap_or_default();
+        let data = records.into_iter().find(|r| r.geoid == geoid);
+        Ok(data.map(|d| Versioned::new("ami_tract_data", eff, d)))
+    }
+
+    // ── Program eligibility rules ─────────────────────────────────────────────
+
+    fn program_rules(&self, program: ProgramCode) -> RefDataResult<ProgramEligibilityRules> {
+        let all: AllProgramRules = self.read_json("program_rules.json")?;
+        all.for_program(program).cloned()
+    }
+
+    // ── HOI estimation ────────────────────────────────────────────────────────
+
+    fn state_hoi_rate(&self, state_abbr: &str, year: u16) -> RefDataResult<StateHoiRate> {
+        let (_, records): (u16, Vec<StateHoiRate>) =
+            self.read_versioned_json("state_hoi_rates", year)?;
+        records
+            .into_iter()
+            .find(|r| r.state_abbr.eq_ignore_ascii_case(state_abbr))
+            .ok_or_else(|| RefDataError::NotFound {
+                data_type: "StateHoiRate",
+                fips: state_abbr.to_owned(),
+                year,
+            })
+    }
+
+    // ── Unified geo-eligibility ───────────────────────────────────────────────
+
+    fn geo_eligibility(
+        &self,
+        fips_code: &str,
+        tract_geoid: Option<&str>,
+        year: u16,
+    ) -> RefDataResult<GeoEligibility> {
+        use types::Cents;
+
+        let fha = self.fha_loan_limits(fips_code, year)?.data;
+        let gse = self.gse_loan_limits(fips_code, year)?.data;
+
+        // USDA rural eligibility — conservative (false) when tract unknown
+        let (usda_sfh, usda_mfh, usda_pct) = match tract_geoid {
+            Some(geoid) => match self.usda_rural_eligibility(geoid)? {
+                Some(r) => (r.is_sfh_eligible, r.is_mfh_eligible, r.pct_eligible),
+                None => (false, false, None), // tract not found → conservative
+            },
+            None => (false, false, None),
+        };
+
+        // USDA income limits — best effort
+        let effective_date =
+            chrono::NaiveDate::from_ymd_opt(i32::from(year), 10, 1).unwrap_or_default();
+        let usda_income = self.usda_income_limits(fips_code, effective_date).ok();
+        let usda_income_limits = match usda_income {
+            Some(v) => [
+                v.data.limit_size_1,
+                v.data.limit_size_2,
+                v.data.limit_size_3,
+                v.data.limit_size_4,
+                v.data.limit_size_5,
+                v.data.limit_size_6,
+                v.data.limit_size_7,
+                v.data.limit_size_8,
+            ],
+            None => [Cents(0); 8],
+        };
+
+        // AMI tract data — optional, keyed by tract
+        let ami = tract_geoid
+            .and_then(|g| self.ami_tract_data(g, year).ok().flatten())
+            .map(|v| v.data);
+
+        Ok(GeoEligibility {
+            fips_code: fips_code.to_owned(),
+            tract_geoid: tract_geoid.map(str::to_owned),
+            effective_year: year,
+            fha_limit_1_unit: fha.limit_1_unit,
+            fha_limit_2_unit: fha.limit_2_unit,
+            fha_limit_3_unit: fha.limit_3_unit,
+            fha_limit_4_unit: fha.limit_4_unit,
+            fha_limit_type: fha.limit_type,
+            gse_limit_1_unit: gse.limit_1_unit,
+            gse_limit_2_unit: gse.limit_2_unit,
+            gse_limit_3_unit: gse.limit_3_unit,
+            gse_limit_4_unit: gse.limit_4_unit,
+            gse_is_high_cost: gse.is_high_cost,
+            usda_sfh_eligible: usda_sfh,
+            usda_mfh_eligible: usda_mfh,
+            usda_pct_eligible: usda_pct,
+            usda_income_limits,
+            ami_100pct: ami.as_ref().and_then(|a| a.ami_100pct),
+            ami_50pct: ami.as_ref().and_then(|a| a.ami_50pct),
+            ami_80pct: ami.as_ref().and_then(|a| a.ami_80pct),
+            ami_115pct: ami.as_ref().and_then(|a| a.ami_115pct),
+            is_low_income_tract: ami.as_ref().map(|a| a.is_low_income_tract).unwrap_or(false),
+            hp_income_limit_waived: ami
+                .as_ref()
+                .map(|a| a.hp_income_limit_waived)
+                .unwrap_or(false),
+        })
+    }
+
+    fn current_version(&self, dataset: &str) -> RefDataResult<VersionId> {
+        // Scan for the most recent file for the dataset and return its version
+        let entries = std::fs::read_dir(&self.data_dir)
+            .map_err(|e| RefDataError::Storage(format!("cannot read data_dir: {e}")))?;
+        let mut best_year: Option<u16> = None;
+        for entry in entries.flatten() {
+            let name = entry.file_name();
+            let name = name.to_string_lossy();
+            if let Some(rest) = name.strip_prefix(&format!("{dataset}_")) {
+                if let Some(yr_str) = rest.strip_suffix(".json") {
+                    if let Ok(yr) = yr_str.parse::<u16>() {
+                        match best_year {
+                            None => best_year = Some(yr),
+                            Some(b) if yr > b => best_year = Some(yr),
+                            _ => {}
+                        }
+                    }
+                }
+            }
+        }
+        let year = best_year.ok_or_else(|| {
+            RefDataError::Storage(format!("no versioned file found for dataset '{dataset}'"))
+        })?;
+        let eff = chrono::NaiveDate::from_ymd_opt(i32::from(year), 1, 1).unwrap_or_default();
+        Ok(VersionId::new(dataset, eff))
     }
 }

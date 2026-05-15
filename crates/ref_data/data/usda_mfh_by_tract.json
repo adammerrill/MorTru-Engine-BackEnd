@@ -1,0 +1,16 @@
+[
+  {
+    "geoid": "48209010905",
+    "fips_code": "48209",
+    "state_fips": "48",
+    "county_fips": "209",
+    "tract_number": "010905",
+    "tract_name": "Census Tract 109.05",
+    "el_projects": 0, "el_units": 0,
+    "fa_projects": 1, "fa_units": 24,
+    "cg_projects": 0, "cg_units": 0,
+    "gh_projects": 0, "gh_units": 0,
+    "mx_projects": 0, "mx_units": 0,
+    "total_projects": 1, "total_units": 24
+  }
+]

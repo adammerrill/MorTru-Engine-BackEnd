@@ -1,0 +1,74 @@
+[
+  {
+    "fips_code": "48209",
+    "state_abbr": "TX",
+    "county_name": "Hays",
+    "cbsa_name": "Austin-Round Rock-Georgetown, TX",
+    "limit_1_unit": 80650000,
+    "limit_2_unit": 103265000,
+    "limit_3_unit": 124815000,
+    "limit_4_unit": 155125000,
+    "is_high_cost": false,
+    "effective_year": 2025
+  },
+  {
+    "fips_code": "48453",
+    "state_abbr": "TX",
+    "county_name": "Travis",
+    "cbsa_name": "Austin-Round Rock-Georgetown, TX",
+    "limit_1_unit": 80650000,
+    "limit_2_unit": 103265000,
+    "limit_3_unit": 124815000,
+    "limit_4_unit": 155125000,
+    "is_high_cost": false,
+    "effective_year": 2025
+  },
+  {
+    "fips_code": "06075",
+    "state_abbr": "CA",
+    "county_name": "San Francisco",
+    "cbsa_name": "San Francisco-Oakland-Berkeley, CA",
+    "limit_1_unit": 120975000,
+    "limit_2_unit": 154897500,
+    "limit_3_unit": 187222500,
+    "limit_4_unit": 232687500,
+    "is_high_cost": true,
+    "effective_year": 2025
+  },
+  {
+    "fips_code": "06037",
+    "state_abbr": "CA",
+    "county_name": "Los Angeles",
+    "cbsa_name": "Los Angeles-Long Beach-Anaheim, CA",
+    "limit_1_unit": 120975000,
+    "limit_2_unit": 154897500,
+    "limit_3_unit": 187222500,
+    "limit_4_unit": 232687500,
+    "is_high_cost": true,
+    "effective_year": 2025
+  },
+  {
+    "fips_code": "12086",
+    "state_abbr": "FL",
+    "county_name": "Miami-Dade",
+    "cbsa_name": "Miami-Fort Lauderdale-Pompano Beach, FL",
+    "limit_1_unit": 80650000,
+    "limit_2_unit": 103265000,
+    "limit_3_unit": 124815000,
+    "limit_4_unit": 155125000,
+    "is_high_cost": false,
+    "effective_year": 2025
+  },
+  {
+    "fips_code": "36061",
+    "state_abbr": "NY",
+    "county_name": "New York",
+    "cbsa_name": "New York-Newark-Jersey City, NY-NJ-PA",
+    "limit_1_unit": 120975000,
+    "limit_2_unit": 154897500,
+    "limit_3_unit": 187222500,
+    "limit_4_unit": 232687500,
+    "is_high_cost": true,
+    "effective_year": 2025
+  }
+]

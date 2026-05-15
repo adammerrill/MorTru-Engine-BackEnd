@@ -1,0 +1,38 @@
+[
+  {
+    "geoid": "48209010905",
+    "fips_code": "48209",
+    "state_abbr": "TX",
+    "is_sfh_eligible": true,
+    "is_mfh_eligible": true,
+    "pct_eligible": 95.0,
+    "source_version": "2018-08-23"
+  },
+  {
+    "geoid": "48209010906",
+    "fips_code": "48209",
+    "state_abbr": "TX",
+    "is_sfh_eligible": true,
+    "is_mfh_eligible": true,
+    "pct_eligible": 88.0,
+    "source_version": "2018-08-23"
+  },
+  {
+    "geoid": "48209950100",
+    "fips_code": "48209",
+    "state_abbr": "TX",
+    "is_sfh_eligible": true,
+    "is_mfh_eligible": true,
+    "pct_eligible": 100.0,
+    "source_version": "2018-08-23"
+  },
+  {
+    "geoid": "48453001801",
+    "fips_code": "48453",
+    "state_abbr": "TX",
+    "is_sfh_eligible": false,
+    "is_mfh_eligible": false,
+    "pct_eligible": 0.0,
+    "source_version": "2018-08-23"
+  }
+]

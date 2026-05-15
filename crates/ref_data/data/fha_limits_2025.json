@@ -1,0 +1,68 @@
+[
+  {
+    "fips_code": "48209",
+    "state_abbr": "TX",
+    "county_name": "Hays",
+    "limit_type": "Floor",
+    "limit_1_unit": 52422500,
+    "limit_2_unit": 67157500,
+    "limit_3_unit": 81172500,
+    "limit_4_unit": 100857500,
+    "effective_year": 2025
+  },
+  {
+    "fips_code": "48453",
+    "state_abbr": "TX",
+    "county_name": "Travis",
+    "limit_type": "Standard",
+    "limit_1_unit": 57175000,
+    "limit_2_unit": 73200000,
+    "limit_3_unit": 88475000,
+    "limit_4_unit": 109925000,
+    "effective_year": 2025
+  },
+  {
+    "fips_code": "06075",
+    "state_abbr": "CA",
+    "county_name": "San Francisco",
+    "limit_type": "HighCost",
+    "limit_1_unit": 120975000,
+    "limit_2_unit": 154875000,
+    "limit_3_unit": 187150000,
+    "limit_4_unit": 232537500,
+    "effective_year": 2025
+  },
+  {
+    "fips_code": "06037",
+    "state_abbr": "CA",
+    "county_name": "Los Angeles",
+    "limit_type": "HighCost",
+    "limit_1_unit": 120975000,
+    "limit_2_unit": 154875000,
+    "limit_3_unit": 187150000,
+    "limit_4_unit": 232537500,
+    "effective_year": 2025
+  },
+  {
+    "fips_code": "12086",
+    "state_abbr": "FL",
+    "county_name": "Miami-Dade",
+    "limit_type": "Standard",
+    "limit_1_unit": 62157500,
+    "limit_2_unit": 79575000,
+    "limit_3_unit": 96150000,
+    "limit_4_unit": 119512500,
+    "effective_year": 2025
+  },
+  {
+    "fips_code": "36061",
+    "state_abbr": "NY",
+    "county_name": "New York",
+    "limit_type": "HighCost",
+    "limit_1_unit": 120975000,
+    "limit_2_unit": 154875000,
+    "limit_3_unit": 187150000,
+    "limit_4_unit": 232537500,
+    "effective_year": 2025
+  }
+]
