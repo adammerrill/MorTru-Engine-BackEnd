@@ -14,6 +14,7 @@
 
 #[cfg(feature = "sqlite")]
 mod inner {
+    #![allow(clippy::type_complexity)]
     use std::{
         path::PathBuf,
         sync::{Arc, Mutex},
@@ -426,8 +427,7 @@ mod inner {
                 limit_4_unit: Cents(l4),
                 effective_year: found_yr as u16,
             };
-            let eff = chrono::NaiveDate::from_ymd_opt(i32::from(found_yr as u16), 1, 1)
-                .unwrap_or_default();
+            let eff = NaiveDate::from_ymd_opt(i32::from(found_yr as u16), 1, 1).unwrap_or_default();
             Ok(Versioned::new("fha_loan_limits", eff, data))
         }
 
@@ -482,8 +482,7 @@ mod inner {
                 is_high_cost: hc != 0,
                 effective_year: found_yr as u16,
             };
-            let eff = chrono::NaiveDate::from_ymd_opt(i32::from(found_yr as u16), 1, 1)
-                .unwrap_or_default();
+            let eff = NaiveDate::from_ymd_opt(i32::from(found_yr as u16), 1, 1).unwrap_or_default();
             Ok(Versioned::new("gse_loan_limits", eff, data))
         }
 
@@ -695,7 +694,7 @@ mod inner {
                     hp,
                     found_yr,
                 )) => {
-                    let eff = chrono::NaiveDate::from_ymd_opt(i32::from(found_yr as u16), 1, 1)
+                    let eff = NaiveDate::from_ymd_opt(i32::from(found_yr as u16), 1, 1)
                         .unwrap_or_default();
                     let data = AmiTractData {
                         geoid: geoid.to_owned(),
@@ -790,7 +789,7 @@ mod inner {
                 year: 0,
             })?;
 
-            let eff = chrono::NaiveDate::parse_from_str(&eff_str, "%Y-%m-%d").unwrap_or_default();
+            let eff = NaiveDate::parse_from_str(&eff_str, "%Y-%m-%d").unwrap_or_default();
             Ok(ProgramEligibilityRules {
                 program,
                 min_credit_score: min_cs as u16,
@@ -899,8 +898,7 @@ mod inner {
                 None => (false, false, None),
             };
 
-            let eff_date =
-                chrono::NaiveDate::from_ymd_opt(i32::from(year), 10, 1).unwrap_or_default();
+            let eff_date = NaiveDate::from_ymd_opt(i32::from(year), 10, 1).unwrap_or_default();
             let usda_income = self.usda_income_limits(fips_code, eff_date).ok();
             let usda_income_limits = match usda_income {
                 Some(v) => [

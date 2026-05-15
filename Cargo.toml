@@ -126,4 +126,3 @@ debug            = true
 opt-level        = 0
 overflow-checks  = true
 debug            = true
-rusqlite            = { version = "0.31", features = ["bundled"] }

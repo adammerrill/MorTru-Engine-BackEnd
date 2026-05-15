@@ -262,7 +262,7 @@ impl RefDataStore for JsonFileStore {
                             };
                             if keep {
                                 if let Ok(records) =
-                                    self.read_json::<Vec<ZipHoiRate>>(&name.to_string())
+                                    self.read_json::<Vec<ZipHoiRate>>(name.as_ref())
                                 {
                                     best = Some((yr, records));
                                 }
