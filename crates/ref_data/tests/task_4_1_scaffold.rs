@@ -94,7 +94,7 @@ fn sample_fha_limits() -> FhaLoanLimits {
         limit_1_unit: Cents(52_422_500), // $524,225 floor
         limit_2_unit: Cents(67_100_000),
         limit_3_unit: Cents(81_100_000),
-        limit_4_unit: Cents(1_007_575_00),
+        limit_4_unit: Cents(100_757_500),
         effective_year: 2025,
     }
 }
@@ -104,7 +104,7 @@ fn test_fha_limits_limit_for_unit_count() {
     let l = sample_fha_limits();
     assert_eq!(l.limit_for(1), Cents(52_422_500));
     assert_eq!(l.limit_for(2), Cents(67_100_000));
-    assert_eq!(l.limit_for(4), Cents(1_007_575_00));
+    assert_eq!(l.limit_for(4), Cents(100_757_500));
 }
 
 #[test]
@@ -295,7 +295,7 @@ fn sample_geo_eligibility() -> GeoEligibility {
         fha_limit_1_unit: Cents(52_422_500),
         fha_limit_2_unit: Cents(67_100_000),
         fha_limit_3_unit: Cents(81_100_000),
-        fha_limit_4_unit: Cents(1_007_575_00),
+        fha_limit_4_unit: Cents(100_757_500),
         fha_limit_type: FhaLimitType::Standard,
         gse_limit_1_unit: Cents(80_650_000),
         gse_limit_2_unit: Cents(103_265_000),
