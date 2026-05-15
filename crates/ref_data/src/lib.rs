@@ -34,5 +34,7 @@ pub use geo::{
 };
 pub use hoi_rates::{StateHoiRate, NATIONAL_FALLBACK_RATE_BPS};
 pub use program_rules::{AllProgramRules, ProgramEligibilityRules};
+#[cfg(feature = "sqlite")]
+pub use store::sqlite::SqliteStore;
 pub use store::{JsonFileStore, RefDataStore};
 pub use versioning::{DataVersionManifest, VersionId, Versioned};

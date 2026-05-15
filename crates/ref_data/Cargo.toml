@@ -20,5 +20,9 @@ thiserror    = { workspace = true }
 rust_decimal = { workspace = true }
 chrono       = { workspace = true }
 
+[features]
+default = []
+# sqlite  = ["sqlx"]  # Phase 3: uncomment when sqlx is added to workspace
+
 [dev-dependencies]
 serde_json = { workspace = true }

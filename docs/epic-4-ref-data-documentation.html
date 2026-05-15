@@ -19,7 +19,7 @@
   a{color:var(--accent2);text-decoration:none}
   .layout{display:flex;min-height:100vh}
   .sidebar{width:264px;background:var(--surface);border-right:1px solid var(--border);position:sticky;top:0;height:100vh;overflow-y:auto;flex-shrink:0}
-  .main{flex:1;max-width:1000px;padding:48px 56px;overflow-x:hidden}
+  .main{flex:1;max-width:1020px;padding:48px 56px;overflow-x:hidden}
   .brand{padding:24px 20px 16px;border-bottom:1px solid var(--border)}
   .brand .t{font-size:13px;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
   .brand .s{font-size:11px;color:var(--muted);margin-top:2px}
@@ -27,10 +27,10 @@
   .ni{display:block;padding:6px 20px;font-size:13px;color:var(--muted);cursor:pointer;border-left:2px solid transparent;transition:all .15s}
   .ni:hover,.ni.active{color:var(--text);border-left-color:var(--accent);background:rgba(91,110,245,.08)}
   .tab-pane{display:none}.tab-pane.active{display:block}
-  h1{font-size:30px;font-weight:700;line-height:1.2;margin-bottom:12px}
-  h2{font-size:20px;font-weight:600;margin:40px 0 14px;padding-bottom:8px;border-bottom:1px solid var(--border)}
-  h3{font-size:16px;font-weight:600;margin:28px 0 10px;color:var(--accent2)}
-  h4{font-size:13px;font-weight:700;margin:20px 0 8px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+  h1{font-size:28px;font-weight:700;line-height:1.2;margin-bottom:12px}
+  h2{font-size:19px;font-weight:600;margin:38px 0 14px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+  h3{font-size:15px;font-weight:600;margin:26px 0 10px;color:var(--accent2)}
+  h4{font-size:12px;font-weight:700;margin:18px 0 8px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
   p{margin-bottom:14px}ul,ol{margin:0 0 14px 20px}li{margin-bottom:4px}
   .badge{display:inline-block;padding:2px 9px;border-radius:4px;font-size:11px;font-weight:600;letter-spacing:.03em;text-transform:uppercase}
   .b-green{background:rgba(52,201,122,.15);color:var(--green)}
@@ -40,12 +40,9 @@
   .b-teal{background:rgba(46,207,212,.12);color:var(--teal)}
   .b-muted{background:var(--surface2);color:var(--muted);border:1px solid var(--border)}
   .b-purple{background:rgba(181,123,247,.12);color:var(--purple)}
-  .status-banner{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--yellow);border-radius:8px;padding:16px 20px;margin-bottom:32px;display:flex;gap:24px;flex-wrap:wrap}
-  .stat{display:flex;flex-direction:column;gap:2px}
-  .stat-val{font-size:22px;font-weight:700;color:var(--text)}
-  .stat-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+  .b-orange{background:rgba(245,150,66,.12);color:var(--orange)}
   pre{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:18px 20px;overflow-x:auto;margin:14px 0 20px}
-  code{font-family:var(--mono);font-size:13px;color:var(--code)}
+  code{font-family:var(--mono);font-size:12.5px;color:var(--code)}
   p code,li code,td code{background:var(--surface2);padding:1px 6px;border-radius:4px;font-size:12px;color:var(--code)}
   table{width:100%;border-collapse:collapse;margin:14px 0 24px;font-size:13px}
   th{background:var(--surface2);padding:9px 14px;text-align:left;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid var(--border)}
@@ -55,679 +52,745 @@
   .callout{border-radius:8px;padding:14px 18px;margin:18px 0;border-left:3px solid}
   .c-info{background:rgba(91,110,245,.08);border-color:var(--accent)}
   .c-warn{background:rgba(245,200,66,.07);border-color:var(--yellow)}
-  .c-danger{background:rgba(245,86,74,.08);border-color:var(--red)}
   .c-green{background:rgba(52,201,122,.07);border-color:var(--green)}
   .c-teal{background:rgba(46,207,212,.07);border-color:var(--teal)}
+  .c-orange{background:rgba(245,150,66,.07);border-color:var(--orange)}
   .callout strong{display:block;margin-bottom:4px;font-size:11px;text-transform:uppercase;letter-spacing:.06em}
-  .arch{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:22px;margin:18px 0;font-family:var(--mono);font-size:12px;color:var(--code);line-height:1.9;white-space:pre;overflow-x:auto}
-  .task-grid{display:grid;grid-template-columns:64px 1fr 120px auto;gap:0;border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:28px}
-  .tg-head{background:var(--surface2);font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:10px 14px}
-  .tg-cell{padding:11px 14px;font-size:13px;border-top:1px solid var(--border);vertical-align:top}
-  .tg-task{font-weight:700;color:var(--accent2);font-family:var(--mono);font-size:12px}
+  .arch{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:20px;font-family:var(--mono);font-size:12px;color:var(--code);line-height:1.9;white-space:pre;overflow-x:auto;margin:16px 0}
+  .status-banner{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--orange);border-radius:8px;padding:16px 20px;margin-bottom:32px;display:flex;gap:28px;flex-wrap:wrap}
+  .stat{display:flex;flex-direction:column;gap:2px}
+  .stat-val{font-size:22px;font-weight:700}
+  .stat-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+  .task-grid{border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:28px}
+  .tg-head{display:grid;grid-template-columns:54px 1fr 120px 80px;background:var(--surface2);font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+  .tg-head div{padding:10px 14px}
+  .tg-row{display:grid;grid-template-columns:54px 1fr 120px 80px;border-top:1px solid var(--border)}
+  .tg-row:hover{background:rgba(255,255,255,.02)}
+  .tg-row div{padding:10px 14px;font-size:13px}
+  .tg-num{font-family:var(--mono);font-size:12px;color:var(--accent2);font-weight:700}
   .tg-tests{font-family:var(--mono);font-size:12px;text-align:right}
-  .green-row td,.green-row .tg-cell{background:rgba(52,201,122,.04)}
-  .method{background:var(--surface);border:1px solid var(--border);border-radius:8px;margin-bottom:10px;overflow:hidden}
-  .method-sig{padding:11px 16px;font-family:var(--mono);font-size:13px;background:var(--surface2);border-bottom:1px solid var(--border)}
-  .method-doc{padding:10px 16px;font-size:13px;color:var(--muted)}
-  .ret{color:var(--accent2)}.fn-name{color:var(--yellow)}.fn-kw{color:var(--accent2)}.fn-type{color:var(--green)}
-  .prog-pill{display:inline-block;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:600;margin:2px}
-  .pp-fha{background:rgba(52,201,122,.15);color:var(--green)}
-  .pp-va{background:rgba(91,110,245,.15);color:var(--accent2)}
-  .pp-usda{background:rgba(46,207,212,.12);color:var(--teal)}
-  .pp-conv{background:rgba(245,200,66,.12);color:var(--yellow)}
-  .pp-hp{background:rgba(245,150,66,.12);color:var(--orange)}
-  .phase-block{background:var(--surface);border:1px solid var(--border);border-radius:8px;margin-bottom:16px;overflow:hidden}
-  .pb-head{padding:12px 16px;background:var(--surface2);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
-  .pb-title{font-weight:600;font-size:14px;flex:1}
-  .pb-count{font-family:var(--mono);font-size:12px;color:var(--muted)}
-  .pb-body{padding:14px 16px;font-size:13px;color:var(--muted)}
-  .data-file{font-family:var(--mono);font-size:11px;background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:2px 8px;color:var(--code);display:inline-block;margin:2px}
+  .done{background:rgba(52,201,122,.04)}
+  .next{background:rgba(245,150,66,.03)}
+  .phase-head{background:var(--surface2);padding:10px 16px;font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;border-top:2px solid var(--border);grid-column:1/-1}
+  .sql-block{background:var(--surface2);border:1px solid var(--border);border-radius:8px;margin-bottom:14px;overflow:hidden}
+  .sql-head{padding:9px 14px;background:rgba(91,110,245,.08);border-bottom:1px solid var(--border);font-size:12px;font-family:var(--mono);color:var(--accent2)}
+  .sql-body{padding:14px 16px;font-family:var(--mono);font-size:12px;color:var(--code);line-height:1.7;white-space:pre;overflow-x:auto}
+  .kw{color:#c792ea}.ty{color:#82aaff}.cm{color:#546e7a}.lit{color:#c3e88d}.op{color:var(--muted)}
+  .progress-bar{height:6px;background:var(--surface2);border-radius:3px;margin:8px 0 16px;overflow:hidden}
+  .progress-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--green),var(--teal));transition:width .3s}
+  .p3-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;margin-bottom:12px}
+  .p3-head{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+  .p3-icon{width:32px;height:32px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+  .p3-body{padding:14px 16px;font-size:13px;color:var(--muted)}
 </style>
 </head>
 <body>
 <div class="layout">
-
 <nav class="sidebar">
-  <div class="brand"><div class="t">MorTru Engine</div><div class="s">Epic 4 · Reference Data</div></div>
+  <div class="brand"><div class="t">MorTru Engine</div><div class="s">Epic 4 · ref_data crate</div></div>
   <div class="ns">Overview</div>
   <a class="ni active" onclick="show('overview')">Progress &amp; Status</a>
-  <a class="ni" onclick="show('architecture')">Architecture</a>
-  <div class="ns">Completed</div>
-  <a class="ni" onclick="show('t41')">Task 4.1 — Scaffold</a>
-  <a class="ni" onclick="show('t42')">Task 4.2 — JsonFileStore</a>
-  <a class="ni" onclick="show('t4546')">Tasks 4.5–4.6 — Loan Limits</a>
-  <a class="ni" onclick="show('t4122')">Tasks 4.21–4.22 — Audit Tasks</a>
-  <div class="ns">Remaining</div>
-  <a class="ni" onclick="show('phase2')">Phase 2 — USDA + AMI</a>
-  <a class="ni" onclick="show('phase3')">Phase 3 — SQL + SQLite</a>
-  <a class="ni" onclick="show('phase4')">Phase 4 — MIP / VA / MI</a>
-  <a class="ni" onclick="show('phase5')">Phase 5 — Lender Data</a>
-  <a class="ni" onclick="show('phase6')">Phase 6 — Gate</a>
+  <a class="ni" onclick="show('arch')">Architecture</a>
+  <div class="ns">✓ Phase 1 — Done</div>
+  <a class="ni" onclick="show('p1')">Tasks 4.1 / 4.2 / 4.5 / 4.6 / 4.21 / 4.22</a>
+  <div class="ns">✓ Phase 2 — Done</div>
+  <a class="ni" onclick="show('p2')">Tasks 4.7 / 4.8 / 4.9 / 4.10</a>
+  <div class="ns">▶ Phase 3 — Next</div>
+  <a class="ni" onclick="show('p3_overview')">Overview &amp; Readiness</a>
+  <a class="ni" onclick="show('p3_43')">Task 4.3 — SQL Migrations</a>
+  <a class="ni" onclick="show('p3_44')">Task 4.4 — SqliteStore</a>
+  <a class="ni" onclick="show('p3_4112')">Tasks 4.11 / 4.12</a>
+  <div class="ns">Phase 4 — Pending</div>
+  <a class="ni" onclick="show('p4')">Tasks 4.13 / 4.14 / 4.15</a>
+  <div class="ns">Phase 5 — Pending</div>
+  <a class="ni" onclick="show('p5')">Tasks 4.16 / 4.17 / 4.18</a>
+  <div class="ns">Phase 6 — Pending</div>
+  <a class="ni" onclick="show('p6')">Tasks 4.19 / 4.23 / 4.20</a>
   <div class="ns">Reference</div>
-  <a class="ni" onclick="show('datatypes')">Type Reference</a>
-  <a class="ni" onclick="show('datafiles')">Data Files</a>
-  <a class="ni" onclick="show('programrules')">Program Rules</a>
+  <a class="ni" onclick="show('data_files')">Data Files</a>
+  <a class="ni" onclick="show('store_api')">Store API</a>
+  <a class="ni" onclick="show('ci')">CI / Coverage Gate</a>
 </nav>
 
 <main class="main">
 
-<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<!-- ═══════════════════════════════════════ OVERVIEW ═══════════════════════════════════════ -->
 <div class="tab-pane active" id="tab-overview">
-  <h1>Epic 4 — Reference Data Build Plan</h1>
-  <p style="color:var(--muted);font-size:16px;margin-bottom:24px;">
-    Crate <code>ref_data</code> · Updated May 2026
+  <h1>Epic 4 — Reference Data</h1>
+  <p style="color:var(--muted);font-size:15px;margin-bottom:24px">
+    Crate <code>ref_data</code> · Updated after Phase 2 completion
   </p>
 
   <div class="status-banner">
-    <div class="stat"><div class="stat-val" style="color:var(--yellow)">In Progress</div><div class="stat-label">Status</div></div>
-    <div class="stat"><div class="stat-val" style="color:var(--green)">82</div><div class="stat-label">Crate Tests</div></div>
-    <div class="stat"><div class="stat-val">1,198</div><div class="stat-label">Workspace Tests</div></div>
-    <div class="stat"><div class="stat-val" style="color:var(--green)">6</div><div class="stat-label">Tasks Done</div></div>
-    <div class="stat"><div class="stat-val">18</div><div class="stat-label">Remaining</div></div>
-    <div class="stat"><div class="stat-val">0</div><div class="stat-label">Failures</div></div>
+    <div class="stat"><div class="stat-val" style="color:var(--orange)">Phase 3</div><div class="stat-label">Current Phase</div></div>
+    <div class="stat"><div class="stat-val" style="color:var(--green)">138</div><div class="stat-label">Crate Tests</div></div>
+    <div class="stat"><div class="stat-val">1,254</div><div class="stat-label">Workspace Total</div></div>
+    <div class="stat"><div class="stat-val" style="color:var(--green)">10</div><div class="stat-label">Tasks Done</div></div>
+    <div class="stat"><div class="stat-val" style="color:var(--muted)">14</div><div class="stat-label">Remaining</div></div>
+    <div class="stat"><div class="stat-val" style="color:var(--green)">0</div><div class="stat-label">Failures</div></div>
   </div>
+
+  <div class="progress-bar"><div class="progress-fill" style="width:42%"></div></div>
+  <p style="font-size:12px;color:var(--muted);margin-top:-8px;margin-bottom:24px">10 of 24 tasks complete (42%)</p>
 
   <h2>Full Task Table</h2>
   <div class="task-grid">
-    <div class="tg-head">Task</div>
-    <div class="tg-head">Deliverable</div>
-    <div class="tg-head">Status</div>
-    <div class="tg-head" style="text-align:right">Tests</div>
+    <div class="tg-head"><div>Task</div><div>Deliverable</div><div>Status</div><div style="text-align:right">Tests</div></div>
 
-    <!-- DONE -->
-    <div class="tg-cell tg-task" style="background:rgba(52,201,122,.04)">4.1</div>
-    <div class="tg-cell" style="background:rgba(52,201,122,.04)">Crate scaffold — all geo types, <code>RefDataStore</code> trait, versioning types, error variants</div>
-    <div class="tg-cell" style="background:rgba(52,201,122,.04)"><span class="badge b-green">✓ Done</span></div>
-    <div class="tg-cell tg-tests" style="background:rgba(52,201,122,.04);color:var(--green)">31</div>
+    <!-- PHASE 1 -->
+    <div class="tg-row" style="grid-template-columns:54px 1fr;"><div class="phase-head" style="grid-column:1/-1">Phase 1 — Foundation (82 tests)</div></div>
+    <div class="tg-row done"><div class="tg-num">4.1</div><div>Crate scaffold — all geo types, <code>RefDataStore</code> trait, versioning, error variants</div><div><span class="badge b-green">✓ Done</span></div><div class="tg-tests" style="color:var(--green)">31</div></div>
+    <div class="tg-row done"><div class="tg-num">4.2</div><div><code>JsonFileStore</code> — all 10 trait methods, versioned file discovery, year fallback</div><div><span class="badge b-green">✓ Done</span></div><div class="tg-tests" style="color:var(--green)">5</div></div>
+    <div class="tg-row done"><div class="tg-num">4.5</div><div>FHA loan limits — <code>fha_limits_2025.json</code>, 6 counties, floor/standard/high-cost</div><div><span class="badge b-green">✓ Done</span></div><div class="tg-tests" style="color:var(--green)">9</div></div>
+    <div class="tg-row done"><div class="tg-num">4.6</div><div>GSE conforming limits — <code>gse_limits_2025.json</code>, high-balance detection, jumbo</div><div><span class="badge b-green">✓ Done</span></div><div class="tg-tests" style="color:var(--green)">10</div></div>
+    <div class="tg-row done"><div class="tg-num">4.21</div><div><code>ProgramEligibilityRules</code> — DTI limits, credit mins, LTV maxes (7 programs) <span class="badge b-purple">Audit</span></div><div><span class="badge b-green">✓ Done</span></div><div class="tg-tests" style="color:var(--green)">18</div></div>
+    <div class="tg-row done"><div class="tg-num">4.22</div><div><code>StateHoiRate</code> — HOI estimation, all 50 states + DC <span class="badge b-purple">Audit</span></div><div><span class="badge b-green">✓ Done</span></div><div class="tg-tests" style="color:var(--green)">9</div></div>
 
-    <div class="tg-cell tg-task" style="background:rgba(52,201,122,.04)">4.2</div>
-    <div class="tg-cell" style="background:rgba(52,201,122,.04)"><code>JsonFileStore</code> full implementation — all trait methods, versioned file discovery, year fallback</div>
-    <div class="tg-cell" style="background:rgba(52,201,122,.04)"><span class="badge b-green">✓ Done</span></div>
-    <div class="tg-cell tg-tests" style="background:rgba(52,201,122,.04);color:var(--green)">5</div>
-
-    <div class="tg-cell tg-task" style="background:rgba(52,201,122,.04)">4.5</div>
-    <div class="tg-cell" style="background:rgba(52,201,122,.04)">FHA loan limits — <code>fha_limits_2025.json</code>, 6 counties, floor/standard/high-cost tested</div>
-    <div class="tg-cell" style="background:rgba(52,201,122,.04)"><span class="badge b-green">✓ Done</span></div>
-    <div class="tg-cell tg-tests" style="background:rgba(52,201,122,.04);color:var(--green)">9</div>
-
-    <div class="tg-cell tg-task" style="background:rgba(52,201,122,.04)">4.6</div>
-    <div class="tg-cell" style="background:rgba(52,201,122,.04)">GSE conforming limits — <code>gse_limits_2025.json</code>, high-balance detection, jumbo detection</div>
-    <div class="tg-cell" style="background:rgba(52,201,122,.04)"><span class="badge b-green">✓ Done</span></div>
-    <div class="tg-cell tg-tests" style="background:rgba(52,201,122,.04);color:var(--green)">10</div>
-
-    <div class="tg-cell tg-task" style="background:rgba(52,201,122,.04)">4.21</div>
-    <div class="tg-cell" style="background:rgba(52,201,122,.04)"><code>ProgramEligibilityRules</code> — DTI limits, credit score mins, LTV maxes for 7 programs <span class="badge b-purple">Audit</span></div>
-    <div class="tg-cell" style="background:rgba(52,201,122,.04)"><span class="badge b-green">✓ Done</span></div>
-    <div class="tg-cell tg-tests" style="background:rgba(52,201,122,.04);color:var(--green)">18</div>
-
-    <div class="tg-cell tg-task" style="background:rgba(52,201,122,.04)">4.22</div>
-    <div class="tg-cell" style="background:rgba(52,201,122,.04)"><code>StateHoiRate</code> — HOI estimation for all 50 states + DC, monthly estimate helper <span class="badge b-purple">Audit</span></div>
-    <div class="tg-cell" style="background:rgba(52,201,122,.04)"><span class="badge b-green">✓ Done</span></div>
-    <div class="tg-cell tg-tests" style="background:rgba(52,201,122,.04);color:var(--green)">9</div>
-
-    <!-- PHASE 2 — next -->
-    <div class="tg-cell tg-task">4.7</div>
-    <div class="tg-cell">USDA rural eligibility query — tract-level lookup, data already seeded</div>
-    <div class="tg-cell"><span class="badge b-blue">Next</span></div>
-    <div class="tg-cell tg-tests" style="color:var(--muted)">~12</div>
-
-    <div class="tg-cell tg-task">4.8</div>
-    <div class="tg-cell">USDA MFH by tract — CSV loader tests, project predicates</div>
-    <div class="tg-cell"><span class="badge b-blue">Next</span></div>
-    <div class="tg-cell tg-tests" style="color:var(--muted)">~10</div>
-
-    <div class="tg-cell tg-task">4.9</div>
-    <div class="tg-cell">USDA income limits — 8 family sizes, household income eligibility check</div>
-    <div class="tg-cell"><span class="badge b-blue">Next</span></div>
-    <div class="tg-cell tg-tests" style="color:var(--muted)">~15</div>
-
-    <div class="tg-cell tg-task">4.10</div>
-    <div class="tg-cell">AMI tract data — 50/80/100/115% thresholds, low-income tract flag, HP waiver</div>
-    <div class="tg-cell"><span class="badge b-blue">Next</span></div>
-    <div class="tg-cell tg-tests" style="color:var(--muted)">~15</div>
+    <!-- PHASE 2 -->
+    <div class="tg-row" style="grid-template-columns:54px 1fr;"><div class="phase-head" style="grid-column:1/-1">Phase 2 — USDA + AMI (56 tests)</div></div>
+    <div class="tg-row done"><div class="tg-num">4.7</div><div>USDA rural eligibility — 4 tracts, SFH/MFH flags, pct_eligible, source version</div><div><span class="badge b-green">✓ Done</span></div><div class="tg-tests" style="color:var(--green)">12</div></div>
+    <div class="tg-row done"><div class="tg-num">4.8</div><div>USDA MFH by tract — project/unit counts, family/elderly predicates</div><div><span class="badge b-green">✓ Done</span></div><div class="tg-tests" style="color:var(--green)">10</div></div>
+    <div class="tg-row done"><div class="tg-num">4.9</div><div>USDA income limits — 8 household sizes, boundary eligibility, Travis vs Hays</div><div><span class="badge b-green">✓ Done</span></div><div class="tg-tests" style="color:var(--green)">18</div></div>
+    <div class="tg-row done"><div class="tg-num">4.10</div><div>AMI tract data — 50/80/100/115% thresholds, HomeReady/HP income gate</div><div><span class="badge b-green">✓ Done</span></div><div class="tg-tests" style="color:var(--green)">16</div></div>
 
     <!-- PHASE 3 -->
-    <div class="tg-cell tg-task">4.3</div>
-    <div class="tg-cell">Migration framework — 12 SQL files defining the full production schema</div>
-    <div class="tg-cell"><span class="badge b-muted">Pending</span></div>
-    <div class="tg-cell tg-tests" style="color:var(--muted)">~8</div>
-
-    <div class="tg-cell tg-task">4.4</div>
-    <div class="tg-cell"><code>SqliteStore</code> — in-process SQLite, same trait interface as <code>JsonFileStore</code></div>
-    <div class="tg-cell"><span class="badge b-muted">Pending</span></div>
-    <div class="tg-cell tg-tests" style="color:var(--muted)">~15</div>
-
-    <div class="tg-cell tg-task">4.11</div>
-    <div class="tg-cell">CBSA/MSA crosswalk — FIPS → MSA classification, rural determination aid</div>
-    <div class="tg-cell"><span class="badge b-muted">Pending</span></div>
-    <div class="tg-cell tg-tests" style="color:var(--muted)">~10</div>
-
-    <div class="tg-cell tg-task">4.12</div>
-    <div class="tg-cell">Texas HOI premiums by ZIP — supplemental to state-level estimation</div>
-    <div class="tg-cell"><span class="badge b-muted">Pending</span></div>
-    <div class="tg-cell tg-tests" style="color:var(--muted)">~8</div>
+    <div class="tg-row" style="grid-template-columns:54px 1fr;"><div class="phase-head" style="grid-column:1/-1">Phase 3 — SQL + SQLite (~41 tests) ▶ NEXT</div></div>
+    <div class="tg-row next"><div class="tg-num">4.3</div><div>SQL migration files — 12 ordered <code>.sql</code> files defining the production PostgreSQL schema</div><div><span class="badge b-orange">Ready</span></div><div class="tg-tests" style="color:var(--muted)">~8</div></div>
+    <div class="tg-row next"><div class="tg-num">4.4</div><div><code>SqliteStore</code> — <code>RefDataStore</code> trait over in-process SQLite via <code>sqlx</code></div><div><span class="badge b-orange">Ready</span></div><div class="tg-tests" style="color:var(--muted)">~20</div></div>
+    <div class="tg-row next"><div class="tg-num">4.11</div><div>CBSA/MSA crosswalk — county FIPS → CBSA code, rural-near-urban determination</div><div><span class="badge b-muted">Pending</span></div><div class="tg-tests" style="color:var(--muted)">~8</div></div>
+    <div class="tg-row next"><div class="tg-num">4.12</div><div>Texas HOI premiums by ZIP — TDOI data, finer than state average (ZIP → state → national)</div><div><span class="badge b-muted">Pending</span></div><div class="tg-tests" style="color:var(--muted)">~5</div></div>
 
     <!-- PHASE 4 -->
-    <div class="tg-cell tg-task">4.13</div>
-    <div class="tg-cell">FHA MIP rates — monthly premium table by LTV/term/amount, UFMIP 1.75%</div>
-    <div class="tg-cell"><span class="badge b-muted">Pending</span></div>
-    <div class="tg-cell tg-tests" style="color:var(--muted)">~18</div>
-
-    <div class="tg-cell tg-task">4.14</div>
-    <div class="tg-cell">VA funding fee table — all veteran/loan-type/down payment combinations</div>
-    <div class="tg-cell"><span class="badge b-muted">Pending</span></div>
-    <div class="tg-cell tg-tests" style="color:var(--muted)">~15</div>
-
-    <div class="tg-cell tg-task">4.15</div>
-    <div class="tg-cell">Conventional MI coverage requirements + LLPA matrices</div>
-    <div class="tg-cell"><span class="badge b-muted">Pending</span></div>
-    <div class="tg-cell tg-tests" style="color:var(--muted)">~20</div>
+    <div class="tg-row" style="grid-template-columns:54px 1fr;"><div class="phase-head" style="grid-column:1/-1">Phase 4 — Fee Tables (~53 tests)</div></div>
+    <div class="tg-row"><div class="tg-num">4.13</div><div>FHA MIP rates — UFMIP 1.75%, annual by LTV/term, cancellation rules</div><div><span class="badge b-muted">Pending</span></div><div class="tg-tests" style="color:var(--muted)">~18</div></div>
+    <div class="tg-row"><div class="tg-num">4.14</div><div>VA funding fee table — all veteran status / down payment combinations</div><div><span class="badge b-muted">Pending</span></div><div class="tg-tests" style="color:var(--muted)">~15</div></div>
+    <div class="tg-row"><div class="tg-num">4.15</div><div>Conventional MI coverage + LLPA matrices</div><div><span class="badge b-muted">Pending</span></div><div class="tg-tests" style="color:var(--muted)">~20</div></div>
 
     <!-- PHASE 5 -->
-    <div class="tg-cell tg-task">4.16</div>
-    <div class="tg-cell">LenderProfile + LenderOverlays — per-lender program restrictions</div>
-    <div class="tg-cell"><span class="badge b-muted">Pending</span></div>
-    <div class="tg-cell tg-tests" style="color:var(--muted)">~15</div>
-
-    <div class="tg-cell tg-task">4.17</div>
-    <div class="tg-cell">MI Provider + MiRateCard + MiProviderOverlays</div>
-    <div class="tg-cell"><span class="badge b-muted">Pending</span></div>
-    <div class="tg-cell tg-tests" style="color:var(--muted)">~15</div>
-
-    <div class="tg-cell tg-task">4.18</div>
-    <div class="tg-cell">RateSheet + LLPA matrix (volatile intraday)</div>
-    <div class="tg-cell"><span class="badge b-muted">Pending</span></div>
-    <div class="tg-cell tg-tests" style="color:var(--muted)">~15</div>
+    <div class="tg-row" style="grid-template-columns:54px 1fr;"><div class="phase-head" style="grid-column:1/-1">Phase 5 — Lender Data (~45 tests)</div></div>
+    <div class="tg-row"><div class="tg-num">4.16</div><div>LenderProfile + LenderOverlays — per-lender tightening of program rules</div><div><span class="badge b-muted">Pending</span></div><div class="tg-tests" style="color:var(--muted)">~15</div></div>
+    <div class="tg-row"><div class="tg-num">4.17</div><div>MI Provider + MiRateCard + MiProviderOverlays</div><div><span class="badge b-muted">Pending</span></div><div class="tg-tests" style="color:var(--muted)">~15</div></div>
+    <div class="tg-row"><div class="tg-num">4.18</div><div>RateSheet + LLPA matrix (volatile intraday data)</div><div><span class="badge b-muted">Pending</span></div><div class="tg-tests" style="color:var(--muted)">~15</div></div>
 
     <!-- PHASE 6 -->
-    <div class="tg-cell tg-task">4.19</div>
-    <div class="tg-cell"><code>GeoEligibility</code> unified query — all 5 programs in one store call</div>
-    <div class="tg-cell"><span class="badge b-muted">Pending</span></div>
-    <div class="tg-cell tg-tests" style="color:var(--muted)">~20</div>
-
-    <div class="tg-cell tg-task">4.23</div>
-    <div class="tg-cell">FHA condo project approval lookup <span class="badge b-purple">Audit</span></div>
-    <div class="tg-cell"><span class="badge b-muted">Pending</span></div>
-    <div class="tg-cell tg-tests" style="color:var(--muted)">~8</div>
-
-    <div class="tg-cell tg-task">4.20</div>
-    <div class="tg-cell">Epic 4 gate — all 5 fixture scenarios pass full geographic + program eligibility</div>
-    <div class="tg-cell"><span class="badge b-muted">Pending</span></div>
-    <div class="tg-cell tg-tests" style="color:var(--muted)">~30</div>
+    <div class="tg-row" style="grid-template-columns:54px 1fr;"><div class="phase-head" style="grid-column:1/-1">Phase 6 — Integration Gate (~58 tests)</div></div>
+    <div class="tg-row"><div class="tg-num">4.19</div><div><code>GeoEligibility</code> unified query — full SqliteStore integration</div><div><span class="badge b-muted">Pending</span></div><div class="tg-tests" style="color:var(--muted)">~20</div></div>
+    <div class="tg-row"><div class="tg-num">4.23</div><div>FHA condo project approval — HUD approved list lookup <span class="badge b-purple">Audit</span></div><div><span class="badge b-muted">Pending</span></div><div class="tg-tests" style="color:var(--muted)">~8</div></div>
+    <div class="tg-row"><div class="tg-num">4.20</div><div>Epic 4 gate — all 5 fixture scenarios, full program + geo eligibility</div><div><span class="badge b-muted">Pending</span></div><div class="tg-tests" style="color:var(--muted)">~30</div></div>
   </div>
 
-  <h2>Projected Test Totals</h2>
+  <h2>Test Count by Phase</h2>
   <table>
-    <tr><th>Phase</th><th>Tasks</th><th>Tests</th><th>Running Total</th></tr>
-    <tr><td>Phase 1 — Done</td><td>4.1, 4.2, 4.5, 4.6, 4.21, 4.22</td><td style="color:var(--green)">82</td><td style="color:var(--green)">82</td></tr>
-    <tr><td>Phase 2 — USDA + AMI</td><td>4.7, 4.8, 4.9, 4.10</td><td>~52</td><td>~134</td></tr>
-    <tr><td>Phase 3 — SQL + SQLite</td><td>4.3, 4.4, 4.11, 4.12</td><td>~41</td><td>~175</td></tr>
-    <tr><td>Phase 4 — MIP / VA / MI</td><td>4.13, 4.14, 4.15</td><td>~53</td><td>~228</td></tr>
-    <tr><td>Phase 5 — Lender Data</td><td>4.16, 4.17, 4.18</td><td>~45</td><td>~273</td></tr>
-    <tr><td>Phase 6 — Gate</td><td>4.19, 4.23, 4.20</td><td>~58</td><td>~331</td></tr>
-    <tr><td><strong>Workspace at completion</strong></td><td>all</td><td>~331 ref_data</td><td style="color:var(--green)"><strong>~1,447 total</strong></td></tr>
+    <tr><th>Phase</th><th>Tasks</th><th>Tests</th><th>Running Total</th><th>Status</th></tr>
+    <tr><td>Phase 1 — Foundation</td><td>4.1, 4.2, 4.5, 4.6, 4.21, 4.22</td><td style="color:var(--green)">82</td><td style="color:var(--green)">82</td><td><span class="badge b-green">✓ Done</span></td></tr>
+    <tr><td>Phase 2 — USDA + AMI</td><td>4.7, 4.8, 4.9, 4.10</td><td style="color:var(--green)">56</td><td style="color:var(--green)">138</td><td><span class="badge b-green">✓ Done</span></td></tr>
+    <tr><td>Phase 3 — SQL + SQLite</td><td>4.3, 4.4, 4.11, 4.12</td><td style="color:var(--orange)">~41</td><td style="color:var(--orange)">~179</td><td><span class="badge b-orange">Next</span></td></tr>
+    <tr><td>Phase 4 — Fee Tables</td><td>4.13, 4.14, 4.15</td><td style="color:var(--muted)">~53</td><td style="color:var(--muted)">~232</td><td><span class="badge b-muted">Pending</span></td></tr>
+    <tr><td>Phase 5 — Lender Data</td><td>4.16, 4.17, 4.18</td><td style="color:var(--muted)">~45</td><td style="color:var(--muted)">~277</td><td><span class="badge b-muted">Pending</span></td></tr>
+    <tr><td>Phase 6 — Gate</td><td>4.19, 4.23, 4.20</td><td style="color:var(--muted)">~58</td><td style="color:var(--muted)">~335</td><td><span class="badge b-muted">Pending</span></td></tr>
+    <tr><td><strong>Workspace at completion</strong></td><td>all</td><td>~335 ref_data</td><td style="color:var(--accent2)"><strong>~1,451 total</strong></td><td></td></tr>
   </table>
 </div>
 
-<!-- ══════════════════════════════════════════════════════════════════════════ -->
-<div class="tab-pane" id="tab-architecture">
+<!-- ═══════════════════════════════════════ ARCHITECTURE ═══════════════════════════════════ -->
+<div class="tab-pane" id="tab-arch">
   <h1>Crate Architecture</h1>
-
-  <h2>Current Module Structure</h2>
+  <h2>Module Structure (current)</h2>
   <div class="arch">crates/ref_data/
-├── Cargo.toml          deps: types, serde, serde_json, thiserror, rust_decimal, chrono
-├── data/               JSON seed files — dev/CI data, shipped with crate
-│   ├── fha_limits_2025.json          FHA limits: 6 counties ✓
-│   ├── gse_limits_2025.json          GSE limits: 6 counties ✓
-│   ├── usda_rural_eligibility.json   4 census tracts seeded ✓
-│   ├── usda_income_limits_2025.json  Hays + Travis counties ✓
-│   ├── usda_mfh_by_tract.json        1 tract seeded ✓
-│   ├── ami_tract_data_2025.json      3 census tracts ✓
-│   ├── program_rules.json            7 programs ✓
-│   └── state_hoi_rates_2025.json     50 states + DC ✓
+├── Cargo.toml        serde, serde_json, thiserror, rust_decimal, chrono
+│                     sqlx (added for Phase 3: features = ["sqlite","runtime-tokio"])
+├── data/             JSON seed files — dev + CI
+│   ├── fha_limits_2025.json           FHA limits: 6 counties ✓
+│   ├── gse_limits_2025.json           GSE limits: 6 counties ✓
+│   ├── usda_rural_eligibility.json    4 census tracts ✓
+│   ├── usda_income_limits_2025.json   Hays + Travis counties ✓
+│   ├── usda_mfh_by_tract.json         1 tract ✓
+│   ├── ami_tract_data_2025.json       3 census tracts ✓
+│   ├── program_rules.json             7 programs ✓
+│   └── state_hoi_rates_2025.json      50 states + DC ✓
+├── migrations/       PostgreSQL migration files (Task 4.3) ◁ Phase 3
+│   ├── 0001_initial_types.sql
+│   ├── 0002_fha_loan_limits.sql
+│   ├── 0003_gse_loan_limits.sql
+│   ├── 0004_usda_rural_eligibility.sql
+│   ├── 0005_usda_income_limits.sql
+│   ├── 0006_usda_mfh_by_tract.sql
+│   ├── 0007_ami_tract_data.sql
+│   ├── 0008_program_rules.sql
+│   ├── 0009_state_hoi_rates.sql
+│   ├── 0010_fha_mip_rates.sql         (stub — Phase 4)
+│   ├── 0011_va_funding_fees.sql       (stub — Phase 4)
+│   └── 0012_lender_rate_data.sql      (stub — Phase 5)
 └── src/
-    ├── lib.rs          public re-exports
-    ├── error.rs        RefDataError (8 variants), RefDataResult&lt;T&gt;
-    ├── versioning.rs   VersionId, Versioned&lt;T&gt;, DataVersionManifest
+    ├── lib.rs         public re-exports
+    ├── error.rs       RefDataError (8 variants) + RefDataResult&lt;T&gt;
+    ├── versioning.rs  VersionId, Versioned&lt;T&gt;, DataVersionManifest
     ├── geo/
-    │   └── mod.rs      FhaLoanLimits, GseLoanLimits, UsdaruralEligibility,
-    │                   UsdaIncomeLimit, AmiTractData, UsdaMfhByTract, GeoEligibility
-    ├── program_rules.rs  ProgramEligibilityRules, AllProgramRules       ← NEW
-    ├── hoi_rates.rs      StateHoiRate, NATIONAL_FALLBACK_RATE_BPS       ← NEW
+    │   └── mod.rs     FhaLoanLimits, GseLoanLimits, UsdaruralEligibility,
+    │                  UsdaIncomeLimit, AmiTractData, UsdaMfhByTract, GeoEligibility
+    ├── program_rules.rs   ProgramEligibilityRules, AllProgramRules ✓
+    ├── hoi_rates.rs       StateHoiRate, NATIONAL_FALLBACK_RATE_BPS ✓
     └── store/
-        └── mod.rs      RefDataStore trait + JsonFileStore (fully implemented)</div>
+        ├── mod.rs         RefDataStore trait + JsonFileStore ✓
+        └── sqlite.rs      SqliteStore (Phase 3) ◁</div>
 
-  <h2>RefDataStore — All Methods</h2>
-  <table>
-    <tr><th>Method</th><th>Returns</th><th>Status</th></tr>
-    <tr><td>fha_loan_limits(fips, year)</td><td><code>Versioned&lt;FhaLoanLimits&gt;</code></td><td><span class="badge b-green">✓ Implemented</span></td></tr>
-    <tr><td>gse_loan_limits(fips, year)</td><td><code>Versioned&lt;GseLoanLimits&gt;</code></td><td><span class="badge b-green">✓ Implemented</span></td></tr>
-    <tr><td>usda_rural_eligibility(geoid)</td><td><code>Option&lt;UsdaruralEligibility&gt;</code></td><td><span class="badge b-green">✓ Implemented</span></td></tr>
-    <tr><td>usda_income_limits(fips, date)</td><td><code>Versioned&lt;UsdaIncomeLimit&gt;</code></td><td><span class="badge b-green">✓ Implemented</span></td></tr>
-    <tr><td>usda_mfh_by_tract(geoid)</td><td><code>Option&lt;UsdaMfhByTract&gt;</code></td><td><span class="badge b-green">✓ Implemented</span></td></tr>
-    <tr><td>ami_tract_data(geoid, year)</td><td><code>Option&lt;Versioned&lt;AmiTractData&gt;&gt;</code></td><td><span class="badge b-green">✓ Implemented</span></td></tr>
-    <tr><td>program_rules(program)</td><td><code>ProgramEligibilityRules</code></td><td><span class="badge b-green">✓ Implemented</span></td></tr>
-    <tr><td>state_hoi_rate(state, year)</td><td><code>StateHoiRate</code></td><td><span class="badge b-green">✓ Implemented</span></td></tr>
-    <tr><td>geo_eligibility(fips, tract, year)</td><td><code>GeoEligibility</code></td><td><span class="badge b-green">✓ Implemented</span></td></tr>
-    <tr><td>current_version(dataset)</td><td><code>VersionId</code></td><td><span class="badge b-green">✓ Implemented</span></td></tr>
-  </table>
-
-  <div class="callout c-teal"><strong>Key Design</strong>All 10 trait methods are fully implemented in <code>JsonFileStore</code>. The store discovers the most recent data file with year ≤ the requested year automatically. Requesting 2030 returns 2025 data with no code changes — just add a new file when agencies update limits.</div>
-
-  <h2>Data Flow</h2>
-  <div class="arch">PropertyEnriched.fips_code + tract_geoid
+  <h2>Eligibility Data Flow</h2>
+  <div class="arch">BorrowerProfile.credit_score + down_payment + loan_purpose
           │
-          ▼  store.geo_eligibility(fips, tract, year)
-    GeoEligibility                    ← batches all underlying queries
+          ▼  store.program_rules(ProgramCode) ──── Task 4.21 ✓
+    ProgramEligibilityRules
+          ├──  credit_score_eligible(score, down_pmt_bps)  → bool
+          ├──  ltv_eligible(ltv, score, is_hb)             → bool
+          └──  dti_eligible(front_end_dti)                 → bool
+
+PropertyEnriched.fips_code + tract_geoid
           │
-          ├──  fha_loan_within_limit(adjusted_loan, unit_count)   → bool
-          ├──  gse_loan_status(loan, units) → (eligible, is_high_balance)
-          ├──  usda_sfh_eligible                                   → bool
-          ├──  usda_income_eligible(household_income, size)        → bool
-          └──  hp_income_eligible(borrower_income)                 → bool
+          ▼  store.geo_eligibility(fips, tract, year) ──── JsonFileStore ✓
+    GeoEligibility                                          SqliteStore ◁ Phase 3
+          ├──  fha_loan_within_limit(adj_loan, units)      → bool
+          ├──  gse_loan_status(loan, units)                → (bool, bool)
+          ├──  usda_sfh_eligible                           → bool
+          ├──  usda_income_eligible(income, size)          → bool
+          └──  hp_income_eligible(income)                  → bool
 
-    store.program_rules(ProgramCode::Fha)
+PropertyEnriched.state + purchase_price
           │
-          ├──  credit_score_eligible(score, down_payment_bps)     → bool
-          ├──  ltv_eligible(ltv, credit_score, is_high_balance)   → bool
-          └──  dti_eligible(front_end_dti)                        → bool
-
-    store.state_hoi_rate("TX", 2025)
-          │
-          └──  monthly_estimate(purchase_price)                   → Option&lt;Cents&gt;</div>
+          ▼  store.state_hoi_rate(state, year) ──── Task 4.22 ✓
+    StateHoiRate
+          └──  monthly_estimate(property_value)           → Option&lt;Cents&gt;</div>
 </div>
 
-<!-- ══════════════════════════════════════════════════════════════════════════ -->
-<div class="tab-pane" id="tab-t41">
-  <h1>Task 4.1 — Crate Scaffold (31 tests) ✅</h1>
-  <h2>Deliverables</h2>
-  <p>All reference data structs, the <code>RefDataStore</code> trait skeleton, and versioning types defined. This established the complete public API surface that all downstream epics import.</p>
+<!-- ═══════════════════════════════════════ PHASE 1 DONE ══════════════════════════════════ -->
+<div class="tab-pane" id="tab-p1">
+  <h1>Phase 1 — Foundation (82 tests) ✅</h1>
+  <div class="callout c-green"><strong>Complete — committed, CI green</strong>All 6 tasks shipped. The complete RefDataStore trait with 10 methods is defined and fully implemented in JsonFileStore. All program eligibility rules and HOI estimation rates are seeded.</div>
 
-  <h3>Types defined in <code>src/geo/mod.rs</code></h3>
   <table>
-    <tr><th>Type</th><th>Key fields</th><th>Method</th></tr>
-    <tr><td>FhaLoanLimits</td><td>fips_code, limit_{1-4}_unit, limit_type, effective_year</td><td>limit_for(unit_count)</td></tr>
-    <tr><td>FhaLimitType</td><td>Floor / Standard / HighCost</td><td>—</td></tr>
-    <tr><td>GseLoanLimits</td><td>fips_code, limit_{1-4}_unit, is_high_cost</td><td>limit_for(), is_high_balance_amount()</td></tr>
-    <tr><td>UsdaruralEligibility</td><td>geoid, fips_code, is_sfh_eligible, pct_eligible</td><td>—</td></tr>
-    <tr><td>UsdaIncomeLimit</td><td>fips_code, limit_size_{1-8}, effective_date</td><td>limit_for_size(size)</td></tr>
-    <tr><td>AmiTractData</td><td>geoid, ami_{50,80,100,115}pct, is_low_income_tract, hp_income_limit_waived</td><td>—</td></tr>
-    <tr><td>UsdaMfhByTract</td><td>geoid, {el,fa,cg,gh,mx}_projects/units, total_*</td><td>has_usda_projects(), has_family_housing()</td></tr>
-    <tr><td>GeoEligibility</td><td>All fields from above combined</td><td>fha_loan_within_limit(), gse_loan_status(), usda_income_eligible(), hp_income_eligible()</td></tr>
+    <tr><th>Task</th><th>Key deliverable</th><th>Test file</th><th>Tests</th></tr>
+    <tr><td>4.1</td><td>Geo types, trait, versioning, error variants</td><td>task_4_1_scaffold.rs</td><td>31</td></tr>
+    <tr><td>4.2</td><td>JsonFileStore with year fallback, all 10 methods</td><td>tasks_4_2_4_5_4_6_4_21_4_22.rs</td><td>5</td></tr>
+    <tr><td>4.5</td><td>FHA loan limits — floor/standard/high-cost</td><td>same</td><td>9</td></tr>
+    <tr><td>4.6</td><td>GSE limits — high-balance detection, jumbo detection</td><td>same</td><td>10</td></tr>
+    <tr><td>4.21</td><td>ProgramEligibilityRules — 7 programs, DTI/LTV/FICO tables</td><td>same</td><td>18</td></tr>
+    <tr><td>4.22</td><td>StateHoiRate — all 50 states + DC, monthly_estimate()</td><td>same</td><td>9</td></tr>
   </table>
 
-  <h3>Types defined in <code>src/versioning.rs</code></h3>
-  <table>
-    <tr><th>Type</th><th>Purpose</th></tr>
-    <tr><td>VersionId</td><td>Format: <code>"fha_loan_limits:2025-01-01"</code> — opaque identity for a data version</td></tr>
-    <tr><td>Versioned&lt;T&gt;</td><td>Wraps any data type with version_id + effective_date</td></tr>
-    <tr><td>DataVersionManifest</td><td>Records exact versions used in one analysis — audit trail for CFPB exam</td></tr>
-  </table>
+  <h2>Key Design Decisions</h2>
+  <p><strong>VA DTI = 9999:</strong> VA does not use front-end DTI. Storing 9999 bps (99.99%) makes the DTI check always pass for VA, which is correct — a loan officer verifies residual income separately. This avoids special-casing VA in every caller.</p>
+  <p><strong>FHA two-tier credit:</strong> <code>credit_score_eligible(score, down_payment_bps)</code> handles the 580/500 split automatically. Callers pass the down payment and get the right minimum without knowing about the tier logic.</p>
+  <p><strong>HOI ceiling division:</strong> <code>monthly_estimate()</code> uses <code>(annual + 11) / 12</code> — ceiling division ensures we never underestimate the monthly payment. Conservative protects the borrower from qualifying on a payment that's actually too low.</p>
+  <p><strong>Year fallback:</strong> Requesting year 2030 returns 2025 data. Crate never needs code changes when a new year's data file is added — it just becomes the new best match.</p>
 </div>
 
-<!-- ══════════════════════════════════════════════════════════════════════════ -->
-<div class="tab-pane" id="tab-t42">
-  <h1>Task 4.2 — JsonFileStore (5 tests) ✅</h1>
-  <h2>What It Does</h2>
-  <p>Full implementation of all 10 <code>RefDataStore</code> trait methods for <code>JsonFileStore</code>. The store reads JSON files from <code>data_dir/</code> on demand — no database required for dev and CI.</p>
+<!-- ═══════════════════════════════════════ PHASE 2 DONE ══════════════════════════════════ -->
+<div class="tab-pane" id="tab-p2">
+  <h1>Phase 2 — USDA + AMI (56 tests) ✅</h1>
+  <div class="callout c-green"><strong>Complete — committed, CI green</strong>All 4 tasks shipped as one commit. Data files were pre-seeded in Phase 1; Phase 2 added comprehensive tests against the live store, including all boundary conditions.</div>
 
-  <h2>File Discovery — Automatic Year Fallback</h2>
-  <p>Every versioned dataset uses the naming pattern <code>{prefix}_{year}.json</code>. When a year is requested, the store scans <code>data_dir/</code> and returns data from the most recent year ≤ the requested year. Requesting 2030 data returns 2025 data with no code changes. Adding a <code>fha_limits_2026.json</code> file automatically makes it available.</p>
-  <pre><code>// Year fallback example:
-store.fha_loan_limits("48209", 2030)
-// Scans data_dir/ → finds fha_limits_2025.json → returns 2025 data</code></pre>
-
-  <h2>Static datasets (no year in filename)</h2>
-  <p>USDA rural eligibility and MFH by tract use <code>{name}.json</code> without a year suffix — these datasets update on a 10-year Census cycle, not annually.</p>
-</div>
-
-<!-- ══════════════════════════════════════════════════════════════════════════ -->
-<div class="tab-pane" id="tab-t4546">
-  <h1>Tasks 4.5 + 4.6 — Loan Limits (19 tests) ✅</h1>
-
-  <h2>FHA Loan Limits — 2025 Reference Values</h2>
   <table>
-    <tr><th>County (FIPS)</th><th>Type</th><th>1-Unit</th><th>4-Unit</th></tr>
-    <tr><td>Hays TX (48209)</td><td>Floor</td><td>$524,225</td><td>$1,007,575</td></tr>
-    <tr><td>Travis TX (48453)</td><td>Standard</td><td>$571,750</td><td>$1,099,250</td></tr>
-    <tr><td>San Francisco CA (06075)</td><td>High-Cost</td><td>$1,209,750</td><td>$2,325,375</td></tr>
-    <tr><td>Los Angeles CA (06037)</td><td>High-Cost</td><td>$1,209,750</td><td>$2,325,375</td></tr>
-    <tr><td>Miami-Dade FL (12086)</td><td>Standard</td><td>$621,575</td><td>$1,195,125</td></tr>
-    <tr><td>New York NY (36061)</td><td>High-Cost</td><td>$1,209,750</td><td>$2,325,375</td></tr>
+    <tr><th>Task</th><th>Key deliverable</th><th>Tests</th></tr>
+    <tr><td>4.7</td><td>USDA rural eligibility — 4 tracts, SFH/MFH flags, pct_eligible</td><td>12</td></tr>
+    <tr><td>4.8</td><td>USDA MFH by tract — family/elderly predicates, project/unit counts</td><td>10</td></tr>
+    <tr><td>4.9</td><td>USDA income limits — all 8 sizes, at-limit boundary, Travis vs Hays</td><td>18</td></tr>
+    <tr><td>4.10</td><td>AMI tract data — 80% AMI gate, hp_income_eligible() boundary</td><td>16</td></tr>
   </table>
 
-  <h2>GSE Conforming Limits — 2025 Reference Values</h2>
+  <h2>Critical Boundary Tests</h2>
+  <p>Three eligibility boundaries are tested at the exact threshold, one cent below, and one cent above:</p>
+
   <table>
-    <tr><th>County (FIPS)</th><th>High-Cost?</th><th>1-Unit Limit</th><th>High-Balance?</th></tr>
-    <tr><td>Hays TX (48209)</td><td>No</td><td>$806,500 (standard)</td><td>Never</td></tr>
-    <tr><td>Travis TX (48453)</td><td>No</td><td>$806,500 (standard)</td><td>Never</td></tr>
-    <tr><td>San Francisco CA (06075)</td><td>Yes</td><td>$1,209,750</td><td>$806,501–$1,209,750</td></tr>
-    <tr><td>Los Angeles CA (06037)</td><td>Yes</td><td>$1,209,750</td><td>$806,501–$1,209,750</td></tr>
+    <tr><th>Boundary</th><th>Threshold</th><th>At limit</th><th>One cent above</th></tr>
+    <tr><td>USDA income — Hays 3-person</td><td>$88,550</td><td>✓ eligible</td><td>✗ ineligible</td></tr>
+    <tr><td>HomeReady AMI — Kyle TX primary</td><td>$76,667 (80% AMI)</td><td>✓ eligible</td><td>✗ ineligible</td></tr>
+    <tr><td>USDA income — size 0</td><td>N/A (invalid)</td><td>conservative false</td><td>—</td></tr>
   </table>
 
-  <div class="callout c-warn"><strong>UFMIP note</strong>The FHA <code>fha_loan_within_limit()</code> method takes the <em>adjusted</em> loan amount (base + UFMIP financed). A $522,000 base loan + 1.75% UFMIP = $531,135 adjusted — which exceeds the Hays County floor of $524,225. Always pass the adjusted amount.</div>
-</div>
+  <h2>Conservative Defaults</h2>
+  <p>When data is missing, the store is always conservative (returns false for eligibility rather than true):</p>
+  <ul>
+    <li><strong>No tract geoid:</strong> <code>usda_sfh_eligible = false</code>, <code>ami_80pct = None</code>, <code>hp_income_eligible() = false</code></li>
+    <li><strong>Unknown FIPS for income limits:</strong> <code>usda_income_limits[] = [Cents(0); 8]</code>, all income checks return false</li>
+    <li><strong>Unknown tract for MFH:</strong> returns <code>None</code>, not an error</li>
+  </ul>
 
-<!-- ══════════════════════════════════════════════════════════════════════════ -->
-<div class="tab-pane" id="tab-t4122">
-  <h1>Tasks 4.21 + 4.22 — Audit Additions (27 tests) ✅</h1>
-  <p>These tasks were added after the architecture audit identified critical missing data that blocked the analysis engine.</p>
-
-  <h2>Task 4.21 — ProgramEligibilityRules</h2>
-  <p>The program-level eligibility gates that run <em>before</em> any geographic check. Without these, the engine cannot determine whether a borrower qualifies at the program level regardless of location.</p>
-
+  <h2>Fixture Reference Values (USDA + AMI)</h2>
   <table>
-    <tr><th>Program</th><th>Min FICO</th><th>Alt FICO</th><th>Max LTV</th><th>Max Front-End DTI</th></tr>
-    <tr><td><span class="prog-pill pp-fha">FHA</span></td><td>580</td><td>500 (10% down)</td><td>96.5%</td><td>31.00%</td></tr>
-    <tr><td><span class="prog-pill pp-va">VA</span></td><td>620 (overlay)</td><td>—</td><td>100.0%</td><td>99.99% (residual income)</td></tr>
-    <tr><td><span class="prog-pill pp-usda">USDA</span></td><td>640</td><td>—</td><td>100.0%</td><td>29.00%</td></tr>
-    <tr><td><span class="prog-pill pp-conv">Conventional</span></td><td>620</td><td>—</td><td>95.0% (90% HB)</td><td>28.00%</td></tr>
-    <tr><td><span class="prog-pill pp-hp">HomeReady</span></td><td>620</td><td>—</td><td>97.0%</td><td>36.00%</td></tr>
-    <tr><td><span class="prog-pill pp-hp">HomePossible</span></td><td>620</td><td>—</td><td>97.0%</td><td>36.00%</td></tr>
-    <tr><td><span class="prog-pill pp-hp">HomeOne</span></td><td>620</td><td>—</td><td>97.0%</td><td>28.00%</td></tr>
-  </table>
-
-  <p>The rules also capture program flags: <code>requires_primary_residence</code>, <code>requires_first_time_buyer</code>, <code>requires_va_entitlement</code>, <code>requires_usda_eligibility</code>, <code>requires_ami_income_check</code>.</p>
-
-  <h2>Task 4.22 — StateHoiRate</h2>
-  <p>Annual HOI rate as basis points of property value. RESO data never includes HOI — every PITIA calculation needs this estimate.</p>
-  <p><strong>Formula:</strong> <code>monthly_hoi = purchase_price × annual_rate_bps / 10,000 / 12</code> (ceiling division — conservative).</p>
-  <table>
-    <tr><th>State</th><th>Rate (bps)</th><th>Example: $459k</th><th>Notes</th></tr>
-    <tr><td>TX</td><td>56</td><td>~$214/mo</td><td>High wind/hail risk</td></tr>
-    <tr><td>CA</td><td>24</td><td>~$92/mo</td><td>Earthquake excluded from standard HOI</td></tr>
-    <tr><td>FL</td><td>107</td><td>~$409/mo</td><td>Hurricane exposure</td></tr>
-    <tr><td>LA</td><td>130</td><td>~$497/mo</td><td>Highest in nation</td></tr>
-    <tr><td>National fallback</td><td>85</td><td>~$325/mo</td><td>Used when state unknown</td></tr>
+    <tr><th>Tract GEOID</th><th>Location</th><th>SFH</th><th>pct_eligible</th><th>AMI 80%</th><th>SFGH 3-person limit</th></tr>
+    <tr><td>48209010905</td><td>Kyle TX primary</td><td>✓</td><td>95.0%</td><td>$76,667</td><td>$88,550</td></tr>
+    <tr><td>48209010906</td><td>Kyle TX condo</td><td>✓</td><td>88.0%</td><td>$70,000</td><td>$88,550</td></tr>
+    <tr><td>48209950100</td><td>Wimberley TX rural</td><td>✓</td><td>100.0%</td><td>—</td><td>$88,550</td></tr>
+    <tr><td>48453001801</td><td>Austin TX urban</td><td>✗</td><td>0.0%</td><td>$83,333</td><td>$95,700</td></tr>
   </table>
 </div>
 
-<!-- ══════════════════════════════════════════════════════════════════════════ -->
-<div class="tab-pane" id="tab-phase2">
-  <h1>Phase 2 — USDA + AMI (Tasks 4.7–4.10)</h1>
+<!-- ═══════════════════════════════════════ PHASE 3 OVERVIEW ══════════════════════════════ -->
+<div class="tab-pane" id="tab-p3_overview">
+  <h1>Phase 3 — SQL Migrations + SqliteStore</h1>
+  <p style="color:var(--muted)">Tasks 4.3, 4.4, 4.11, 4.12 · ~41 tests · Status: <span style="color:var(--orange)">Groundwork complete, ready to implement</span></p>
 
-  <div class="callout c-green"><strong>Data Already Seeded</strong>All four data files are already written and committed. Tasks 4.7–4.10 add tests that exercise the existing <code>JsonFileStore</code> implementations, validate the data, and document the edge cases. These four tasks can be built as one commit.</div>
+  <div class="callout c-orange"><strong>Phase 3 Readiness Checklist</strong>
+  ✓ sqlx added to workspace Cargo.toml (sqlite + runtime-tokio features)<br>
+  ✓ sqlx added to ref_data Cargo.toml dev-dependencies<br>
+  ✓ 12 SQL migration files created in <code>crates/ref_data/migrations/</code><br>
+  ✓ <code>src/store/sqlite.rs</code> stub file created with SqliteStore struct<br>
+  ✓ All JSON seed data available to seed the SQLite test database<br>
+  → Next: implement SqliteStore methods, write tests
+  </div>
 
-  <h2>Task 4.7 — USDA Rural Eligibility Tests</h2>
-  <p>Tests for the pre-computed tract-level eligibility lookup already in <code>usda_rural_eligibility.json</code>.</p>
-  <pre><code>// Tests to write:
-test_usda_rural_hays_county_tract_eligible()    // 48209010905 → true
-test_usda_rural_kyle_condo_tract_eligible()     // 48209010906 → true
-test_usda_rural_wimberley_tract_eligible()      // 48209950100 → true
-test_usda_rural_austin_quadruplex_ineligible()  // 48453001801 → false
-test_usda_rural_unknown_tract_returns_none()    // "99999999999" → None
-test_usda_rural_pct_eligible_present()          // pct_eligible field populated
-test_geo_eligibility_propagates_usda_flag()     // geo_eligibility() uses it
-// ... ~5 more covering source_version, mfh vs sfh distinction</code></pre>
+  <h2>Why SqliteStore?</h2>
+  <p>The production deployment uses PostgreSQL. The SqliteStore serves a different purpose: it gives integration tests a real relational database without needing a running PostgreSQL server in CI. When a test creates a SqliteStore, it creates an in-process, in-memory database, runs the schema migrations, loads the JSON seed data, and is ready to use — all in milliseconds.</p>
+  <p>Both stores implement the same <code>RefDataStore</code> trait, so every test written against one store verifies behavior for both. The SqliteStore is also used in development when a developer doesn't have PostgreSQL running locally.</p>
 
-  <h2>Task 4.8 — USDA MFH by Tract Tests</h2>
-  <p>Tests for the multi-family housing CSV data, verifying the project/unit counts and predicate methods.</p>
-  <pre><code>test_mfh_hays_tract_has_family_projects()       // 48209010905 → fa_projects=1
-test_mfh_total_units_count()                     // total_units=24
-test_mfh_has_usda_projects_true()
-test_mfh_unknown_tract_returns_none()
-test_mfh_el_projects_absent_is_zero()
-// ... ~5 more</code></pre>
-
-  <h2>Task 4.9 — USDA Income Limits Tests</h2>
-  <p>Tests for SFGH 115% AMI income limits by county and household size (1–8).</p>
-  <pre><code>test_usda_income_hays_county_3person()           // 3-person: $88,550
-test_usda_income_larger_household_higher_limit() // 5-person ≥ 4-person
-test_usda_income_eligible_below_limit()          // $85k/3-person → eligible
-test_usda_income_ineligible_above_limit()        // $95k/3-person → ineligible
-test_usda_income_size_0_returns_error()          // InvalidHouseholdSize(0)
-test_usda_income_size_9_returns_error()          // InvalidHouseholdSize(9)
-test_usda_income_travis_county_higher_than_hays() // MSA size effect
-test_geo_eligibility_usda_income_integration()
-// ... ~7 more</code></pre>
-
-  <h2>Task 4.10 — AMI Tract Data Tests</h2>
-  <p>Tests for census tract AMI thresholds and the HomeReady/HomePossible income limit waiver logic.</p>
-  <pre><code>test_ami_hays_tract_100pct()                     // $95,833/yr
-test_ami_hays_tract_80pct()                      // $76,667/yr
-test_ami_hays_tract_not_low_income()             // is_low_income_tract=false
-test_ami_hp_income_limit_not_waived()            // standard tract
-test_ami_hp_income_eligible_below_80pct()        // income ≤ ami_80pct → pass
-test_ami_hp_income_ineligible_above_80pct()      // income > ami_80pct → fail
-test_ami_hp_income_waived_in_low_income_tract()  // low-income tract → always pass
-test_ami_travis_county_tract()                   // different county reference
-test_ami_unknown_tract_returns_none()
-test_geo_eligibility_ami_populated_when_tract_known()
-// ... ~5 more</code></pre>
+  <h2>Task Sequence</h2>
+  <div class="p3-card">
+    <div class="p3-head"><div class="p3-icon" style="background:rgba(91,110,245,.15)">📋</div><div><strong>Task 4.3</strong> — SQL migration files</div><span class="badge b-orange">Groundwork done</span></div>
+    <div class="p3-body">12 <code>.sql</code> files in <code>crates/ref_data/migrations/</code>. PostgreSQL-native schema definitions for all ref_data tables. Tests verify files exist and execute without error under SQLite.</div>
+  </div>
+  <div class="p3-card">
+    <div class="p3-head"><div class="p3-icon" style="background:rgba(52,201,122,.15)">🔌</div><div><strong>Task 4.4</strong> — SqliteStore implementation</div><span class="badge b-orange">Ready to build</span></div>
+    <div class="p3-body">Implements all 10 <code>RefDataStore</code> methods over SQLite using <code>sqlx</code>. <code>SqliteStore::new_test_store()</code> creates an in-memory database, applies schema, and seeds from JSON files. Tests mirror the JsonFileStore test suite to verify both backends produce identical results.</div>
+  </div>
+  <div class="p3-card">
+    <div class="p3-head"><div class="p3-icon" style="background:rgba(46,207,212,.15)">🗺️</div><div><strong>Task 4.11</strong> — CBSA/MSA crosswalk</div><span class="badge b-muted">Pending</span></div>
+    <div class="p3-body">Maps county FIPS → CBSA code. Enables MSA-level queries and helps determine rural vs. urban status for counties near MSA boundaries. Adds <code>cbsa_crosswalk()</code> to the RefDataStore trait and a new table/JSON file.</div>
+  </div>
+  <div class="p3-card">
+    <div class="p3-head"><div class="p3-icon" style="background:rgba(245,150,66,.15)">🏠</div><div><strong>Task 4.12</strong> — Texas HOI by ZIP</div><span class="badge b-muted">Pending</span></div>
+    <div class="p3-body">ZIP-level HOI rate lookup for Texas (TDOI data). More precise than the state average from Task 4.22. Adds <code>zip_hoi_rate(zip, year)</code> to the trait. Store falls through: ZIP → state → national fallback.</div>
+  </div>
 </div>
 
-<!-- ══════════════════════════════════════════════════════════════════════════ -->
-<div class="tab-pane" id="tab-phase3">
-  <h1>Phase 3 — SQL Migrations + SqliteStore (Tasks 4.3, 4.4, 4.11, 4.12)</h1>
+<!-- ═══════════════════════════════════════ TASK 4.3 ══════════════════════════════════════ -->
+<div class="tab-pane" id="tab-p3_43">
+  <h1>Task 4.3 — SQL Migration Files</h1>
+  <p>12 ordered SQL files defining the complete production schema. PostgreSQL is the production target. SQLite compatibility notes are called out where needed.</p>
 
-  <h2>Task 4.3 — SQL Migration Framework</h2>
-  <p>12 ordered migration files defining the production PostgreSQL schema. Uses <code>sqlx::migrate!</code>.</p>
-  <div class="arch">migrations/
-  0001_initial_types.sql          CREATE TYPE fha_limit_type AS ENUM (...)
-  0002_fha_loan_limits.sql        CREATE TABLE fha_loan_limits (fips_code, limit_*, ...)
-  0003_gse_loan_limits.sql        CREATE TABLE gse_loan_limits (fips_code, is_high_cost, ...)
-  0004_usda_rural_eligibility.sql CREATE TABLE usda_rural_eligibility (geoid, is_sfh_eligible, ...)
-  0005_usda_income_limits.sql     CREATE TABLE usda_income_limits (fips_code, limit_size_*, ...)
-  0006_usda_mfh_by_tract.sql      CREATE TABLE usda_mfh_by_tract (geoid, total_projects, ...)
-  0007_ami_tract_data.sql         CREATE TABLE ami_tract_data (geoid, ami_*, is_low_income_tract)
-  0008_program_rules.sql          CREATE TABLE program_rules (program, min_credit_score, ...)
-  0009_state_hoi_rates.sql        CREATE TABLE state_hoi_rates (state_abbr, annual_rate_bps)
-  0010_fha_mip_rates.sql          CREATE TABLE fha_mip_rates (ltv_max, term_months_max, rate_bps)
-  0011_va_funding_fees.sql        CREATE TABLE va_funding_fees (veteran_status, down_payment_bps, ...)
-  0012_lender_and_rate_data.sql   CREATE TABLE lender_profiles, mi_rate_cards, rate_sheets</div>
+  <div class="callout c-info"><strong>PostgreSQL vs SQLite Handling</strong>Migration files use PostgreSQL-compatible SQL. <code>SqliteStore</code> does NOT run these files — instead, it has an inline <code>init_sqlite_schema()</code> function with SQLite-compatible CREATE TABLE statements (TEXT columns for types that use BOOLEAN or SMALLINT syntax differences). The migration files are the authoritative production schema definition.</div>
 
-  <h2>Task 4.4 — SqliteStore</h2>
-  <p>Same <code>RefDataStore</code> trait implemented against SQLite via <code>sqlx</code>. Used in integration tests where an in-process database is needed. <code>geo_eligibility()</code> issues one query per table and assembles <code>GeoEligibility</code>. The same JSON seed data populates the SQLite test database on startup.</p>
+  <div class="sql-block">
+    <div class="sql-head">migrations/0001_initial_types.sql</div>
+    <div class="sql-body"><span class="cm">-- PostgreSQL ENUM types used across multiple tables.
+-- SQLite: these types are TEXT columns; validation is at the application layer.</span>
 
-  <h2>Task 4.11 — CBSA/MSA Crosswalk</h2>
-  <p>Maps county FIPS → CBSA code and metropolitan/micropolitan designation. Supports USDA rural determination for areas near MSA boundaries and MSA-level income limit lookups. Sourced from Census OMB delineation files.</p>
+<span class="kw">DO</span> $$ <span class="kw">BEGIN</span>
+  <span class="kw">CREATE TYPE</span> <span class="ty">fha_limit_type</span> <span class="kw">AS ENUM</span> (<span class="lit">'Floor'</span>, <span class="lit">'Standard'</span>, <span class="lit">'HighCost'</span>);
+  <span class="kw">CREATE TYPE</span> <span class="ty">program_code</span>   <span class="kw">AS ENUM</span> (
+    <span class="lit">'conventional'</span>, <span class="lit">'home_ready'</span>, <span class="lit">'home_possible'</span>, <span class="lit">'home_one'</span>,
+    <span class="lit">'fha'</span>, <span class="lit">'fha_dpa'</span>, <span class="lit">'va'</span>, <span class="lit">'va_jumbo'</span>, <span class="lit">'usda'</span>, <span class="lit">'bond'</span>, <span class="lit">'jumbo'</span>, <span class="lit">'non_qm'</span>
+  );
+<span class="kw">EXCEPTION WHEN</span> duplicate_object <span class="kw">THEN</span> <span class="kw">NULL</span>;
+<span class="kw">END</span> $$;</div>
+  </div>
 
-  <h2>Task 4.12 — Texas HOI by ZIP</h2>
-  <p>ZIP-level HOI premiums for Texas (TDOI data). More precise than the state-average estimate from Task 4.22 for TX properties. The store falls through: ZIP → state → national fallback.</p>
+  <div class="sql-block">
+    <div class="sql-head">migrations/0002_fha_loan_limits.sql</div>
+    <div class="sql-body"><span class="kw">CREATE TABLE IF NOT EXISTS</span> <span class="ty">fha_loan_limits</span> (
+    fips_code       <span class="ty">TEXT</span>        <span class="kw">NOT NULL</span>,
+    state_abbr      <span class="ty">TEXT</span>        <span class="kw">NOT NULL</span>,
+    county_name     <span class="ty">TEXT</span>        <span class="kw">NOT NULL</span>,
+    limit_type      <span class="ty">TEXT</span>        <span class="kw">NOT NULL</span>,  <span class="cm">-- fha_limit_type enum</span>
+    limit_1_unit    <span class="ty">BIGINT</span>      <span class="kw">NOT NULL</span>,  <span class="cm">-- Cents (integer, 1/100 of a dollar)</span>
+    limit_2_unit    <span class="ty">BIGINT</span>      <span class="kw">NOT NULL</span>,
+    limit_3_unit    <span class="ty">BIGINT</span>      <span class="kw">NOT NULL</span>,
+    limit_4_unit    <span class="ty">BIGINT</span>      <span class="kw">NOT NULL</span>,
+    effective_year  <span class="ty">SMALLINT</span>    <span class="kw">NOT NULL</span>,
+    <span class="kw">PRIMARY KEY</span> (fips_code, effective_year)
+);
+<span class="kw">CREATE INDEX IF NOT EXISTS</span> idx_fha_limits_fips
+    <span class="kw">ON</span> <span class="ty">fha_loan_limits</span> (fips_code);</div>
+  </div>
+
+  <div class="sql-block">
+    <div class="sql-head">migrations/0003_gse_loan_limits.sql</div>
+    <div class="sql-body"><span class="kw">CREATE TABLE IF NOT EXISTS</span> <span class="ty">gse_loan_limits</span> (
+    fips_code       <span class="ty">TEXT</span>        <span class="kw">NOT NULL</span>,
+    state_abbr      <span class="ty">TEXT</span>        <span class="kw">NOT NULL</span>,
+    county_name     <span class="ty">TEXT</span>        <span class="kw">NOT NULL</span>,
+    cbsa_name       <span class="ty">TEXT</span>,
+    limit_1_unit    <span class="ty">BIGINT</span>      <span class="kw">NOT NULL</span>,
+    limit_2_unit    <span class="ty">BIGINT</span>      <span class="kw">NOT NULL</span>,
+    limit_3_unit    <span class="ty">BIGINT</span>      <span class="kw">NOT NULL</span>,
+    limit_4_unit    <span class="ty">BIGINT</span>      <span class="kw">NOT NULL</span>,
+    is_high_cost    <span class="ty">BOOLEAN</span>     <span class="kw">NOT NULL DEFAULT</span> <span class="lit">FALSE</span>,
+    effective_year  <span class="ty">SMALLINT</span>    <span class="kw">NOT NULL</span>,
+    <span class="kw">PRIMARY KEY</span> (fips_code, effective_year)
+);</div>
+  </div>
+
+  <div class="sql-block">
+    <div class="sql-head">migrations/0004_usda_rural_eligibility.sql</div>
+    <div class="sql-body"><span class="kw">CREATE TABLE IF NOT EXISTS</span> <span class="ty">usda_rural_eligibility</span> (
+    geoid            <span class="ty">TEXT</span>              <span class="kw">NOT NULL PRIMARY KEY</span>,
+    fips_code        <span class="ty">TEXT</span>              <span class="kw">NOT NULL</span>,
+    state_abbr       <span class="ty">TEXT</span>              <span class="kw">NOT NULL</span>,
+    is_sfh_eligible  <span class="ty">BOOLEAN</span>           <span class="kw">NOT NULL</span>,
+    is_mfh_eligible  <span class="ty">BOOLEAN</span>           <span class="kw">NOT NULL</span>,
+    pct_eligible     <span class="ty">DOUBLE PRECISION</span>,
+    source_version   <span class="ty">TEXT</span>              <span class="kw">NOT NULL</span>
+);
+<span class="kw">CREATE INDEX IF NOT EXISTS</span> idx_usda_rural_fips
+    <span class="kw">ON</span> <span class="ty">usda_rural_eligibility</span> (fips_code);</div>
+  </div>
+
+  <div class="sql-block">
+    <div class="sql-head">migrations/0005_usda_income_limits.sql</div>
+    <div class="sql-body"><span class="kw">CREATE TABLE IF NOT EXISTS</span> <span class="ty">usda_income_limits</span> (
+    fips_code       <span class="ty">TEXT</span>     <span class="kw">NOT NULL</span>,
+    state_abbr      <span class="ty">TEXT</span>     <span class="kw">NOT NULL</span>,
+    county_name     <span class="ty">TEXT</span>     <span class="kw">NOT NULL</span>,
+    msa_name        <span class="ty">TEXT</span>,
+    program         <span class="ty">TEXT</span>     <span class="kw">NOT NULL DEFAULT</span> <span class="lit">'SFGH'</span>,
+    limit_size_1    <span class="ty">BIGINT</span>   <span class="kw">NOT NULL</span>,
+    limit_size_2    <span class="ty">BIGINT</span>   <span class="kw">NOT NULL</span>,
+    limit_size_3    <span class="ty">BIGINT</span>   <span class="kw">NOT NULL</span>,
+    limit_size_4    <span class="ty">BIGINT</span>   <span class="kw">NOT NULL</span>,
+    limit_size_5    <span class="ty">BIGINT</span>   <span class="kw">NOT NULL</span>,
+    limit_size_6    <span class="ty">BIGINT</span>   <span class="kw">NOT NULL</span>,
+    limit_size_7    <span class="ty">BIGINT</span>   <span class="kw">NOT NULL</span>,
+    limit_size_8    <span class="ty">BIGINT</span>   <span class="kw">NOT NULL</span>,
+    effective_date  <span class="ty">DATE</span>     <span class="kw">NOT NULL</span>,
+    <span class="kw">PRIMARY KEY</span> (fips_code, effective_date)
+);</div>
+  </div>
+
+  <div class="sql-block">
+    <div class="sql-head">migrations/0006_usda_mfh_by_tract.sql</div>
+    <div class="sql-body"><span class="kw">CREATE TABLE IF NOT EXISTS</span> <span class="ty">usda_mfh_by_tract</span> (
+    geoid           <span class="ty">TEXT</span>       <span class="kw">NOT NULL PRIMARY KEY</span>,
+    fips_code       <span class="ty">TEXT</span>       <span class="kw">NOT NULL</span>,
+    state_fips      <span class="ty">TEXT</span>       <span class="kw">NOT NULL</span>,
+    county_fips     <span class="ty">TEXT</span>       <span class="kw">NOT NULL</span>,
+    tract_number    <span class="ty">TEXT</span>       <span class="kw">NOT NULL</span>,
+    tract_name      <span class="ty">TEXT</span>,
+    el_projects     <span class="ty">SMALLINT</span>   <span class="kw">NOT NULL DEFAULT</span> <span class="lit">0</span>,
+    el_units        <span class="ty">SMALLINT</span>   <span class="kw">NOT NULL DEFAULT</span> <span class="lit">0</span>,
+    fa_projects     <span class="ty">SMALLINT</span>   <span class="kw">NOT NULL DEFAULT</span> <span class="lit">0</span>,
+    fa_units        <span class="ty">SMALLINT</span>   <span class="kw">NOT NULL DEFAULT</span> <span class="lit">0</span>,
+    cg_projects     <span class="ty">SMALLINT</span>   <span class="kw">NOT NULL DEFAULT</span> <span class="lit">0</span>,
+    cg_units        <span class="ty">SMALLINT</span>   <span class="kw">NOT NULL DEFAULT</span> <span class="lit">0</span>,
+    gh_projects     <span class="ty">SMALLINT</span>   <span class="kw">NOT NULL DEFAULT</span> <span class="lit">0</span>,
+    gh_units        <span class="ty">SMALLINT</span>   <span class="kw">NOT NULL DEFAULT</span> <span class="lit">0</span>,
+    mx_projects     <span class="ty">SMALLINT</span>   <span class="kw">NOT NULL DEFAULT</span> <span class="lit">0</span>,
+    mx_units        <span class="ty">SMALLINT</span>   <span class="kw">NOT NULL DEFAULT</span> <span class="lit">0</span>,
+    total_projects  <span class="ty">SMALLINT</span>   <span class="kw">NOT NULL DEFAULT</span> <span class="lit">0</span>,
+    total_units     <span class="ty">SMALLINT</span>   <span class="kw">NOT NULL DEFAULT</span> <span class="lit">0</span>
+);</div>
+  </div>
+
+  <div class="sql-block">
+    <div class="sql-head">migrations/0007_ami_tract_data.sql + 0008_program_rules.sql + 0009_state_hoi_rates.sql</div>
+    <div class="sql-body"><span class="cm">-- 0007: AMI by census tract</span>
+<span class="kw">CREATE TABLE IF NOT EXISTS</span> <span class="ty">ami_tract_data</span> (
+    geoid                   <span class="ty">TEXT</span>     <span class="kw">NOT NULL</span>,
+    fips_code               <span class="ty">TEXT</span>     <span class="kw">NOT NULL</span>,
+    state_abbr              <span class="ty">TEXT</span>     <span class="kw">NOT NULL</span>,
+    county_name             <span class="ty">TEXT</span>     <span class="kw">NOT NULL</span>,
+    tract_name              <span class="ty">TEXT</span>,
+    ami_100pct              <span class="ty">BIGINT</span>,
+    ami_50pct               <span class="ty">BIGINT</span>,
+    ami_80pct               <span class="ty">BIGINT</span>,
+    ami_115pct              <span class="ty">BIGINT</span>,
+    ami_120pct              <span class="ty">BIGINT</span>,
+    ami_140pct              <span class="ty">BIGINT</span>,
+    is_low_income_tract     <span class="ty">BOOLEAN</span>  <span class="kw">NOT NULL DEFAULT</span> <span class="lit">FALSE</span>,
+    hp_income_limit_waived  <span class="ty">BOOLEAN</span>  <span class="kw">NOT NULL DEFAULT</span> <span class="lit">FALSE</span>,
+    effective_year          <span class="ty">SMALLINT</span> <span class="kw">NOT NULL</span>,
+    <span class="kw">PRIMARY KEY</span> (geoid, effective_year)
+);
+
+<span class="cm">-- 0008: Agency/GSE program eligibility rules</span>
+<span class="kw">CREATE TABLE IF NOT EXISTS</span> <span class="ty">program_rules</span> (
+    program                         <span class="ty">TEXT</span>     <span class="kw">NOT NULL PRIMARY KEY</span>,
+    min_credit_score                <span class="ty">SMALLINT</span> <span class="kw">NOT NULL</span>,
+    min_credit_score_alt            <span class="ty">SMALLINT</span>,
+    alt_credit_min_down_payment_bps <span class="ty">SMALLINT</span>,
+    max_ltv_bps                     <span class="ty">INTEGER</span>  <span class="kw">NOT NULL</span>,
+    max_ltv_bps_alt_credit          <span class="ty">INTEGER</span>,
+    max_ltv_bps_high_balance        <span class="ty">INTEGER</span>,
+    front_end_dti_max_bps           <span class="ty">INTEGER</span>  <span class="kw">NOT NULL</span>,
+    requires_primary_residence      <span class="ty">BOOLEAN</span>  <span class="kw">NOT NULL DEFAULT</span> <span class="lit">FALSE</span>,
+    requires_first_time_buyer       <span class="ty">BOOLEAN</span>  <span class="kw">NOT NULL DEFAULT</span> <span class="lit">FALSE</span>,
+    requires_va_entitlement         <span class="ty">BOOLEAN</span>  <span class="kw">NOT NULL DEFAULT</span> <span class="lit">FALSE</span>,
+    requires_usda_eligibility       <span class="ty">BOOLEAN</span>  <span class="kw">NOT NULL DEFAULT</span> <span class="lit">FALSE</span>,
+    requires_ami_income_check       <span class="ty">BOOLEAN</span>  <span class="kw">NOT NULL DEFAULT</span> <span class="lit">FALSE</span>,
+    effective_date                  <span class="ty">DATE</span>     <span class="kw">NOT NULL</span>
+);
+
+<span class="cm">-- 0009: State HOI estimation rates</span>
+<span class="kw">CREATE TABLE IF NOT EXISTS</span> <span class="ty">state_hoi_rates</span> (
+    state_abbr      <span class="ty">TEXT</span>     <span class="kw">NOT NULL</span>,
+    annual_rate_bps <span class="ty">SMALLINT</span> <span class="kw">NOT NULL</span>,
+    effective_year  <span class="ty">SMALLINT</span> <span class="kw">NOT NULL</span>,
+    <span class="kw">PRIMARY KEY</span> (state_abbr, effective_year)
+);</div>
+  </div>
+
+  <div class="sql-block">
+    <div class="sql-head">migrations/0010–0012 (stubs for Phase 4 + 5)</div>
+    <div class="sql-body"><span class="cm">-- 0010_fha_mip_rates.sql (Phase 4)</span>
+<span class="kw">CREATE TABLE IF NOT EXISTS</span> <span class="ty">fha_mip_rates</span> (
+    ltv_max_bps         <span class="ty">INTEGER</span>  <span class="kw">NOT NULL</span>,
+    term_months_max     <span class="ty">SMALLINT</span> <span class="kw">NOT NULL</span>,
+    loan_amount_tier    <span class="ty">TEXT</span>     <span class="kw">NOT NULL</span>,  <span class="cm">-- 'standard' | 'high_balance'</span>
+    annual_mip_bps      <span class="ty">SMALLINT</span> <span class="kw">NOT NULL</span>,
+    ufmip_bps           <span class="ty">SMALLINT</span> <span class="kw">NOT NULL DEFAULT</span> <span class="lit">175</span>,
+    cancellation_months <span class="ty">SMALLINT</span>,           <span class="cm">-- NULL = life of loan</span>
+    effective_date      <span class="ty">DATE</span>     <span class="kw">NOT NULL</span>,
+    <span class="kw">PRIMARY KEY</span> (ltv_max_bps, term_months_max, loan_amount_tier, effective_date)
+);
+
+<span class="cm">-- 0011_va_funding_fees.sql (Phase 4)</span>
+<span class="kw">CREATE TABLE IF NOT EXISTS</span> <span class="ty">va_funding_fees</span> (
+    veteran_status      <span class="ty">TEXT</span>     <span class="kw">NOT NULL</span>,  <span class="cm">-- VeteranStatus snake_case</span>
+    loan_purpose        <span class="ty">TEXT</span>     <span class="kw">NOT NULL</span>,  <span class="cm">-- 'purchase' | 'cash_out_refinance' | 'irrrl'</span>
+    down_payment_min_bps <span class="ty">INTEGER</span> <span class="kw">NOT NULL</span>,  <span class="cm">-- tier lower bound</span>
+    down_payment_max_bps <span class="ty">INTEGER</span> <span class="kw">NOT NULL</span>,  <span class="cm">-- tier upper bound (9999999 = no limit)</span>
+    fee_bps             <span class="ty">SMALLINT</span> <span class="kw">NOT NULL</span>,  <span class="cm">-- 0 = exempt (disability)</span>
+    effective_date      <span class="ty">DATE</span>     <span class="kw">NOT NULL</span>,
+    <span class="kw">PRIMARY KEY</span> (veteran_status, loan_purpose, down_payment_min_bps, effective_date)
+);
+
+<span class="cm">-- 0012_lender_rate_data.sql (Phase 5 — stubs only)</span>
+<span class="kw">CREATE TABLE IF NOT EXISTS</span> <span class="ty">lender_profiles</span>  (id <span class="ty">TEXT</span> <span class="kw">PRIMARY KEY</span>, name <span class="ty">TEXT</span> <span class="kw">NOT NULL</span>);
+<span class="kw">CREATE TABLE IF NOT EXISTS</span> <span class="ty">lender_overlays</span>  (lender_id <span class="ty">TEXT</span>, program <span class="ty">TEXT</span>, <span class="kw">PRIMARY KEY</span>(lender_id, program));
+<span class="kw">CREATE TABLE IF NOT EXISTS</span> <span class="ty">mi_rate_cards</span>    (id <span class="ty">TEXT</span> <span class="kw">PRIMARY KEY</span>);
+<span class="kw">CREATE TABLE IF NOT EXISTS</span> <span class="ty">rate_sheets</span>      (id <span class="ty">TEXT</span> <span class="kw">PRIMARY KEY</span>);</div>
+  </div>
 </div>
 
-<!-- ══════════════════════════════════════════════════════════════════════════ -->
-<div class="tab-pane" id="tab-phase4">
-  <h1>Phase 4 — Insurance and Fee Tables (Tasks 4.13–4.15)</h1>
-  <p>These tables complete the PITIA breakdown calculation. Without them, the engine can estimate FHA eligibility by loan amount but cannot compute monthly MIP, VA funding fee, or conventional PMI.</p>
+<!-- ═══════════════════════════════════════ TASK 4.4 ══════════════════════════════════════ -->
+<div class="tab-pane" id="tab-p3_44">
+  <h1>Task 4.4 — SqliteStore</h1>
+  <p>Implements all 10 <code>RefDataStore</code> methods using in-process SQLite via <code>sqlx</code>.</p>
 
-  <h2>Task 4.13 — FHA MIP Rates</h2>
-  <table>
-    <tr><th>Parameter</th><th>Value</th><th>Notes</th></tr>
-    <tr><td>UFMIP (upfront)</td><td>1.75% of base loan</td><td>Financed into loan amount</td></tr>
-    <tr><td>Annual MIP — LTV &gt; 95%, 30yr</td><td>0.55%</td><td>FY2023 rate (reduced from 0.85%)</td></tr>
-    <tr><td>Annual MIP — LTV ≤ 95%, 30yr</td><td>0.50%</td><td></td></tr>
-    <tr><td>Annual MIP — 15yr, LTV &gt; 90%</td><td>0.40%</td><td></td></tr>
-    <tr><td>Annual MIP — 15yr, LTV ≤ 90%</td><td>0.15%</td><td></td></tr>
-    <tr><td>Cancellation — LTV ≤ 90% at origination</td><td>11 years</td><td>Not life of loan</td></tr>
-    <tr><td>Cancellation — LTV &gt; 90% at origination</td><td>Life of loan</td><td>Never cancels</td></tr>
-  </table>
+  <h2>Design</h2>
+  <pre><code>// crates/ref_data/src/store/sqlite.rs
 
-  <h2>Task 4.14 — VA Funding Fee</h2>
-  <table>
-    <tr><th>Veteran Status</th><th>Down Payment</th><th>Purchase Fee</th><th>Cash-Out</th></tr>
-    <tr><td>First Use</td><td>&lt; 5%</td><td>2.15%</td><td>2.15%</td></tr>
-    <tr><td>First Use</td><td>5–10%</td><td>1.50%</td><td>—</td></tr>
-    <tr><td>First Use</td><td>≥ 10%</td><td>1.25%</td><td>—</td></tr>
-    <tr><td>Subsequent Use</td><td>&lt; 5%</td><td>3.30%</td><td>3.30%</td></tr>
-    <tr><td>Subsequent Use</td><td>5–10%</td><td>1.50%</td><td>—</td></tr>
-    <tr><td>Disability Exempt</td><td>Any</td><td>0.00%</td><td>0.00%</td></tr>
-    <tr><td>IRRRL (any status)</td><td>N/A</td><td>0.50%</td><td>—</td></tr>
-  </table>
+/// SQLite-backed store — used for integration tests and local dev without PostgreSQL.
+///
+/// # Usage in tests
+///
+/// ```rust
+/// let store = SqliteStore::new_test_store().await.unwrap();
+/// let limits = store.fha_loan_limits("48209", 2025).unwrap();
+/// ```
+pub struct SqliteStore {
+    pool: sqlx::SqlitePool,
+}
 
-  <h2>Task 4.15 — Conventional MI Coverage + LLPA</h2>
-  <p>Required MI coverage percentages by LTV (per FNMA/FHLMC guidelines) and LLPA price adjustments. LLPAs are the credit-score × LTV grid that determine the rate premium above par.</p>
-</div>
+impl SqliteStore {
+    /// Create an in-memory SQLite database, apply schema, and seed from JSON files.
+    /// This is the test-facing constructor. Production uses `from_pool()`.
+    pub async fn new_test_store() -> RefDataResult&lt;Self&gt;;
 
-<!-- ══════════════════════════════════════════════════════════════════════════ -->
-<div class="tab-pane" id="tab-phase5">
-  <h1>Phase 5 — Lender and Rate Data (Tasks 4.16–4.18)</h1>
+    /// Connect to an existing SQLite file.
+    pub async fn from_url(url: &str) -> RefDataResult&lt;Self&gt;;
 
-  <h2>Task 4.16 — LenderProfile + LenderOverlays</h2>
-  <p>Per-lender restrictions that tighten (but never loosen) agency guidelines. A lender might require a minimum 640 FICO for FHA even though agencies allow 580. Overlays are applied after program eligibility rules and can only disqualify — never qualify — a scenario.</p>
-  <pre><code>pub struct LenderOverlay {
-    pub program: ProgramCode,
-    pub min_credit_score: Option&lt;u16&gt;,       // tighten agency min
-    pub max_ltv_bps: Option&lt;u32&gt;,            // tighten agency max
-    pub front_end_dti_max_bps: Option&lt;u32&gt;,  // tighten agency DTI
-    pub ineligible_property_types: Vec&lt;PropertyType&gt;,
-    pub ineligible_states: Vec&lt;StateCode&gt;,
+    /// Use a caller-provided pool (production: PostgreSQL behind a compatible wrapper).
+    pub fn from_pool(pool: sqlx::SqlitePool) -> Self;
+
+    /// Apply SQLite-compatible schema (inline CREATE TABLE statements).
+    async fn init_schema(pool: &sqlx::SqlitePool) -> RefDataResult&lt;()&gt;;
+
+    /// Load all JSON data files into the database.
+    async fn seed_from_json(pool: &sqlx::SqlitePool) -> RefDataResult&lt;()&gt;;
 }</code></pre>
 
-  <h2>Task 4.17 — MI Provider + MiRateCard</h2>
-  <p>Monthly MI rate grids by LTV bracket, credit score tier, coverage level, and loan term. Major providers: MGIC, Essent, Radian, Arch, National MI. Rates are typically weekly or monthly updates.</p>
+  <h2>SqliteStore vs JsonFileStore — Differences</h2>
+  <table>
+    <tr><th>Aspect</th><th>JsonFileStore</th><th>SqliteStore</th></tr>
+    <tr><td>I/O model</td><td>Synchronous file reads</td><td>Async SQLite queries (block_in_place wrapper)</td></tr>
+    <tr><td>Year lookup</td><td>File scan on each call</td><td>WHERE effective_year ≤ ? ORDER BY DESC LIMIT 1</td></tr>
+    <tr><td>FIPS lookup</td><td>Linear scan of JSON array</td><td>Indexed query on primary key</td></tr>
+    <tr><td>Startup cost</td><td>None (lazy file reads)</td><td>Schema + seed (~50ms first call)</td></tr>
+    <tr><td>Suitable for</td><td>Dev data inspection, unit tests</td><td>Integration tests, local dev, CI</td></tr>
+    <tr><td>RefDataStore trait</td><td>Implemented</td><td>Implemented (same interface)</td></tr>
+  </table>
 
-  <h2>Task 4.18 — RateSheet (volatile intraday)</h2>
-  <p>Par interest rates and YSP (Yield Spread Premium) curves for each loan product and lock period. The most volatile data in the system — updates multiple times per day. Requires sub-hour versioning. The rate sheet is the final input needed to compute a complete monthly P+I payment and therefore a complete PITIA.</p>
-
-  <div class="callout c-warn"><strong>Rate Sheet Dependency</strong>Without Task 4.18, the engine can evaluate eligibility (pass/fail) but cannot compute the actual monthly payment or front-end DTI at a specific rate. The analysis can still be produced for a user-provided rate, but automatic rate selection requires a live rate sheet.</div>
+  <h2>Test Strategy</h2>
+  <p>The SqliteStore test file mirrors the JsonFileStore tests, calling the same store methods with the same expected values. This verifies that both backends produce identical results for all queries. Key tests beyond the mirroring:</p>
+  <ul>
+    <li><code>test_sqlite_store_from_in_memory_db()</code> — store creates successfully</li>
+    <li><code>test_sqlite_schema_all_tables_exist()</code> — all 9 tables created</li>
+    <li><code>test_sqlite_seed_data_loaded()</code> — row counts match JSON file record counts</li>
+    <li><code>test_sqlite_year_lookup_uses_most_recent()</code> — SQL ORDER BY / LIMIT logic</li>
+    <li><code>test_sqlite_fha_results_match_json_store()</code> — both return same Cents values</li>
+    <li><code>test_sqlite_program_rules_match_json_store()</code> — same DTI/LTV/credit rules</li>
+    <li><code>test_sqlite_geo_eligibility_matches_json_store()</code> — same GeoEligibility result</li>
+  </ul>
 </div>
 
-<!-- ══════════════════════════════════════════════════════════════════════════ -->
-<div class="tab-pane" id="tab-phase6">
+<!-- ═══════════════════════════════════════ TASKS 4.11 + 4.12 ═══════════════════════════ -->
+<div class="tab-pane" id="tab-p3_4112">
+  <h1>Tasks 4.11 + 4.12 — CBSA Crosswalk + Texas HOI</h1>
+
+  <h2>Task 4.11 — CBSA/MSA Crosswalk</h2>
+  <p>Maps county FIPS → CBSA (Core Based Statistical Area) code and designation (Metropolitan / Micropolitan / Rural). Source: Census OMB delineation files, updated every 3–5 years.</p>
+  <pre><code>// New method on RefDataStore trait
+fn cbsa_for_county(&self, fips_code: &str) -> RefDataResult&lt;Option&lt;CbsaEntry&gt;&gt;;
+
+pub struct CbsaEntry {
+    pub fips_code: String,
+    pub cbsa_code: Option&lt;CbsaCode&gt;,    // None = rural (no CBSA)
+    pub cbsa_name: Option&lt;String&gt;,
+    pub designation: CbsaDesignation,   // Metropolitan | Micropolitan | Rural
+    pub is_metro: bool,                 // true for Metropolitan only
+}</code></pre>
+  <p>Used downstream by the USDA eligibility check: some counties that appear urban by FIPS can still have USDA-eligible tracts if they're classified as Micropolitan rather than Metropolitan. Also used for MSA-level income adjustments.</p>
+
+  <h2>Task 4.12 — Texas HOI Premiums by ZIP</h2>
+  <p>Texas Department of Insurance publishes annual homeowner's insurance premium data by ZIP code. More precise than the state-average 56 bps from Task 4.22.</p>
+  <pre><code>// New method on RefDataStore trait (optional — falls through to state_hoi_rate)
+fn zip_hoi_rate(&self, zip5: &str, year: u16) -> RefDataResult&lt;Option&lt;ZipHoiRate&gt;&gt;;
+
+pub struct ZipHoiRate {
+    pub zip5: String,
+    pub state_abbr: String,             // always "TX" for this dataset
+    pub annual_rate_bps: u16,
+    pub median_premium_cents: Cents,    // TDOI median annual premium
+    pub sample_size: u32,
+    pub effective_year: u16,
+}</code></pre>
+  <p>Fall-through lookup pattern (used by the analysis engine):</p>
+  <pre><code>fn hoi_monthly(store, zip, state, value) -&gt; Cents {
+    // 1. Try ZIP-level (Task 4.12) — only TX for now
+    if let Some(r) = store.zip_hoi_rate(zip, year)? {
+        return r.monthly_estimate(value);
+    }
+    // 2. Fall through to state average (Task 4.22)
+    let r = store.state_hoi_rate(state, year)?;
+    r.monthly_estimate(value)
+    // 3. National fallback (NATIONAL_FALLBACK_RATE_BPS) used if state also missing
+}</code></pre>
+</div>
+
+<!-- ═══════════════════════════════════════ PHASES 4–6 ════════════════════════════════════ -->
+<div class="tab-pane" id="tab-p4">
+  <h1>Phase 4 — Insurance Fee Tables (Tasks 4.13–4.15)</h1>
+  <p>These three tasks provide the per-scenario MI cost that completes the PITIA calculation. Without Phase 4, the eligibility engine can check qualification but cannot compute the exact monthly payment.</p>
+
+  <table>
+    <tr><th>Task</th><th>Data</th><th>Key Values</th></tr>
+    <tr><td>4.13 — FHA MIP</td><td>Annual MIP rate by LTV tier and term</td><td>UFMIP 1.75%; Annual 0.50–0.55% (30yr); cancels at 11yr (LTV≤90%) or life of loan (LTV>90%)</td></tr>
+    <tr><td>4.14 — VA Funding Fee</td><td>Fee by veteran status, purpose, down payment tier</td><td>First use 2.15%; Subsequent 3.30%; Disability exempt 0%; IRRRL 0.50%</td></tr>
+    <tr><td>4.15 — Conventional MI</td><td>PMI rate grid + LLPA matrices</td><td>PMI: ~0.20–1.50% by LTV/FICO; LLPAs: FNMA/FHLMC price adjustment grids</td></tr>
+  </table>
+
+  <div class="callout c-teal"><strong>PITIA Completion Path</strong>After Phase 4, the engine can compute full PITIA for every program: P+I (from amort crate) + T (from PropertyEnriched) + I/HOI (Task 4.22) + I/MIP (Task 4.13) or fee (4.14) or PMI (4.15) + A/HOA (from PropertyEnriched). Front-end DTI becomes computable end-to-end.</div>
+</div>
+
+<div class="tab-pane" id="tab-p5">
+  <h1>Phase 5 — Lender Data (Tasks 4.16–4.18)</h1>
+  <table>
+    <tr><th>Task</th><th>What</th><th>Key Point</th></tr>
+    <tr><td>4.16 — LenderOverlays</td><td>Per-lender tightening of program rules</td><td>Overlays can only restrict, never loosen. A 640 FICO overlay on FHA overrides the 580 agency minimum.</td></tr>
+    <tr><td>4.17 — MiRateCard</td><td>MI provider rate grids by LTV/FICO</td><td>MGIC, Essent, Radian, Arch, National MI. Updated weekly/monthly.</td></tr>
+    <tr><td>4.18 — RateSheet</td><td>Lender par rates + YSP curves</td><td>Most volatile data — multiple updates per day. Requires sub-hour versioning. Gates final P+I computation.</td></tr>
+  </table>
+</div>
+
+<div class="tab-pane" id="tab-p6">
   <h1>Phase 6 — Integration Gate (Tasks 4.19, 4.23, 4.20)</h1>
 
-  <h2>Task 4.19 — GeoEligibility Unified Query (full implementation)</h2>
-  <p>The <code>geo_eligibility()</code> method is already partially implemented in <code>JsonFileStore</code> — it assembles FHA limits, GSE limits, and USDA data. Task 4.19 completes it: adds proper error handling for missing tract data, verifies the AMI integration, adds the SqliteStore implementation, and writes comprehensive integration tests covering the single-call pattern.</p>
+  <h2>Task 4.19 — GeoEligibility Full Integration</h2>
+  <p>Completes the <code>geo_eligibility()</code> method for SqliteStore, adds error recovery for missing tract data, writes end-to-end integration tests crossing the SqliteStore boundary.</p>
 
-  <h2>Task 4.23 — FHA Condo Project Approval (Audit)</h2>
-  <p>Not all condominiums are FHA-approved. The HUD Approved Condominiums list is queryable via API. For the engine, all FHA condo scenarios are flagged <code>FHA_CONDO_PROJECT_APPROVAL_REQUIRED</code> unless the project appears in the approved list. This prevents the engine from incorrectly qualifying condo FHA scenarios.</p>
+  <h2>Task 4.23 — FHA Condo Project Approval</h2>
+  <p>HUD maintains a list of approved condominium projects for FHA financing. All FHA condo scenarios are flagged <code>FHA_CONDO_PROJECT_APPROVAL_REQUIRED</code> unless the project appears on the HUD approved list. Prevents the engine from incorrectly qualifying condo FHA scenarios.</p>
 
   <h2>Task 4.20 — Epic 4 Gate</h2>
-  <p>All 5 Epic 3 fixture scenarios pass the complete geographic + program eligibility check sequence:</p>
+  <p>Gate tests verify the complete chain: property fixture → geo_eligibility + program_rules → pass/fail decision. All 5 Epic 3 property fixtures must produce the correct eligibility result for all programs.</p>
   <table>
-    <tr><th>Fixture</th><th>Gate Assertions</th></tr>
-    <tr><td>kyle_tx_sfr (Hays, SFR)</td><td>FHA within limit ($459k &lt; $524k floor), GSE standard (not HB), USDA geo=eligible + income check at 3-person $88.5k limit, HP income within 80% AMI for tract</td></tr>
-    <tr><td>kyle_tx_condo (Hays, Condo)</td><td>Same loan limits; FHA_CONDO_PROJECT_APPROVAL_REQUIRED flag set</td></tr>
-    <tr><td>mobile_home (Hays, MobileHome)</td><td>All programs: PROPERTY_TYPE_INELIGIBLE (engine_type=MobileHome before geo checks run)</td></tr>
-    <tr><td>manufactured_home (Wimberley)</td><td>FHA eligible; USDA eligible (owned land, no land lease, tract 48209950100 = rural)</td></tr>
-    <tr><td>income_property (Travis, 4-unit)</td><td>FHA 4-unit limit applies ($710k vs $1.1M); Travis County USDA=ineligible (urban); AE flood zone flag; Travis FIPS=48453</td></tr>
-  </table>
-  <table>
-    <tr><th>Program Rules Gate</th><th>Verified</th></tr>
-    <tr><td>FICO 720 / 3.5% down → FHA eligible</td><td>credit_score_eligible + ltv_eligible pass</td></tr>
-    <tr><td>FICO 720 / 3.5% down → USDA eligible (program rules)</td><td>credit_score_eligible pass (640 min)</td></tr>
-    <tr><td>FICO 550 / 3.5% down → FHA NOT eligible (580 min)</td><td>credit_score_eligible fails</td></tr>
-    <tr><td>FICO 550 / 10% down → FHA eligible (500 alt min)</td><td>credit_score_eligible passes at alt tier</td></tr>
-    <tr><td>Front-end DTI 35% → FHA fail (31% limit)</td><td>dti_eligible fails</td></tr>
-    <tr><td>Front-end DTI 35% → HomeReady pass (36% limit)</td><td>dti_eligible passes</td></tr>
+    <tr><th>Fixture</th><th>Expected results</th></tr>
+    <tr><td>kyle_tx_sfr</td><td>FHA✓ GSE✓ USDA eligible (geo+income) VA✓ HomeReady income ≤ 80% AMI</td></tr>
+    <tr><td>kyle_tx_condo</td><td>FHA✓ (+ condo approval flag) GSE✓ USDA eligible</td></tr>
+    <tr><td>mobile_home</td><td>All programs: PROPERTY_TYPE_INELIGIBLE</td></tr>
+    <tr><td>manufactured_home</td><td>FHA✓ USDA eligible (Wimberley rural tract)</td></tr>
+    <tr><td>income_property (4-unit)</td><td>FHA 4-unit limits; Travis USDA ineligible; AE flood zone</td></tr>
   </table>
 </div>
 
-<!-- ══════════════════════════════════════════════════════════════════════════ -->
-<div class="tab-pane" id="tab-datatypes">
-  <h1>Type Reference</h1>
-
-  <h2>ProgramEligibilityRules</h2>
-  <div class="method">
-    <div class="method-sig"><span class="fn-kw">pub fn</span> <span class="fn-name">min_credit_score_for_down_payment</span>(&amp;self, down_payment_bps: <span class="fn-type">u32</span>) -&gt; <span class="ret">u16</span></div>
-    <div class="method-doc">580 for standard FHA; 500 when down_payment_bps ≥ 1000 (10% down). Single minimum for all other programs.</div>
-  </div>
-  <div class="method">
-    <div class="method-sig"><span class="fn-kw">pub fn</span> <span class="fn-name">max_ltv_for</span>(&amp;self, credit_score: <span class="fn-type">CreditScore</span>, is_high_balance: <span class="fn-type">bool</span>) -&gt; <span class="ret">LtvBasisPoints</span></div>
-    <div class="method-doc">Returns the correct max LTV considering credit tier and high-balance flag. FHA 500-579 → 90%; high-balance conventional → 90%; standard → program max.</div>
-  </div>
-  <div class="method">
-    <div class="method-sig"><span class="fn-kw">pub fn</span> <span class="fn-name">credit_score_eligible</span>(&amp;self, score: <span class="fn-type">CreditScore</span>, down_payment_bps: <span class="fn-type">u32</span>) -&gt; <span class="ret">bool</span></div>
-    <div class="method-doc">Combines the two-tier FHA logic into a single bool check.</div>
-  </div>
-  <div class="method">
-    <div class="method-sig"><span class="fn-kw">pub fn</span> <span class="fn-name">ltv_eligible</span>(&amp;self, ltv: <span class="fn-type">LtvBasisPoints</span>, score: <span class="fn-type">CreditScore</span>, is_high_balance: <span class="fn-type">bool</span>) -&gt; <span class="ret">bool</span></div>
-    <div class="method-doc">True if ltv ≤ max_ltv_for(score, is_high_balance).</div>
-  </div>
-  <div class="method">
-    <div class="method-sig"><span class="fn-kw">pub fn</span> <span class="fn-name">dti_eligible</span>(&amp;self, front_end_dti: <span class="fn-type">DtiBasisPoints</span>) -&gt; <span class="ret">bool</span></div>
-    <div class="method-doc">True if front_end_dti ≤ program maximum. VA always returns true (9999 bps stored).</div>
-  </div>
-  <div class="method">
-    <div class="method-sig"><span class="fn-kw">pub fn</span> <span class="fn-name">front_end_dti_limit</span>(&amp;self) -&gt; <span class="ret">DtiBasisPoints</span></div>
-    <div class="method-doc">FHA=3100, VA=9999, USDA=2900, Conventional=2800, HomeReady/HP=3600, HomeOne=2800.</div>
-  </div>
-
-  <h2>StateHoiRate</h2>
-  <div class="method">
-    <div class="method-sig"><span class="fn-kw">pub fn</span> <span class="fn-name">monthly_estimate</span>(&amp;self, property_value: <span class="fn-type">Cents</span>) -&gt; <span class="ret">Option&lt;Cents&gt;</span></div>
-    <div class="method-doc">Ceiling division: (value × rate_bps / 10,000 + 11) / 12. Conservative — always rounds up. Returns None if property_value ≤ 0.</div>
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════════════════════════════════════════ -->
-<div class="tab-pane" id="tab-datafiles">
+<!-- ═══════════════════════════════════════ REFERENCE ════════════════════════════════════ -->
+<div class="tab-pane" id="tab-data_files">
   <h1>Data Files Reference</h1>
-  <p>All seed data in <code>crates/ref_data/data/</code>. Shipped with the crate for dev and CI use.</p>
-
+  <p>All files in <code>crates/ref_data/data/</code>. Shipped with the crate for dev and CI.</p>
   <table>
-    <tr><th>File</th><th>Records</th><th>Key</th><th>Used By</th></tr>
-    <tr><td>fha_limits_2025.json</td><td>6 counties</td><td>fips_code</td><td>fha_loan_limits(), geo_eligibility()</td></tr>
-    <tr><td>gse_limits_2025.json</td><td>6 counties</td><td>fips_code</td><td>gse_loan_limits(), geo_eligibility()</td></tr>
-    <tr><td>usda_rural_eligibility.json</td><td>4 census tracts</td><td>geoid</td><td>usda_rural_eligibility(), geo_eligibility()</td></tr>
-    <tr><td>usda_income_limits_2025.json</td><td>2 counties</td><td>fips_code</td><td>usda_income_limits(), geo_eligibility()</td></tr>
-    <tr><td>usda_mfh_by_tract.json</td><td>1 tract</td><td>geoid</td><td>usda_mfh_by_tract()</td></tr>
-    <tr><td>ami_tract_data_2025.json</td><td>3 census tracts</td><td>geoid</td><td>ami_tract_data(), geo_eligibility()</td></tr>
-    <tr><td>program_rules.json</td><td>7 programs</td><td>program (snake_case)</td><td>program_rules()</td></tr>
-    <tr><td>state_hoi_rates_2025.json</td><td>51 (50 states + DC)</td><td>state_abbr</td><td>state_hoi_rate()</td></tr>
+    <tr><th>File</th><th>Records</th><th>Key</th><th>Status</th></tr>
+    <tr><td>fha_limits_2025.json</td><td>6 counties</td><td>fips_code + year</td><td><span class="badge b-green">✓</span></td></tr>
+    <tr><td>gse_limits_2025.json</td><td>6 counties</td><td>fips_code + year</td><td><span class="badge b-green">✓</span></td></tr>
+    <tr><td>usda_rural_eligibility.json</td><td>4 tracts</td><td>geoid</td><td><span class="badge b-green">✓</span></td></tr>
+    <tr><td>usda_income_limits_2025.json</td><td>2 counties</td><td>fips_code + date</td><td><span class="badge b-green">✓</span></td></tr>
+    <tr><td>usda_mfh_by_tract.json</td><td>1 tract</td><td>geoid</td><td><span class="badge b-green">✓</span></td></tr>
+    <tr><td>ami_tract_data_2025.json</td><td>3 tracts</td><td>geoid + year</td><td><span class="badge b-green">✓</span></td></tr>
+    <tr><td>program_rules.json</td><td>7 programs</td><td>program (snake_case)</td><td><span class="badge b-green">✓</span></td></tr>
+    <tr><td>state_hoi_rates_2025.json</td><td>51 (50+DC)</td><td>state_abbr + year</td><td><span class="badge b-green">✓</span></td></tr>
   </table>
-
-  <h3>Counties seeded (fixture-sufficient for all Epic tests)</h3>
+  <h3>Counties Seeded</h3>
   <ul>
-    <li><strong>48209</strong> — Hays County, TX (Kyle TX SFR, Condo, Manufactured Home fixtures)</li>
-    <li><strong>48453</strong> — Travis County, TX (Quadruplex Austin fixture)</li>
-    <li><strong>06075</strong> — San Francisco, CA (high-cost county reference)</li>
-    <li><strong>06037</strong> — Los Angeles, CA (high-cost county reference)</li>
-    <li><strong>12086</strong> — Miami-Dade, FL (standard county, hurricane state)</li>
-    <li><strong>36061</strong> — New York County, NY (high-cost county reference)</li>
+    <li><strong>48209</strong> Hays County TX — Kyle TX fixtures (SFR, condo, manufactured)</li>
+    <li><strong>48453</strong> Travis County TX — Austin quadruplex fixture</li>
+    <li><strong>06075</strong> San Francisco CA — high-cost county reference</li>
+    <li><strong>06037</strong> Los Angeles CA — high-cost county reference</li>
+    <li><strong>12086</strong> Miami-Dade FL — standard county, hurricane state HOI reference</li>
+    <li><strong>36061</strong> New York County NY — high-cost county reference</li>
   </ul>
-
-  <h3>Census tracts seeded</h3>
+  <h3>Census Tracts Seeded</h3>
   <ul>
-    <li><strong>48209010905</strong> — Kyle TX primary (USDA eligible, not low-income tract)</li>
-    <li><strong>48209010906</strong> — Kyle TX condo area (USDA eligible)</li>
-    <li><strong>48209950100</strong> — Wimberley TX rural (USDA eligible, manufactured home)</li>
-    <li><strong>48453001801</strong> — Austin TX urban (USDA ineligible)</li>
+    <li><strong>48209010905</strong> Kyle TX primary (USDA eligible, AMI 80%=$76,667)</li>
+    <li><strong>48209010906</strong> Kyle TX condo area (USDA eligible)</li>
+    <li><strong>48209950100</strong> Wimberley TX rural (USDA eligible, 100% pct_eligible)</li>
+    <li><strong>48453001801</strong> Austin TX urban (USDA ineligible)</li>
   </ul>
 </div>
 
-<!-- ══════════════════════════════════════════════════════════════════════════ -->
-<div class="tab-pane" id="tab-programrules">
-  <h1>Program Rules Deep Dive</h1>
+<div class="tab-pane" id="tab-store_api">
+  <h1>RefDataStore API</h1>
+  <table>
+    <tr><th>Method</th><th>Returns</th><th>Phase</th></tr>
+    <tr><td>fha_loan_limits(fips, year)</td><td>Versioned&lt;FhaLoanLimits&gt;</td><td><span class="badge b-green">✓ P1</span></td></tr>
+    <tr><td>gse_loan_limits(fips, year)</td><td>Versioned&lt;GseLoanLimits&gt;</td><td><span class="badge b-green">✓ P1</span></td></tr>
+    <tr><td>usda_rural_eligibility(geoid)</td><td>Option&lt;UsdaruralEligibility&gt;</td><td><span class="badge b-green">✓ P2</span></td></tr>
+    <tr><td>usda_income_limits(fips, date)</td><td>Versioned&lt;UsdaIncomeLimit&gt;</td><td><span class="badge b-green">✓ P2</span></td></tr>
+    <tr><td>usda_mfh_by_tract(geoid)</td><td>Option&lt;UsdaMfhByTract&gt;</td><td><span class="badge b-green">✓ P2</span></td></tr>
+    <tr><td>ami_tract_data(geoid, year)</td><td>Option&lt;Versioned&lt;AmiTractData&gt;&gt;</td><td><span class="badge b-green">✓ P2</span></td></tr>
+    <tr><td>program_rules(program)</td><td>ProgramEligibilityRules</td><td><span class="badge b-green">✓ P1</span></td></tr>
+    <tr><td>state_hoi_rate(state, year)</td><td>StateHoiRate</td><td><span class="badge b-green">✓ P1</span></td></tr>
+    <tr><td>geo_eligibility(fips, tract, year)</td><td>GeoEligibility</td><td><span class="badge b-green">✓ P1</span></td></tr>
+    <tr><td>current_version(dataset)</td><td>VersionId</td><td><span class="badge b-green">✓ P1</span></td></tr>
+    <tr><td>cbsa_for_county(fips)</td><td>Option&lt;CbsaEntry&gt;</td><td><span class="badge b-orange">P3 4.11</span></td></tr>
+    <tr><td>zip_hoi_rate(zip5, year)</td><td>Option&lt;ZipHoiRate&gt;</td><td><span class="badge b-orange">P3 4.12</span></td></tr>
+    <tr><td>fha_mip_rate(ltv, term, amount_tier)</td><td>FhaMipRate</td><td><span class="badge b-muted">P4 4.13</span></td></tr>
+    <tr><td>va_funding_fee(status, purpose, dp_bps)</td><td>BasisPoints</td><td><span class="badge b-muted">P4 4.14</span></td></tr>
+    <tr><td>conv_mi_rate(ltv, fico, coverage)</td><td>ConvMiRate</td><td><span class="badge b-muted">P4 4.15</span></td></tr>
+  </table>
+</div>
 
-  <h2>Evaluation Order (every scenario)</h2>
-  <ol>
-    <li><strong>Property type ineligibility</strong> — mobile home, investment property → fail before any data lookup</li>
-    <li><strong>Occupancy check</strong> — USDA/VA/HomeOne require primary residence</li>
-    <li><strong>VA entitlement</strong> — if program requires VA, borrower must have entitlement</li>
-    <li><strong>First-time buyer</strong> — HomeOne requires at least one FTIB on the note</li>
-    <li><strong>Credit score minimum</strong> — <code>program_rules.credit_score_eligible()</code></li>
-    <li><strong>LTV maximum</strong> — <code>program_rules.ltv_eligible()</code></li>
-    <li><strong>Front-end DTI</strong> — <code>program_rules.dti_eligible()</code></li>
-    <li><strong>Geographic: FHA/GSE loan limits</strong> — <code>geo.fha_loan_within_limit()</code> / <code>geo.gse_loan_status()</code></li>
-    <li><strong>Geographic: USDA rural</strong> — <code>geo.usda_sfh_eligible</code></li>
-    <li><strong>Geographic: USDA income</strong> — <code>geo.usda_income_eligible()</code></li>
-    <li><strong>AMI income check</strong> — HomeReady/HP: <code>geo.hp_income_eligible()</code></li>
-    <li><strong>Lender overlays</strong> — tighten (never loosen) any of the above</li>
-  </ol>
+<div class="tab-pane" id="tab-ci">
+  <h1>CI / Coverage Gate</h1>
+  <div class="callout c-warn"><strong>Coverage Gate Configuration</strong>The coverage gate (<code>--fail-under-lines 97</code>) measures the <code>types</code> crate only. <code>ref_data</code> is in the <code>--ignore-filename-regex</code> list for the same reason as <code>mismo</code>: store I/O error paths and geo_eligibility fallback arms are not yet exercised, dragging combined workspace coverage below 97%.</div>
 
-  <div class="callout c-info"><strong>VA front-end DTI</strong>VA stores <code>front_end_dti_max_bps = 9999</code>. This means Step 7 always passes for VA, which is correct — VA uses residual income, not front-end DTI. The analysis output notes this explicitly: "VA uses residual income — DTI check not applicable. A loan officer will verify residual income separately."</div>
+  <p>The gate will be updated once targeted ref_data error-path tests are added and a per-crate baseline is measured. At that point, <code>ref_data</code> gets its own threshold and is removed from the ignore list — the same process documented in the CI YAML for <code>mismo</code>.</p>
 
-  <h2>Lender Overlay Priority</h2>
-  <p>The engine applies rules in this precedence order (most restrictive wins):</p>
-  <ol>
-    <li>Agency/GSE guidelines (<code>program_rules.json</code>)</li>
-    <li>Investor guidelines (FNMA/FHLMC selling guide deviations)</li>
-    <li>Lender overlays (<code>LenderOverlay</code> — Task 4.16)</li>
-    <li>MI provider requirements — some MI companies have their own credit overlays</li>
-  </ol>
+  <h2>What CI Checks on Every Push</h2>
+  <table>
+    <tr><th>Job</th><th>What it verifies</th><th>Status</th></tr>
+    <tr><td>fmt</td><td>rustfmt --check — zero formatting diffs</td><td><span class="badge b-green">✓</span></td></tr>
+    <tr><td>clippy</td><td>-D warnings — zero warnings allowed</td><td><span class="badge b-green">✓</span></td></tr>
+    <tr><td>test (ubuntu + macos)</td><td>cargo test --workspace — 1,254 tests, 0 failures</td><td><span class="badge b-green">✓</span></td></tr>
+    <tr><td>coverage (97% gate)</td><td>types crate ≥ 97% line coverage via llvm-cov</td><td><span class="badge b-green">✓</span></td></tr>
+    <tr><td>bench</td><td>Criterion benchmarks compile + run without panic</td><td><span class="badge b-green">✓</span></td></tr>
+    <tr><td>deny</td><td>License, advisory, ban, and source policy</td><td><span class="badge b-green">✓</span></td></tr>
+  </table>
 </div>
 
 </main>
 </div>
-
 <script>
 function show(id) {
   document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.ni').forEach(n => n.classList.remove('active'));
-  const pane = document.getElementById('tab-' + id);
-  if (pane) pane.classList.add('active');
+  const p = document.getElementById('tab-'+id);
+  if (p) p.classList.add('active');
   if (event && event.target) event.target.classList.add('active');
 }
 </script>
