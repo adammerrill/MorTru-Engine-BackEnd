@@ -46,15 +46,18 @@
 //! - Task 3.12: RESO ↔ MISMO bridge
 //! - Task 3.13: Epic 3 gate test
 
+pub mod bridge;
+pub mod enriched;
 pub mod error;
 pub mod fcc;
 pub mod lookups;
 pub mod property;
 
-// Task 3.10-3.11 modules land as those tasks are delivered:
-// pub mod enriched;
-// pub mod bridge;
-
+pub use bridge::{
+    enriched_to_mismo_address, hoa_for_mismo_expense, property_sub_type_to_mismo,
+    select_valuation_price, state_code_to_mismo, MismoAddressFields,
+};
+pub use enriched::PropertyEnriched;
 pub use error::{ResoError, ResoResult};
 pub use fcc::{parse_fcc_response, FccClient, FipsResolution};
 pub use lookups::{ResoPropertySubType, ResoPropertyType, ResoStandardStatus};
