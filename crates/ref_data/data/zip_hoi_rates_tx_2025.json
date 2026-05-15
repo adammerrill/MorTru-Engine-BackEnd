@@ -1,0 +1,42 @@
+[
+  {
+    "zip5": "78640",
+    "state_abbr": "TX",
+    "annual_rate_bps": 62,
+    "median_annual_premium_cents": 284400,
+    "sample_size": 4821,
+    "effective_year": 2025
+  },
+  {
+    "zip5": "78641",
+    "state_abbr": "TX",
+    "annual_rate_bps": 59,
+    "median_annual_premium_cents": 270900,
+    "sample_size": 3102,
+    "effective_year": 2025
+  },
+  {
+    "zip5": "78666",
+    "state_abbr": "TX",
+    "annual_rate_bps": 58,
+    "median_annual_premium_cents": 266200,
+    "sample_size": 5644,
+    "effective_year": 2025
+  },
+  {
+    "zip5": "78701",
+    "state_abbr": "TX",
+    "annual_rate_bps": 48,
+    "median_annual_premium_cents": 220300,
+    "sample_size": 2891,
+    "effective_year": 2025
+  },
+  {
+    "zip5": "78745",
+    "state_abbr": "TX",
+    "annual_rate_bps": 53,
+    "median_annual_premium_cents": 243500,
+    "sample_size": 6712,
+    "effective_year": 2025
+  }
+]

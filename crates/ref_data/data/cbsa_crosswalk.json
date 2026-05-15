@@ -1,0 +1,58 @@
+[
+  {
+    "fips_code": "48209",
+    "cbsa_code": "12420",
+    "cbsa_name": "Austin-Round Rock-Georgetown, TX",
+    "designation": "metropolitan",
+    "is_metro": true
+  },
+  {
+    "fips_code": "48453",
+    "cbsa_code": "12420",
+    "cbsa_name": "Austin-Round Rock-Georgetown, TX",
+    "designation": "metropolitan",
+    "is_metro": true
+  },
+  {
+    "fips_code": "06075",
+    "cbsa_code": "41860",
+    "cbsa_name": "San Francisco-Oakland-Berkeley, CA",
+    "designation": "metropolitan",
+    "is_metro": true
+  },
+  {
+    "fips_code": "06037",
+    "cbsa_code": "31080",
+    "cbsa_name": "Los Angeles-Long Beach-Anaheim, CA",
+    "designation": "metropolitan",
+    "is_metro": true
+  },
+  {
+    "fips_code": "12086",
+    "cbsa_code": "33100",
+    "cbsa_name": "Miami-Fort Lauderdale-Pompano Beach, FL",
+    "designation": "metropolitan",
+    "is_metro": true
+  },
+  {
+    "fips_code": "36061",
+    "cbsa_code": "35620",
+    "cbsa_name": "New York-Newark-Jersey City, NY-NJ-PA",
+    "designation": "metropolitan",
+    "is_metro": true
+  },
+  {
+    "fips_code": "48299",
+    "cbsa_code": "29700",
+    "cbsa_name": "Marble Falls, TX",
+    "designation": "micropolitan",
+    "is_metro": false
+  },
+  {
+    "fips_code": "48107",
+    "cbsa_code": null,
+    "cbsa_name": null,
+    "designation": "rural",
+    "is_metro": false
+  }
+]

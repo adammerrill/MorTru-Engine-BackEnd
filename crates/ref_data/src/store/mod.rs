@@ -1,11 +1,9 @@
-//! `RefDataStore` trait + `JsonFileStore` implementation.
-//!
-//! All reference data access goes through this trait. Swap the implementation
-//! to change backends without touching any other crate.
+//! `RefDataStore` trait + `JsonFileStore` + `SqliteStore` implementations.
 
 use std::path::PathBuf;
 
 use crate::{
+    cbsa::CbsaEntry,
     error::{RefDataError, RefDataResult},
     geo::{
         AmiTractData, FhaLoanLimits, GeoEligibility, GseLoanLimits, UsdaIncomeLimit,
@@ -14,6 +12,7 @@ use crate::{
     hoi_rates::StateHoiRate,
     program_rules::{AllProgramRules, ProgramEligibilityRules},
     versioning::{VersionId, Versioned},
+    zip_hoi::ZipHoiRate,
 };
 use types::ProgramCode;
 
@@ -21,8 +20,7 @@ use types::ProgramCode;
 
 /// Single interface for all reference data access.
 ///
-/// Implementations: [`JsonFileStore`] (dev/CI), SqliteStore (integration),
-/// PostgresStore (production).
+/// Implementations: [`JsonFileStore`] (dev/CI), [`SqliteStore`] (integration).
 pub trait RefDataStore: Send + Sync {
     // ── Loan limits ───────────────────────────────────────────────────────────
     fn fha_loan_limits(
@@ -52,11 +50,17 @@ pub trait RefDataStore: Send + Sync {
         year: u16,
     ) -> RefDataResult<Option<Versioned<AmiTractData>>>;
 
-    // ── Program eligibility rules (Task 4.21) ─────────────────────────────────
+    // ── Program eligibility rules ─────────────────────────────────────────────
     fn program_rules(&self, program: ProgramCode) -> RefDataResult<ProgramEligibilityRules>;
 
-    // ── HOI estimation (Task 4.22) ────────────────────────────────────────────
+    // ── HOI estimation ────────────────────────────────────────────────────────
     fn state_hoi_rate(&self, state_abbr: &str, year: u16) -> RefDataResult<StateHoiRate>;
+
+    // ── ZIP-level HOI (Task 4.12) — falls through to state rate if None ───────
+    fn zip_hoi_rate(&self, zip5: &str, year: u16) -> RefDataResult<Option<ZipHoiRate>>;
+
+    // ── CBSA/MSA crosswalk (Task 4.11) ───────────────────────────────────────
+    fn cbsa_for_county(&self, fips_code: &str) -> RefDataResult<Option<CbsaEntry>>;
 
     // ── Unified geo-eligibility query ─────────────────────────────────────────
     fn geo_eligibility(
@@ -73,26 +77,12 @@ pub trait RefDataStore: Send + Sync {
 // ── JsonFileStore ─────────────────────────────────────────────────────────────
 
 /// JSON-file-backed store for development and CI.
-///
-/// Data files live under `data_dir/`. File naming convention:
-///
-/// | Dataset | File |
-/// |---|---|
-/// | FHA loan limits | `fha_limits_{year}.json` |
-/// | GSE conforming limits | `gse_limits_{year}.json` |
-/// | USDA rural eligibility | `usda_rural_eligibility.json` |
-/// | USDA income limits | `usda_income_limits_{year}.json` |
-/// | USDA MFH by tract | `usda_mfh_by_tract.json` |
-/// | AMI tract data | `ami_tract_data_{year}.json` |
-/// | Program eligibility rules | `program_rules.json` |
-/// | State HOI rates | `state_hoi_rates_{year}.json` |
 #[derive(Debug)]
 pub struct JsonFileStore {
     pub data_dir: PathBuf,
 }
 
 impl JsonFileStore {
-    /// Create a store pointing at `data_dir`.
     #[must_use]
     pub fn new(data_dir: impl Into<PathBuf>) -> Self {
         Self {
@@ -100,8 +90,10 @@ impl JsonFileStore {
         }
     }
 
-    /// Read and parse a JSON file relative to `data_dir`.
-    fn read_json<T: serde::de::DeserializeOwned>(&self, filename: &str) -> RefDataResult<T> {
+    pub(crate) fn read_json<T: serde::de::DeserializeOwned>(
+        &self,
+        filename: &str,
+    ) -> RefDataResult<T> {
         let path = self.data_dir.join(filename);
         let content = std::fs::read_to_string(&path)
             .map_err(|e| RefDataError::Storage(format!("cannot read {}: {e}", path.display())))?;
@@ -111,11 +103,7 @@ impl JsonFileStore {
         })
     }
 
-    /// Find the most recent year file ≤ `year` using a naming pattern.
-    ///
-    /// Scans `data_dir` for files matching `{prefix}_{year}.json` and returns
-    /// the content of the most recent year that is ≤ the requested year.
-    fn read_versioned_json<T: serde::de::DeserializeOwned>(
+    pub(crate) fn read_versioned_json<T: serde::de::DeserializeOwned>(
         &self,
         prefix: &str,
         year: u16,
@@ -152,8 +140,6 @@ impl JsonFileStore {
 }
 
 impl RefDataStore for JsonFileStore {
-    // ── FHA loan limits ───────────────────────────────────────────────────────
-
     fn fha_loan_limits(
         &self,
         fips_code: &str,
@@ -173,8 +159,6 @@ impl RefDataStore for JsonFileStore {
         Ok(Versioned::new("fha_loan_limits", eff, data))
     }
 
-    // ── GSE conforming limits ─────────────────────────────────────────────────
-
     fn gse_loan_limits(
         &self,
         fips_code: &str,
@@ -193,8 +177,6 @@ impl RefDataStore for JsonFileStore {
         let eff = chrono::NaiveDate::from_ymd_opt(i32::from(found_year), 1, 1).unwrap_or_default();
         Ok(Versioned::new("gse_loan_limits", eff, data))
     }
-
-    // ── USDA ──────────────────────────────────────────────────────────────────
 
     fn usda_rural_eligibility(&self, geoid: &str) -> RefDataResult<Option<UsdaruralEligibility>> {
         let records: Vec<UsdaruralEligibility> = self.read_json("usda_rural_eligibility.json")?;
@@ -230,8 +212,6 @@ impl RefDataStore for JsonFileStore {
         Ok(records.into_iter().find(|r| r.geoid == geoid))
     }
 
-    // ── AMI ───────────────────────────────────────────────────────────────────
-
     fn ami_tract_data(
         &self,
         geoid: &str,
@@ -244,14 +224,10 @@ impl RefDataStore for JsonFileStore {
         Ok(data.map(|d| Versioned::new("ami_tract_data", eff, d)))
     }
 
-    // ── Program eligibility rules ─────────────────────────────────────────────
-
     fn program_rules(&self, program: ProgramCode) -> RefDataResult<ProgramEligibilityRules> {
         let all: AllProgramRules = self.read_json("program_rules.json")?;
         all.for_program(program).cloned()
     }
-
-    // ── HOI estimation ────────────────────────────────────────────────────────
 
     fn state_hoi_rate(&self, state_abbr: &str, year: u16) -> RefDataResult<StateHoiRate> {
         let (_, records): (u16, Vec<StateHoiRate>) =
@@ -266,7 +242,47 @@ impl RefDataStore for JsonFileStore {
             })
     }
 
-    // ── Unified geo-eligibility ───────────────────────────────────────────────
+    fn zip_hoi_rate(&self, zip5: &str, year: u16) -> RefDataResult<Option<ZipHoiRate>> {
+        // Scan for zip_hoi_rates_*_{year}.json files; state-prefixed names supported
+        let entries = std::fs::read_dir(&self.data_dir)
+            .map_err(|e| RefDataError::Storage(format!("cannot read data_dir: {e}")))?;
+
+        let mut best: Option<(u16, Vec<ZipHoiRate>)> = None;
+        for entry in entries.flatten() {
+            let name = entry.file_name();
+            let name = name.to_string_lossy();
+            if name.starts_with("zip_hoi_rates_") && name.ends_with(".json") {
+                // Extract trailing year from name like zip_hoi_rates_tx_2025.json
+                if let Some(yr_str) = name.trim_end_matches(".json").rsplit('_').next() {
+                    if let Ok(yr) = yr_str.parse::<u16>() {
+                        if yr <= year {
+                            let keep = match &best {
+                                None => true,
+                                Some((b, _)) => yr > *b,
+                            };
+                            if keep {
+                                if let Ok(records) =
+                                    self.read_json::<Vec<ZipHoiRate>>(&name.to_string())
+                                {
+                                    best = Some((yr, records));
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        match best {
+            Some((_, records)) => Ok(records.into_iter().find(|r| r.zip5 == zip5)),
+            None => Ok(None), // no ZIP HOI data at all → caller falls through to state rate
+        }
+    }
+
+    fn cbsa_for_county(&self, fips_code: &str) -> RefDataResult<Option<CbsaEntry>> {
+        let records: Vec<CbsaEntry> = self.read_json("cbsa_crosswalk.json")?;
+        Ok(records.into_iter().find(|r| r.fips_code == fips_code))
+    }
 
     fn geo_eligibility(
         &self,
@@ -279,16 +295,14 @@ impl RefDataStore for JsonFileStore {
         let fha = self.fha_loan_limits(fips_code, year)?.data;
         let gse = self.gse_loan_limits(fips_code, year)?.data;
 
-        // USDA rural eligibility — conservative (false) when tract unknown
         let (usda_sfh, usda_mfh, usda_pct) = match tract_geoid {
             Some(geoid) => match self.usda_rural_eligibility(geoid)? {
                 Some(r) => (r.is_sfh_eligible, r.is_mfh_eligible, r.pct_eligible),
-                None => (false, false, None), // tract not found → conservative
+                None => (false, false, None),
             },
             None => (false, false, None),
         };
 
-        // USDA income limits — best effort
         let effective_date =
             chrono::NaiveDate::from_ymd_opt(i32::from(year), 10, 1).unwrap_or_default();
         let usda_income = self.usda_income_limits(fips_code, effective_date).ok();
@@ -306,7 +320,6 @@ impl RefDataStore for JsonFileStore {
             None => [Cents(0); 8],
         };
 
-        // AMI tract data — optional, keyed by tract
         let ami = tract_geoid
             .and_then(|g| self.ami_tract_data(g, year).ok().flatten())
             .map(|v| v.data);
@@ -342,7 +355,6 @@ impl RefDataStore for JsonFileStore {
     }
 
     fn current_version(&self, dataset: &str) -> RefDataResult<VersionId> {
-        // Scan for the most recent file for the dataset and return its version
         let entries = std::fs::read_dir(&self.data_dir)
             .map_err(|e| RefDataError::Storage(format!("cannot read data_dir: {e}")))?;
         let mut best_year: Option<u16> = None;
@@ -368,3 +380,8 @@ impl RefDataStore for JsonFileStore {
         Ok(VersionId::new(dataset, eff))
     }
 }
+
+// SqliteStore lives in its own module, gated behind the "sqlite" feature.
+pub mod sqlite;
+#[cfg(feature = "sqlite")]
+pub use sqlite::SqliteStore;

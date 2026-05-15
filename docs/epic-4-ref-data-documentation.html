@@ -95,12 +95,12 @@
   <a class="ni" onclick="show('p1')">Tasks 4.1 / 4.2 / 4.5 / 4.6 / 4.21 / 4.22</a>
   <div class="ns">✓ Phase 2 — Done</div>
   <a class="ni" onclick="show('p2')">Tasks 4.7 / 4.8 / 4.9 / 4.10</a>
-  <div class="ns">▶ Phase 3 — Next</div>
+  <div class="ns">✓ Phase 3 — Done</div>
   <a class="ni" onclick="show('p3_overview')">Overview &amp; Readiness</a>
   <a class="ni" onclick="show('p3_43')">Task 4.3 — SQL Migrations</a>
   <a class="ni" onclick="show('p3_44')">Task 4.4 — SqliteStore</a>
   <a class="ni" onclick="show('p3_4112')">Tasks 4.11 / 4.12</a>
-  <div class="ns">Phase 4 — Pending</div>
+  <div class="ns">▶ Phase 4 — Next</div>
   <a class="ni" onclick="show('p4')">Tasks 4.13 / 4.14 / 4.15</a>
   <div class="ns">Phase 5 — Pending</div>
   <a class="ni" onclick="show('p5')">Tasks 4.16 / 4.17 / 4.18</a>
@@ -122,16 +122,16 @@
   </p>
 
   <div class="status-banner">
-    <div class="stat"><div class="stat-val" style="color:var(--orange)">Phase 3</div><div class="stat-label">Current Phase</div></div>
-    <div class="stat"><div class="stat-val" style="color:var(--green)">138</div><div class="stat-label">Crate Tests</div></div>
-    <div class="stat"><div class="stat-val">1,254</div><div class="stat-label">Workspace Total</div></div>
-    <div class="stat"><div class="stat-val" style="color:var(--green)">10</div><div class="stat-label">Tasks Done</div></div>
-    <div class="stat"><div class="stat-val" style="color:var(--muted)">14</div><div class="stat-label">Remaining</div></div>
+    <div class="stat"><div class="stat-val" style="color:var(--yellow)">Phase 4</div><div class="stat-label">Current Phase</div></div>
+    <div class="stat"><div class="stat-val" style="color:var(--green)">181</div><div class="stat-label">Crate Tests</div></div>
+    <div class="stat"><div class="stat-val">1,279</div><div class="stat-label">Workspace Total</div></div>
+    <div class="stat"><div class="stat-val" style="color:var(--green)">14</div><div class="stat-label">Tasks Done</div></div>
+    <div class="stat"><div class="stat-val" style="color:var(--muted)">10</div><div class="stat-label">Remaining</div></div>
     <div class="stat"><div class="stat-val" style="color:var(--green)">0</div><div class="stat-label">Failures</div></div>
   </div>
 
-  <div class="progress-bar"><div class="progress-fill" style="width:42%"></div></div>
-  <p style="font-size:12px;color:var(--muted);margin-top:-8px;margin-bottom:24px">10 of 24 tasks complete (42%)</p>
+  <div class="progress-bar"><div class="progress-fill" style="width:58%"></div></div>
+  <p style="font-size:12px;color:var(--muted);margin-top:-8px;margin-bottom:24px">14 of 24 tasks complete (58%)</p>
 
   <h2>Full Task Table</h2>
   <div class="task-grid">
@@ -154,17 +154,17 @@
     <div class="tg-row done"><div class="tg-num">4.10</div><div>AMI tract data — 50/80/100/115% thresholds, HomeReady/HP income gate</div><div><span class="badge b-green">✓ Done</span></div><div class="tg-tests" style="color:var(--green)">16</div></div>
 
     <!-- PHASE 3 -->
-    <div class="tg-row" style="grid-template-columns:54px 1fr;"><div class="phase-head" style="grid-column:1/-1">Phase 3 — SQL + SQLite (~41 tests) ▶ NEXT</div></div>
-    <div class="tg-row next"><div class="tg-num">4.3</div><div>SQL migration files — 12 ordered <code>.sql</code> files defining the production PostgreSQL schema</div><div><span class="badge b-orange">Ready</span></div><div class="tg-tests" style="color:var(--muted)">~8</div></div>
-    <div class="tg-row next"><div class="tg-num">4.4</div><div><code>SqliteStore</code> — <code>RefDataStore</code> trait over in-process SQLite via <code>sqlx</code></div><div><span class="badge b-orange">Ready</span></div><div class="tg-tests" style="color:var(--muted)">~20</div></div>
-    <div class="tg-row next"><div class="tg-num">4.11</div><div>CBSA/MSA crosswalk — county FIPS → CBSA code, rural-near-urban determination</div><div><span class="badge b-muted">Pending</span></div><div class="tg-tests" style="color:var(--muted)">~8</div></div>
-    <div class="tg-row next"><div class="tg-num">4.12</div><div>Texas HOI premiums by ZIP — TDOI data, finer than state average (ZIP → state → national)</div><div><span class="badge b-muted">Pending</span></div><div class="tg-tests" style="color:var(--muted)">~5</div></div>
+    <div class="tg-row" style="grid-template-columns:54px 1fr;"><div class="phase-head" style="grid-column:1/-1">Phase 3 — SQL + SQLite (45 tests) ✓ DONE</div></div>
+    <div class="tg-row next"><div class="tg-num done-num">4.3</div><div>SQL migration files — 12 ordered <code>.sql</code> files defining the production PostgreSQL schema</div><div><span class="badge b-green">✓ Done</span></div><div class="tg-tests" style="color:var(--green)">7</div></div>
+    <div class="tg-row next"><div class="tg-num done-num">4.4</div><div><code>SqliteStore</code> — <code>RefDataStore</code> trait over in-process SQLite via <code>sqlx</code></div><div><span class="badge b-green">✓ Done</span></div><div class="tg-tests" style="color:var(--green)">20</div></div>
+    <div class="tg-row next"><div class="tg-num done-num">4.11</div><div>CBSA/MSA crosswalk — county FIPS → CBSA code, rural-near-urban determination</div><div><span class="badge b-green">✓ Done</span></div><div class="tg-tests" style="color:var(--green)">7</div></div>
+    <div class="tg-row next"><div class="tg-num done-num">4.12</div><div>Texas HOI premiums by ZIP — TDOI data, finer than state average (ZIP → state → national)</div><div><span class="badge b-green">✓ Done</span></div><div class="tg-tests" style="color:var(--green)">8</div></div>
 
     <!-- PHASE 4 -->
-    <div class="tg-row" style="grid-template-columns:54px 1fr;"><div class="phase-head" style="grid-column:1/-1">Phase 4 — Fee Tables (~53 tests)</div></div>
+    <div class="tg-row" style="grid-template-columns:54px 1fr;"><div class="phase-head" style="grid-column:1/-1">Phase 4 — Fee Tables (~53 tests) ▶ NEXT</div></div>
     <div class="tg-row"><div class="tg-num">4.13</div><div>FHA MIP rates — UFMIP 1.75%, annual by LTV/term, cancellation rules</div><div><span class="badge b-muted">Pending</span></div><div class="tg-tests" style="color:var(--muted)">~18</div></div>
     <div class="tg-row"><div class="tg-num">4.14</div><div>VA funding fee table — all veteran status / down payment combinations</div><div><span class="badge b-muted">Pending</span></div><div class="tg-tests" style="color:var(--muted)">~15</div></div>
-    <div class="tg-row"><div class="tg-num">4.15</div><div>Conventional MI coverage + LLPA matrices</div><div><span class="badge b-muted">Pending</span></div><div class="tg-tests" style="color:var(--muted)">~20</div></div>
+    <div class="tg-row"><div class="tg-num">4.15</div><div>Conventional MI coverage + LLPA matrices</div><div><span class="badge b-green">✓ Done</span></div><div class="tg-tests" style="color:var(--green)">20</div></div>
 
     <!-- PHASE 5 -->
     <div class="tg-row" style="grid-template-columns:54px 1fr;"><div class="phase-head" style="grid-column:1/-1">Phase 5 — Lender Data (~45 tests)</div></div>
@@ -175,7 +175,7 @@
     <!-- PHASE 6 -->
     <div class="tg-row" style="grid-template-columns:54px 1fr;"><div class="phase-head" style="grid-column:1/-1">Phase 6 — Integration Gate (~58 tests)</div></div>
     <div class="tg-row"><div class="tg-num">4.19</div><div><code>GeoEligibility</code> unified query — full SqliteStore integration</div><div><span class="badge b-muted">Pending</span></div><div class="tg-tests" style="color:var(--muted)">~20</div></div>
-    <div class="tg-row"><div class="tg-num">4.23</div><div>FHA condo project approval — HUD approved list lookup <span class="badge b-purple">Audit</span></div><div><span class="badge b-muted">Pending</span></div><div class="tg-tests" style="color:var(--muted)">~8</div></div>
+    <div class="tg-row"><div class="tg-num">4.23</div><div>FHA condo project approval — HUD approved list lookup <span class="badge b-purple">Audit</span></div><div><span class="badge b-green">✓ Done</span></div><div class="tg-tests" style="color:var(--green)">10</div></div>
     <div class="tg-row"><div class="tg-num">4.20</div><div>Epic 4 gate — all 5 fixture scenarios, full program + geo eligibility</div><div><span class="badge b-muted">Pending</span></div><div class="tg-tests" style="color:var(--muted)">~30</div></div>
   </div>
 
@@ -184,8 +184,8 @@
     <tr><th>Phase</th><th>Tasks</th><th>Tests</th><th>Running Total</th><th>Status</th></tr>
     <tr><td>Phase 1 — Foundation</td><td>4.1, 4.2, 4.5, 4.6, 4.21, 4.22</td><td style="color:var(--green)">82</td><td style="color:var(--green)">82</td><td><span class="badge b-green">✓ Done</span></td></tr>
     <tr><td>Phase 2 — USDA + AMI</td><td>4.7, 4.8, 4.9, 4.10</td><td style="color:var(--green)">56</td><td style="color:var(--green)">138</td><td><span class="badge b-green">✓ Done</span></td></tr>
-    <tr><td>Phase 3 — SQL + SQLite</td><td>4.3, 4.4, 4.11, 4.12</td><td style="color:var(--orange)">~41</td><td style="color:var(--orange)">~179</td><td><span class="badge b-orange">Next</span></td></tr>
-    <tr><td>Phase 4 — Fee Tables</td><td>4.13, 4.14, 4.15</td><td style="color:var(--muted)">~53</td><td style="color:var(--muted)">~232</td><td><span class="badge b-muted">Pending</span></td></tr>
+    <tr><td>Phase 3 — SQL + SQLite</td><td>4.3, 4.4, 4.11, 4.12</td><td style="color:var(--green)">45</td><td style="color:var(--green)">183</td><td><span class="badge b-green">✓ Done</span></td></tr>
+    <tr><td>Phase 4 — Fee Tables</td><td>4.13, 4.14, 4.15</td><td style="color:var(--orange)">~53</td><td style="color:var(--orange)">~236</td><td><span class="badge b-orange">Next</span></td></tr>
     <tr><td>Phase 5 — Lender Data</td><td>4.16, 4.17, 4.18</td><td style="color:var(--muted)">~45</td><td style="color:var(--muted)">~277</td><td><span class="badge b-muted">Pending</span></td></tr>
     <tr><td>Phase 6 — Gate</td><td>4.19, 4.23, 4.20</td><td style="color:var(--muted)">~58</td><td style="color:var(--muted)">~335</td><td><span class="badge b-muted">Pending</span></td></tr>
     <tr><td><strong>Workspace at completion</strong></td><td>all</td><td>~335 ref_data</td><td style="color:var(--accent2)"><strong>~1,451 total</strong></td><td></td></tr>
@@ -328,13 +328,13 @@ PropertyEnriched.state + purchase_price
   <h1>Phase 3 — SQL Migrations + SqliteStore</h1>
   <p style="color:var(--muted)">Tasks 4.3, 4.4, 4.11, 4.12 · ~41 tests · Status: <span style="color:var(--orange)">Groundwork complete, ready to implement</span></p>
 
-  <div class="callout c-orange"><strong>Phase 3 Readiness Checklist</strong>
+  <div class="callout c-green"><strong>Phase 3 Complete</strong>
   ✓ sqlx added to workspace Cargo.toml (sqlite + runtime-tokio features)<br>
   ✓ sqlx added to ref_data Cargo.toml dev-dependencies<br>
   ✓ 12 SQL migration files created in <code>crates/ref_data/migrations/</code><br>
   ✓ <code>src/store/sqlite.rs</code> stub file created with SqliteStore struct<br>
   ✓ All JSON seed data available to seed the SQLite test database<br>
-  → Next: implement SqliteStore methods, write tests
+  ✓ All tasks complete: 45 tests, 0 failures, CI green
   </div>
 
   <h2>Why SqliteStore?</h2>
