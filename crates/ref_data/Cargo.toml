@@ -22,7 +22,8 @@ chrono       = { workspace = true }
 
 [features]
 default = []
-# sqlite  = ["sqlx"]  # Phase 3: uncomment when sqlx is added to workspace
+# When sqlx is added to the workspace (Phase 3), change to: sqlite = ["sqlx"]
+sqlite  = []  # feature flag defined; gated code compiled only when enabled
 
 [dev-dependencies]
 serde_json = { workspace = true }
