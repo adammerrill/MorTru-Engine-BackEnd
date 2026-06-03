@@ -4,13 +4,22 @@ use std::path::PathBuf;
 
 use crate::{
     cbsa::CbsaEntry,
+    condo_approval::{FhaCondoApprovedFile, FhaCondoProject},
+    conv_mi::{
+        ConvMiCoverage, ConvMiCoverageTable, ConvMiInput, MiMonthlyTable, MiRateInput,
+        UsdaGuaranteeFees,
+    },
     error::{RefDataError, RefDataResult},
+    fha_mip::{FhaMipInput, FhaMipResult, FhaMipTable},
     geo::{
         AmiTractData, FhaLoanLimits, GeoEligibility, GseLoanLimits, UsdaIncomeLimit,
         UsdaMfhByTract, UsdaruralEligibility,
     },
     hoi_rates::StateHoiRate,
+    lender::{LenderOverlays, LenderProfile, LenderProfileFile},
     program_rules::{AllProgramRules, ProgramEligibilityRules},
+    rate_sheet::{LlpaInput, LlpaMatrix, RateSheet, RateSheetFile},
+    va_fee::{VaFeeInput, VaFeeTable},
     versioning::{VersionId, Versioned},
     zip_hoi::ZipHoiRate,
 };
@@ -72,6 +81,40 @@ pub trait RefDataStore: Send + Sync {
 
     // ── Version tracking ──────────────────────────────────────────────────────
     fn current_version(&self, dataset: &str) -> RefDataResult<VersionId>;
+
+    // ── FHA / VA / Conv MI / USDA fee tables (Phase 4) ──────────────────
+    fn fha_mip(&self, input: &FhaMipInput, year: u16) -> RefDataResult<FhaMipResult>;
+    fn va_funding_fee(&self, input: &VaFeeInput, year: u16) -> RefDataResult<u32>;
+    fn conv_mi_coverage(&self, input: &ConvMiInput, year: u16) -> RefDataResult<ConvMiCoverage>;
+    fn mi_monthly_rate(&self, provider: &str, input: &MiRateInput, year: u16)
+        -> RefDataResult<u16>;
+    fn usda_guarantee_fees(&self, year: u16) -> RefDataResult<UsdaGuaranteeFees>;
+
+    // ── Lender profiles + overlays (Task 4.16) ───────────────────────────────
+    fn lender_profile(&self, lender_id: &str) -> RefDataResult<Option<LenderProfile>>;
+    fn lender_overlays(
+        &self,
+        lender_id: &str,
+        program: ProgramCode,
+    ) -> RefDataResult<Option<LenderOverlays>>;
+
+    // ── MI provider metadata (Task 4.17) ─────────────────────────────────────
+    /// Returns annual rate in bps for the single-premium borrower-paid plan.
+    fn mi_single_premium_bps(
+        &self,
+        provider: &str,
+        input: &MiRateInput,
+        year: u16,
+    ) -> RefDataResult<u16>;
+
+    // ── LLPA matrix (Task 4.18) ──────────────────────────────────────────────
+    fn llpa_total(&self, agency: &str, input: &LlpaInput, year: u16) -> RefDataResult<i32>;
+
+    // ── Rate sheet (Task 4.18) ───────────────────────────────────────────────
+    fn rate_sheet(&self, lender_id: &str) -> RefDataResult<Option<RateSheet>>;
+
+    // ── FHA condo project approval (Task 4.23) ───────────────────────────────
+    fn fha_condo_project(&self, fha_project_id: &str) -> RefDataResult<Option<FhaCondoProject>>;
 }
 
 // ── JsonFileStore ─────────────────────────────────────────────────────────────
@@ -378,6 +421,123 @@ impl RefDataStore for JsonFileStore {
         })?;
         let eff = chrono::NaiveDate::from_ymd_opt(i32::from(year), 1, 1).unwrap_or_default();
         Ok(VersionId::new(dataset, eff))
+    }
+
+    fn fha_mip(&self, input: &FhaMipInput, year: u16) -> RefDataResult<FhaMipResult> {
+        let (_, table): (u16, FhaMipTable) = self.read_versioned_json("fha_mip_rates", year)?;
+        table.lookup(input).ok_or_else(|| {
+            RefDataError::Storage(format!(
+                "no FHA MIP row matched ltv={}, term={}, high_bal={}, streamline={}",
+                input.ltv_bps,
+                input.term_months,
+                input.base_loan_cents,
+                input.is_streamline_pre_2009
+            ))
+        })
+    }
+
+    fn va_funding_fee(&self, input: &VaFeeInput, year: u16) -> RefDataResult<u32> {
+        let (_, table): (u16, VaFeeTable) = self.read_versioned_json("va_funding_fees", year)?;
+        table.lookup(input).ok_or_else(|| {
+            RefDataError::Storage("no VA funding fee row matched input parameters".to_owned())
+        })
+    }
+
+    fn conv_mi_coverage(&self, input: &ConvMiInput, year: u16) -> RefDataResult<ConvMiCoverage> {
+        let (_, table): (u16, ConvMiCoverageTable) =
+            self.read_versioned_json("conv_mi_coverage", year)?;
+        table.lookup(input).ok_or_else(|| {
+            RefDataError::Storage(format!(
+                "no conv MI coverage row matched ltv={}, term={}, program={:?}",
+                input.ltv_bps, input.term_months, input.program
+            ))
+        })
+    }
+
+    fn mi_monthly_rate(
+        &self,
+        provider: &str,
+        input: &MiRateInput,
+        year: u16,
+    ) -> RefDataResult<u16> {
+        let filename = format!("mi_rates_{provider}_monthly");
+        let (_, table): (u16, MiMonthlyTable) = self.read_versioned_json(&filename, year)?;
+        table.lookup_annual_bps(input).ok_or_else(|| {
+            RefDataError::Storage(format!(
+                "no MI rate row matched provider={provider}, ltv={}, coverage={}%, fico={}",
+                input.ltv_bps, input.coverage_pct, input.fico
+            ))
+        })
+    }
+
+    fn usda_guarantee_fees(&self, year: u16) -> RefDataResult<UsdaGuaranteeFees> {
+        let (_, fees): (u16, UsdaGuaranteeFees) =
+            self.read_versioned_json("usda_guarantee_fees", year)?;
+        Ok(fees)
+    }
+
+    fn lender_profile(&self, lender_id: &str) -> RefDataResult<Option<LenderProfile>> {
+        let file: LenderProfileFile = self.read_json("lender_profiles.json")?;
+        Ok(file.lenders.into_iter().find(|l| l.lender_id == lender_id))
+    }
+
+    fn lender_overlays(
+        &self,
+        lender_id: &str,
+        program: ProgramCode,
+    ) -> RefDataResult<Option<LenderOverlays>> {
+        let file: LenderProfileFile = self.read_json("lender_profiles.json")?;
+        Ok(file
+            .overlays
+            .into_iter()
+            .find(|o| o.lender_id == lender_id && o.program == program))
+    }
+
+    fn mi_single_premium_bps(
+        &self,
+        provider: &str,
+        input: &MiRateInput,
+        year: u16,
+    ) -> RefDataResult<u16> {
+        let filename = format!("mi_rates_{provider}_sp_bp_nr");
+        let (_, table): (u16, MiMonthlyTable) = self.read_versioned_json(&filename, year)?;
+        table.lookup_annual_bps(input).ok_or_else(|| {
+            RefDataError::Storage(format!(
+                "no SP row: provider={provider}, ltv={}, cov={}%, fico={}",
+                input.ltv_bps, input.coverage_pct, input.fico
+            ))
+        })
+    }
+
+    fn llpa_total(&self, agency: &str, input: &LlpaInput, year: u16) -> RefDataResult<i32> {
+        let filename = format!("llpa_matrix_{agency}");
+        let (_, matrix): (u16, LlpaMatrix) = self.read_versioned_json(&filename, year)?;
+        Ok(matrix.total_llpa(input))
+    }
+
+    fn rate_sheet(&self, lender_id: &str) -> RefDataResult<Option<RateSheet>> {
+        let entries = std::fs::read_dir(&self.data_dir)
+            .map_err(|e| RefDataError::Storage(format!("read data_dir: {e}")))?;
+        for entry in entries.flatten() {
+            let name = entry.file_name().to_string_lossy().to_string();
+            if name.starts_with("rate_sheet_") && name.ends_with(".json") {
+                if let Ok(file) = self.read_json::<RateSheetFile>(&name) {
+                    if let Some(sheet) = file.sheets.into_iter().find(|s| s.lender_id == lender_id)
+                    {
+                        return Ok(Some(sheet));
+                    }
+                }
+            }
+        }
+        Ok(None)
+    }
+
+    fn fha_condo_project(&self, fha_project_id: &str) -> RefDataResult<Option<FhaCondoProject>> {
+        let file: FhaCondoApprovedFile = self.read_json("fha_condo_approved.json")?;
+        Ok(file
+            .projects
+            .into_iter()
+            .find(|p| p.fha_project_id == fha_project_id))
     }
 }
 

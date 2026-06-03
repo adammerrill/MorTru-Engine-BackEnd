@@ -26,14 +26,20 @@ mod inner {
 
     use crate::{
         cbsa::{CbsaDesignation, CbsaEntry},
+        condo_approval::FhaCondoProject,
+        conv_mi::{ConvMiCoverage, ConvMiInput, MiRateInput, UsdaGuaranteeFees},
         error::{RefDataError, RefDataResult},
+        fha_mip::{FhaMipInput, FhaMipResult},
         geo::{
             AmiTractData, FhaLimitType, FhaLoanLimits, GeoEligibility, GseLoanLimits,
             UsdaIncomeLimit, UsdaMfhByTract, UsdaruralEligibility,
         },
         hoi_rates::StateHoiRate,
+        lender::{LenderOverlays, LenderProfile},
         program_rules::ProgramEligibilityRules,
+        rate_sheet::{LlpaInput, RateSheet},
         store::{JsonFileStore, RefDataStore},
+        va_fee::VaFeeInput,
         versioning::{VersionId, Versioned},
         zip_hoi::ZipHoiRate,
     };
@@ -949,8 +955,72 @@ mod inner {
         }
 
         fn current_version(&self, dataset: &str) -> RefDataResult<VersionId> {
-            // Use JsonFileStore for version lookup (file-based versioning)
             JsonFileStore::new(&self.data_dir).current_version(dataset)
+        }
+
+        fn fha_mip(&self, input: &FhaMipInput, year: u16) -> RefDataResult<FhaMipResult> {
+            JsonFileStore::new(&self.data_dir).fha_mip(input, year)
+        }
+
+        fn va_funding_fee(&self, input: &VaFeeInput, year: u16) -> RefDataResult<u32> {
+            JsonFileStore::new(&self.data_dir).va_funding_fee(input, year)
+        }
+
+        fn conv_mi_coverage(
+            &self,
+            input: &ConvMiInput,
+            year: u16,
+        ) -> RefDataResult<ConvMiCoverage> {
+            JsonFileStore::new(&self.data_dir).conv_mi_coverage(input, year)
+        }
+
+        fn mi_monthly_rate(
+            &self,
+            provider: &str,
+            input: &MiRateInput,
+            year: u16,
+        ) -> RefDataResult<u16> {
+            JsonFileStore::new(&self.data_dir).mi_monthly_rate(provider, input, year)
+        }
+
+        fn usda_guarantee_fees(&self, year: u16) -> RefDataResult<UsdaGuaranteeFees> {
+            JsonFileStore::new(&self.data_dir).usda_guarantee_fees(year)
+        }
+
+        fn lender_profile(&self, lender_id: &str) -> RefDataResult<Option<LenderProfile>> {
+            JsonFileStore::new(&self.data_dir).lender_profile(lender_id)
+        }
+
+        fn lender_overlays(
+            &self,
+            lender_id: &str,
+            program: ProgramCode,
+        ) -> RefDataResult<Option<LenderOverlays>> {
+            JsonFileStore::new(&self.data_dir).lender_overlays(lender_id, program)
+        }
+
+        fn mi_single_premium_bps(
+            &self,
+            provider: &str,
+            input: &MiRateInput,
+            year: u16,
+        ) -> RefDataResult<u16> {
+            JsonFileStore::new(&self.data_dir).mi_single_premium_bps(provider, input, year)
+        }
+
+        fn llpa_total(&self, agency: &str, input: &LlpaInput, year: u16) -> RefDataResult<i32> {
+            JsonFileStore::new(&self.data_dir).llpa_total(agency, input, year)
+        }
+
+        fn rate_sheet(&self, lender_id: &str) -> RefDataResult<Option<RateSheet>> {
+            JsonFileStore::new(&self.data_dir).rate_sheet(lender_id)
+        }
+
+        fn fha_condo_project(
+            &self,
+            fha_project_id: &str,
+        ) -> RefDataResult<Option<FhaCondoProject>> {
+            JsonFileStore::new(&self.data_dir).fha_condo_project(fha_project_id)
         }
     }
 

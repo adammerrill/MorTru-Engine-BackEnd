@@ -1,0 +1,8 @@
+{
+  "fiscal_year": 2025,
+  "effective_date": "2024-10-01",
+  "source": "USDA RD Instruction 440.1 Exhibit K; HB 1-3555 Chapter 16",
+  "upfront_fee_bps": 100,
+  "annual_fee_bps": 35,
+  "notes": "Upfront fee may be financed into loan above appraised value. Annual fee assessed on scheduled unpaid principal balance."
+}

@@ -1,0 +1,91 @@
+{
+  "effective_date": "2023-04-07",
+  "source": "VA Pamphlet VAP26-7 Chapter 8; VA Circular 26-23-11",
+  "notes": "Exempt veterans (disability, surviving spouse) pay 0 — pass VeteranCategory::Exempt",
+  "rows": [
+    {
+      "veteran_category": "regular_military",
+      "loan_purpose": "purchase_or_construction",
+      "down_payment_min_bps": 0,     "down_payment_max_bps": 500,
+      "first_use_fee_bps": 215,       "subsequent_use_fee_bps": 330
+    },
+    {
+      "veteran_category": "regular_military",
+      "loan_purpose": "purchase_or_construction",
+      "down_payment_min_bps": 500,   "down_payment_max_bps": 1000,
+      "first_use_fee_bps": 150,       "subsequent_use_fee_bps": 150
+    },
+    {
+      "veteran_category": "regular_military",
+      "loan_purpose": "purchase_or_construction",
+      "down_payment_min_bps": 1000,  "down_payment_max_bps": 999999,
+      "first_use_fee_bps": 125,       "subsequent_use_fee_bps": 125
+    },
+    {
+      "veteran_category": "reserves_national_guard",
+      "loan_purpose": "purchase_or_construction",
+      "down_payment_min_bps": 0,     "down_payment_max_bps": 500,
+      "first_use_fee_bps": 240,       "subsequent_use_fee_bps": 330
+    },
+    {
+      "veteran_category": "reserves_national_guard",
+      "loan_purpose": "purchase_or_construction",
+      "down_payment_min_bps": 500,   "down_payment_max_bps": 1000,
+      "first_use_fee_bps": 175,       "subsequent_use_fee_bps": 175
+    },
+    {
+      "veteran_category": "reserves_national_guard",
+      "loan_purpose": "purchase_or_construction",
+      "down_payment_min_bps": 1000,  "down_payment_max_bps": 999999,
+      "first_use_fee_bps": 150,       "subsequent_use_fee_bps": 150
+    },
+    {
+      "veteran_category": "regular_military",
+      "loan_purpose": "cash_out_refinance",
+      "down_payment_min_bps": 0,     "down_payment_max_bps": 999999,
+      "first_use_fee_bps": 215,       "subsequent_use_fee_bps": 330
+    },
+    {
+      "veteran_category": "reserves_national_guard",
+      "loan_purpose": "cash_out_refinance",
+      "down_payment_min_bps": 0,     "down_payment_max_bps": 999999,
+      "first_use_fee_bps": 240,       "subsequent_use_fee_bps": 330
+    },
+    {
+      "veteran_category": "regular_military",
+      "loan_purpose": "irrrl",
+      "down_payment_min_bps": 0,     "down_payment_max_bps": 999999,
+      "first_use_fee_bps": 50,        "subsequent_use_fee_bps": 50
+    },
+    {
+      "veteran_category": "reserves_national_guard",
+      "loan_purpose": "irrrl",
+      "down_payment_min_bps": 0,     "down_payment_max_bps": 999999,
+      "first_use_fee_bps": 50,        "subsequent_use_fee_bps": 50
+    },
+    {
+      "veteran_category": "regular_military",
+      "loan_purpose": "manufactured_home_not_permanent",
+      "down_payment_min_bps": 0,     "down_payment_max_bps": 999999,
+      "first_use_fee_bps": 100,       "subsequent_use_fee_bps": 100
+    },
+    {
+      "veteran_category": "reserves_national_guard",
+      "loan_purpose": "manufactured_home_not_permanent",
+      "down_payment_min_bps": 0,     "down_payment_max_bps": 999999,
+      "first_use_fee_bps": 100,       "subsequent_use_fee_bps": 100
+    },
+    {
+      "veteran_category": "regular_military",
+      "loan_purpose": "loan_assumption",
+      "down_payment_min_bps": 0,     "down_payment_max_bps": 999999,
+      "first_use_fee_bps": 50,        "subsequent_use_fee_bps": 50
+    },
+    {
+      "veteran_category": "reserves_national_guard",
+      "loan_purpose": "loan_assumption",
+      "down_payment_min_bps": 0,     "down_payment_max_bps": 999999,
+      "first_use_fee_bps": 50,        "subsequent_use_fee_bps": 50
+    }
+  ]
+}

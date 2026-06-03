@@ -1,0 +1,72 @@
+{
+  "high_balance_threshold_cents": 72620000,
+  "effective_date": "2023-03-20",
+  "source": "HUD Handbook 4000.1 Appendix 1.0, last revised 2025-11-26",
+  "rows": [
+    {
+      "scenario": "standard_gt15yr_standard_balance_ltv_le90",
+      "is_streamline_pre_2009": false, "term_le_15_years": false, "high_balance": false,
+      "ltv_max_bps": 9000, "ufmip_bps": 175, "annual_mip_bps": 50, "duration_years": 11
+    },
+    {
+      "scenario": "standard_gt15yr_standard_balance_ltv_le95",
+      "is_streamline_pre_2009": false, "term_le_15_years": false, "high_balance": false,
+      "ltv_max_bps": 9500, "ufmip_bps": 175, "annual_mip_bps": 50, "duration_years": null
+    },
+    {
+      "scenario": "standard_gt15yr_standard_balance_ltv_over95",
+      "is_streamline_pre_2009": false, "term_le_15_years": false, "high_balance": false,
+      "ltv_max_bps": 10000, "ufmip_bps": 175, "annual_mip_bps": 55, "duration_years": null
+    },
+    {
+      "scenario": "standard_gt15yr_high_balance_ltv_le90",
+      "is_streamline_pre_2009": false, "term_le_15_years": false, "high_balance": true,
+      "ltv_max_bps": 9000, "ufmip_bps": 175, "annual_mip_bps": 70, "duration_years": 11
+    },
+    {
+      "scenario": "standard_gt15yr_high_balance_ltv_le95",
+      "is_streamline_pre_2009": false, "term_le_15_years": false, "high_balance": true,
+      "ltv_max_bps": 9500, "ufmip_bps": 175, "annual_mip_bps": 70, "duration_years": null
+    },
+    {
+      "scenario": "standard_gt15yr_high_balance_ltv_over95",
+      "is_streamline_pre_2009": false, "term_le_15_years": false, "high_balance": true,
+      "ltv_max_bps": 10000, "ufmip_bps": 175, "annual_mip_bps": 75, "duration_years": null
+    },
+    {
+      "scenario": "standard_le15yr_standard_balance_ltv_le90",
+      "is_streamline_pre_2009": false, "term_le_15_years": true, "high_balance": false,
+      "ltv_max_bps": 9000, "ufmip_bps": 175, "annual_mip_bps": 15, "duration_years": 11
+    },
+    {
+      "scenario": "standard_le15yr_standard_balance_ltv_over90",
+      "is_streamline_pre_2009": false, "term_le_15_years": true, "high_balance": false,
+      "ltv_max_bps": 10000, "ufmip_bps": 175, "annual_mip_bps": 40, "duration_years": null
+    },
+    {
+      "scenario": "standard_le15yr_high_balance_ltv_le78",
+      "is_streamline_pre_2009": false, "term_le_15_years": true, "high_balance": true,
+      "ltv_max_bps": 7800, "ufmip_bps": 175, "annual_mip_bps": 15, "duration_years": 11
+    },
+    {
+      "scenario": "standard_le15yr_high_balance_ltv_le90",
+      "is_streamline_pre_2009": false, "term_le_15_years": true, "high_balance": true,
+      "ltv_max_bps": 9000, "ufmip_bps": 175, "annual_mip_bps": 40, "duration_years": 11
+    },
+    {
+      "scenario": "standard_le15yr_high_balance_ltv_over90",
+      "is_streamline_pre_2009": false, "term_le_15_years": true, "high_balance": true,
+      "ltv_max_bps": 10000, "ufmip_bps": 175, "annual_mip_bps": 65, "duration_years": null
+    },
+    {
+      "scenario": "streamline_pre2009_ltv_le90",
+      "is_streamline_pre_2009": true, "term_le_15_years": false, "high_balance": false,
+      "ltv_max_bps": 9000, "ufmip_bps": 1, "annual_mip_bps": 55, "duration_years": 11
+    },
+    {
+      "scenario": "streamline_pre2009_ltv_over90",
+      "is_streamline_pre_2009": true, "term_le_15_years": false, "high_balance": false,
+      "ltv_max_bps": 10000, "ufmip_bps": 1, "annual_mip_bps": 55, "duration_years": null
+    }
+  ]
+}

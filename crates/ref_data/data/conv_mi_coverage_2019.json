@@ -1,0 +1,118 @@
+{
+  "effective_date": "2019-08-07",
+  "sources": [
+    "Fannie Mae B7-1-02 (08/07/2019)",
+    "Freddie Mac Single-Family Guide Section 4701.1 (02/04/2026)"
+  ],
+  "notes": "Standard = agency-mandated level. Minimum = available with MI LLPA surcharge (Fannie 'minimum coverage' / Freddie 'custom coverage').",
+  "rows": [
+    {
+      "program": "standard", "term_le_20yr": true, "is_standard_term": false, "is_manufactured": false,
+      "ltv_min_bps": 8000, "ltv_max_bps": 8500, "standard_coverage_pct": 6,  "minimum_coverage_pct": 6,  "llpa_with_minimum": false
+    },
+    {
+      "program": "standard", "term_le_20yr": true, "is_standard_term": false, "is_manufactured": false,
+      "ltv_min_bps": 8500, "ltv_max_bps": 9000, "standard_coverage_pct": 12, "minimum_coverage_pct": 12, "llpa_with_minimum": false
+    },
+    {
+      "program": "standard", "term_le_20yr": true, "is_standard_term": false, "is_manufactured": false,
+      "ltv_min_bps": 9000, "ltv_max_bps": 9500, "standard_coverage_pct": 25, "minimum_coverage_pct": 16, "llpa_with_minimum": true
+    },
+    {
+      "program": "standard", "term_le_20yr": true, "is_standard_term": false, "is_manufactured": false,
+      "ltv_min_bps": 9500, "ltv_max_bps": 9700, "standard_coverage_pct": 35, "minimum_coverage_pct": 18, "llpa_with_minimum": true
+    },
+    {
+      "program": "standard", "term_le_20yr": false, "is_standard_term": true, "is_manufactured": false,
+      "ltv_min_bps": 8000, "ltv_max_bps": 8500, "standard_coverage_pct": 12, "minimum_coverage_pct": 6,  "llpa_with_minimum": true
+    },
+    {
+      "program": "standard", "term_le_20yr": false, "is_standard_term": true, "is_manufactured": false,
+      "ltv_min_bps": 8500, "ltv_max_bps": 9000, "standard_coverage_pct": 25, "minimum_coverage_pct": 12, "llpa_with_minimum": true
+    },
+    {
+      "program": "standard", "term_le_20yr": false, "is_standard_term": true, "is_manufactured": false,
+      "ltv_min_bps": 9000, "ltv_max_bps": 9500, "standard_coverage_pct": 30, "minimum_coverage_pct": 16, "llpa_with_minimum": true
+    },
+    {
+      "program": "standard", "term_le_20yr": false, "is_standard_term": true, "is_manufactured": false,
+      "ltv_min_bps": 9500, "ltv_max_bps": 9700, "standard_coverage_pct": 35, "minimum_coverage_pct": 18, "llpa_with_minimum": true
+    },
+    {
+      "program": "home_ready", "term_le_20yr": true, "is_standard_term": false, "is_manufactured": false,
+      "ltv_min_bps": 8000, "ltv_max_bps": 8500, "standard_coverage_pct": 6,  "minimum_coverage_pct": 6,  "llpa_with_minimum": false
+    },
+    {
+      "program": "home_ready", "term_le_20yr": true, "is_standard_term": false, "is_manufactured": false,
+      "ltv_min_bps": 8500, "ltv_max_bps": 9000, "standard_coverage_pct": 12, "minimum_coverage_pct": 12, "llpa_with_minimum": false
+    },
+    {
+      "program": "home_ready", "term_le_20yr": true, "is_standard_term": false, "is_manufactured": false,
+      "ltv_min_bps": 9000, "ltv_max_bps": 9500, "standard_coverage_pct": 25, "minimum_coverage_pct": 16, "llpa_with_minimum": true
+    },
+    {
+      "program": "home_ready", "term_le_20yr": true, "is_standard_term": false, "is_manufactured": false,
+      "ltv_min_bps": 9500, "ltv_max_bps": 9700, "standard_coverage_pct": 25, "minimum_coverage_pct": 18, "llpa_with_minimum": true
+    },
+    {
+      "program": "home_ready", "term_le_20yr": false, "is_standard_term": true, "is_manufactured": false,
+      "ltv_min_bps": 8000, "ltv_max_bps": 8500, "standard_coverage_pct": 12, "minimum_coverage_pct": 6,  "llpa_with_minimum": true
+    },
+    {
+      "program": "home_ready", "term_le_20yr": false, "is_standard_term": true, "is_manufactured": false,
+      "ltv_min_bps": 8500, "ltv_max_bps": 9000, "standard_coverage_pct": 25, "minimum_coverage_pct": 12, "llpa_with_minimum": true
+    },
+    {
+      "program": "home_ready", "term_le_20yr": false, "is_standard_term": true, "is_manufactured": false,
+      "ltv_min_bps": 9000, "ltv_max_bps": 9500, "standard_coverage_pct": 25, "minimum_coverage_pct": 16, "llpa_with_minimum": true
+    },
+    {
+      "program": "home_ready", "term_le_20yr": false, "is_standard_term": true, "is_manufactured": false,
+      "ltv_min_bps": 9500, "ltv_max_bps": 9700, "standard_coverage_pct": 25, "minimum_coverage_pct": 18, "llpa_with_minimum": true
+    },
+    {
+      "program": "home_possible", "term_le_20yr": true, "is_standard_term": false, "is_manufactured": false,
+      "ltv_min_bps": 8000, "ltv_max_bps": 8500, "standard_coverage_pct": 6,  "minimum_coverage_pct": 6,  "llpa_with_minimum": false
+    },
+    {
+      "program": "home_possible", "term_le_20yr": true, "is_standard_term": false, "is_manufactured": false,
+      "ltv_min_bps": 8500, "ltv_max_bps": 9000, "standard_coverage_pct": 12, "minimum_coverage_pct": 12, "llpa_with_minimum": false
+    },
+    {
+      "program": "home_possible", "term_le_20yr": true, "is_standard_term": false, "is_manufactured": false,
+      "ltv_min_bps": 9000, "ltv_max_bps": 9500, "standard_coverage_pct": 25, "minimum_coverage_pct": 16, "llpa_with_minimum": true
+    },
+    {
+      "program": "home_possible", "term_le_20yr": true, "is_standard_term": false, "is_manufactured": false,
+      "ltv_min_bps": 9500, "ltv_max_bps": 9700, "standard_coverage_pct": 25, "minimum_coverage_pct": 18, "llpa_with_minimum": true
+    },
+    {
+      "program": "home_possible", "term_le_20yr": false, "is_standard_term": true, "is_manufactured": false,
+      "ltv_min_bps": 8000, "ltv_max_bps": 8500, "standard_coverage_pct": 12, "minimum_coverage_pct": 6,  "llpa_with_minimum": true
+    },
+    {
+      "program": "home_possible", "term_le_20yr": false, "is_standard_term": true, "is_manufactured": false,
+      "ltv_min_bps": 8500, "ltv_max_bps": 9000, "standard_coverage_pct": 25, "minimum_coverage_pct": 12, "llpa_with_minimum": true
+    },
+    {
+      "program": "home_possible", "term_le_20yr": false, "is_standard_term": true, "is_manufactured": false,
+      "ltv_min_bps": 9000, "ltv_max_bps": 9500, "standard_coverage_pct": 25, "minimum_coverage_pct": 16, "llpa_with_minimum": true
+    },
+    {
+      "program": "home_possible", "term_le_20yr": false, "is_standard_term": true, "is_manufactured": false,
+      "ltv_min_bps": 9500, "ltv_max_bps": 9700, "standard_coverage_pct": 25, "minimum_coverage_pct": 18, "llpa_with_minimum": true
+    },
+    {
+      "program": "standard", "term_le_20yr": false, "is_standard_term": true, "is_manufactured": true,
+      "ltv_min_bps": 8000, "ltv_max_bps": 8500, "standard_coverage_pct": 12, "minimum_coverage_pct": 6,  "llpa_with_minimum": true
+    },
+    {
+      "program": "standard", "term_le_20yr": false, "is_standard_term": true, "is_manufactured": true,
+      "ltv_min_bps": 8500, "ltv_max_bps": 9000, "standard_coverage_pct": 25, "minimum_coverage_pct": 12, "llpa_with_minimum": true
+    },
+    {
+      "program": "standard", "term_le_20yr": false, "is_standard_term": true, "is_manufactured": true,
+      "ltv_min_bps": 9000, "ltv_max_bps": 9500, "standard_coverage_pct": 30, "minimum_coverage_pct": 16, "llpa_with_minimum": true
+    }
+  ]
+}
