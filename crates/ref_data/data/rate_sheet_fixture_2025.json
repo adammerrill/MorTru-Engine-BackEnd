@@ -1,0 +1,19 @@
+{
+  "sheets": [
+    {
+      "lender_id": "lndr_abc_mortgage",
+      "as_of": "2025-01-15T08:00:00Z",
+      "entries": [
+        {"product": "conv_30yr_fixed", "lock_days": 30, "par_rate_bps": 7125, "price_at_par":  0.00},
+        {"product": "conv_30yr_fixed", "lock_days": 45, "par_rate_bps": 7125, "price_at_par": -0.25},
+        {"product": "conv_30yr_fixed", "lock_days": 60, "par_rate_bps": 7125, "price_at_par": -0.50},
+        {"product": "conv_15yr_fixed", "lock_days": 30, "par_rate_bps": 6625, "price_at_par":  0.00},
+        {"product": "fha_30yr_fixed",  "lock_days": 30, "par_rate_bps": 6875, "price_at_par":  0.00},
+        {"product": "fha_30yr_fixed",  "lock_days": 45, "par_rate_bps": 6875, "price_at_par": -0.25},
+        {"product": "va_30yr_fixed",   "lock_days": 30, "par_rate_bps": 6750, "price_at_par":  0.00},
+        {"product": "va_30yr_fixed",   "lock_days": 45, "par_rate_bps": 6750, "price_at_par": -0.25},
+        {"product": "usda_30yr_fixed", "lock_days": 30, "par_rate_bps": 6875, "price_at_par":  0.00}
+      ]
+    }
+  ]
+}

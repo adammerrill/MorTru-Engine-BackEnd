@@ -1,0 +1,62 @@
+{
+  "lenders": [
+    {
+      "lender_id": "lndr_abc_mortgage",
+      "name": "ABC Mortgage Company",
+      "nmls_id": "1234567",
+      "active": true
+    },
+    {
+      "lender_id": "lndr_first_national",
+      "name": "First National Bank Home Loans",
+      "nmls_id": "9876543",
+      "active": true
+    },
+    {
+      "lender_id": "lndr_community_cu",
+      "name": "Community Credit Union Mortgage",
+      "nmls_id": "5551234",
+      "active": true
+    },
+    {
+      "lender_id": "lndr_inactive_test",
+      "name": "Inactive Lender (test)",
+      "nmls_id": null,
+      "active": false
+    }
+  ],
+  "overlays": [
+    {
+      "lender_id": "lndr_abc_mortgage",
+      "program": "fha",
+      "min_credit_score_override": 620,
+      "max_ltv_bps_override": null,
+      "dti_max_bps_override": 2800,
+      "effective_date": "2024-01-01"
+    },
+    {
+      "lender_id": "lndr_abc_mortgage",
+      "program": "conventional",
+      "min_credit_score_override": 660,
+      "max_ltv_bps_override": 9500,
+      "dti_max_bps_override": null,
+      "effective_date": "2024-01-01"
+    },
+    {
+      "lender_id": "lndr_first_national",
+      "program": "va",
+      "min_credit_score_override": 640,
+      "max_ltv_bps_override": null,
+      "dti_max_bps_override": null,
+      "effective_date": "2024-03-15"
+    },
+    {
+      "lender_id": "lndr_first_national",
+      "program": "usda",
+      "min_credit_score_override": 660,
+      "max_ltv_bps_override": null,
+      "dti_max_bps_override": 2500,
+      "effective_date": "2024-03-15"
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "effective_date": "2024-01-01",
+  "providers": [
+    {
+      "provider_id": "nmi",
+      "name": "National Mortgage Insurance Corporation",
+      "short_name": "National MI",
+      "nmls_id": null,
+      "approved_by_fannie": true,
+      "approved_by_freddie": true,
+      "approved_by_fha": false,
+      "supported_plans": ["monthly", "single_premium_bp_nr", "single_premium_bp_refundable", "single_premium_lp"],
+      "floor_monthly_bps": 14,
+      "floor_single_premium_bps": 40,
+      "active": true
+    },
+    {
+      "provider_id": "mgic",
+      "name": "Mortgage Guaranty Insurance Corporation",
+      "short_name": "MGIC",
+      "nmls_id": null,
+      "approved_by_fannie": true,
+      "approved_by_freddie": true,
+      "approved_by_fha": false,
+      "supported_plans": ["monthly", "single_premium_bp_nr", "single_premium_lp"],
+      "floor_monthly_bps": 14,
+      "floor_single_premium_bps": 40,
+      "active": true
+    },
+    {
+      "provider_id": "radian",
+      "name": "Radian Guaranty Inc.",
+      "short_name": "Radian",
+      "nmls_id": null,
+      "approved_by_fannie": true,
+      "approved_by_freddie": true,
+      "approved_by_fha": false,
+      "supported_plans": ["monthly", "single_premium_bp_nr", "single_premium_lp"],
+      "floor_monthly_bps": 14,
+      "floor_single_premium_bps": 40,
+      "active": true
+    }
+  ]
+}

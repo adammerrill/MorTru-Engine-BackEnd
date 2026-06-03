@@ -1,0 +1,36 @@
+{
+  "provider": "national_mi",
+  "product": "single_premium_borrower_paid_non_refundable",
+  "source_doc": "NTL.SP.BP.NR.2022-03",
+  "effective_date": "2022-03-01",
+  "floor_bps": 30,
+  "notes": "One-time upfront premium as % of loan amount × 100 stored as bps. Non-refundable except under HPA.",
+  "fico_bands": [
+    {"index": 0, "min": 760, "max": 999},
+    {"index": 1, "min": 740, "max": 759},
+    {"index": 2, "min": 720, "max": 739},
+    {"index": 3, "min": 700, "max": 719},
+    {"index": 4, "min": 680, "max": 699},
+    {"index": 5, "min": 660, "max": 679},
+    {"index": 6, "min": 640, "max": 659},
+    {"index": 7, "min": 620, "max": 639}
+  ],
+  "rows": [
+    {"term_gt_20yr": true,  "ltv_min_bps": 9500, "ltv_max_bps": 9700, "coverage_pct": 35, "rates_by_fico": [158, 219, 275, 318, 368, 465, 493, 596], "floor_bps": 30},
+    {"term_gt_20yr": true,  "ltv_min_bps": 9500, "ltv_max_bps": 9700, "coverage_pct": 30, "rates_by_fico": [147, 204, 253, 292, 337, 426, 452, 546], "floor_bps": 30},
+    {"term_gt_20yr": true,  "ltv_min_bps": 9500, "ltv_max_bps": 9700, "coverage_pct": 25, "rates_by_fico": [136, 188, 231, 265, 306, 386, 410, 495], "floor_bps": 30},
+    {"term_gt_20yr": true,  "ltv_min_bps": 9500, "ltv_max_bps": 9700, "coverage_pct": 18, "rates_by_fico": [115, 169, 177, 225, 255, 293, 311, 375], "floor_bps": 30},
+    {"term_gt_20yr": true,  "ltv_min_bps": 9000, "ltv_max_bps": 9500, "coverage_pct": 35, "rates_by_fico": [125, 187, 222, 264, 305, 386, 405, 493], "floor_bps": 30},
+    {"term_gt_20yr": true,  "ltv_min_bps": 9000, "ltv_max_bps": 9500, "coverage_pct": 30, "rates_by_fico": [122, 173, 216, 252, 292, 369, 391, 472], "floor_bps": 30},
+    {"term_gt_20yr": true,  "ltv_min_bps": 9000, "ltv_max_bps": 9500, "coverage_pct": 25, "rates_by_fico": [120, 159, 211, 241, 279, 352, 374, 451], "floor_bps": 30},
+    {"term_gt_20yr": true,  "ltv_min_bps": 9000, "ltv_max_bps": 9500, "coverage_pct": 16, "rates_by_fico": [ 96, 126, 165, 181, 198, 227, 241, 291], "floor_bps": 30},
+    {"term_gt_20yr": true,  "ltv_min_bps": 8500, "ltv_max_bps": 9000, "coverage_pct": 30, "rates_by_fico": [104, 139, 178, 210, 239, 300, 318, 384], "floor_bps": 30},
+    {"term_gt_20yr": true,  "ltv_min_bps": 8500, "ltv_max_bps": 9000, "coverage_pct": 25, "rates_by_fico": [ 87, 116, 148, 175, 199, 250, 265, 320], "floor_bps": 30},
+    {"term_gt_20yr": true,  "ltv_min_bps": 8500, "ltv_max_bps": 9000, "coverage_pct": 17, "rates_by_fico": [ 70,  91, 113, 133, 152, 190, 201, 243], "floor_bps": 30},
+    {"term_gt_20yr": true,  "ltv_min_bps": 8500, "ltv_max_bps": 9000, "coverage_pct": 12, "rates_by_fico": [ 59,  74,  89, 105, 120, 150, 159, 192], "floor_bps": 30},
+    {"term_gt_20yr": true,  "ltv_min_bps": 8000, "ltv_max_bps": 8500, "coverage_pct": 25, "rates_by_fico": [ 83,  97, 115, 128, 153, 180, 191, 229], "floor_bps": 30},
+    {"term_gt_20yr": true,  "ltv_min_bps": 8000, "ltv_max_bps": 8500, "coverage_pct": 17, "rates_by_fico": [ 64,  74,  88,  98, 117, 137, 146, 174], "floor_bps": 30},
+    {"term_gt_20yr": true,  "ltv_min_bps": 8000, "ltv_max_bps": 8500, "coverage_pct": 12, "rates_by_fico": [ 47,  54,  64,  71,  85, 100, 106, 127], "floor_bps": 30},
+    {"term_gt_20yr": true,  "ltv_min_bps": 8000, "ltv_max_bps": 8500, "coverage_pct":  6, "rates_by_fico": [ 43,  50,  59,  65,  78,  91,  96, 116], "floor_bps": 30}
+  ]
+}

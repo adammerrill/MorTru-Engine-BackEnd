@@ -1,0 +1,54 @@
+{
+  "source_date": "2025-01-15",
+  "source": "HUD Approved Condominium Project List (excerpt for test fixtures)",
+  "projects": [
+    {
+      "fha_project_id": "A000001TX",
+      "project_name": "Kyle Townhomes at Plum Creek",
+      "address": "1000 Plum Creek Pkwy",
+      "city": "Kyle",
+      "state": "TX",
+      "zip5": "78640",
+      "county_fips": "48209",
+      "status": "approved",
+      "approval_expiry": "2026-12-31",
+      "units_in_project": 120
+    },
+    {
+      "fha_project_id": "A000002TX",
+      "project_name": "Buda Springs Condominiums",
+      "address": "500 Main St",
+      "city": "Buda",
+      "state": "TX",
+      "zip5": "78610",
+      "county_fips": "48209",
+      "status": "approved",
+      "approval_expiry": "2027-06-30",
+      "units_in_project": 88
+    },
+    {
+      "fha_project_id": "A000003TX",
+      "project_name": "South Congress Lofts (expired)",
+      "address": "4200 S Congress Ave",
+      "city": "Austin",
+      "state": "TX",
+      "zip5": "78745",
+      "county_fips": "48453",
+      "status": "expired",
+      "approval_expiry": "2023-11-30",
+      "units_in_project": 64
+    },
+    {
+      "fha_project_id": "A000004TX",
+      "project_name": "Riverside Commons (withdrawn)",
+      "address": "1800 Riverside Dr",
+      "city": "Austin",
+      "state": "TX",
+      "zip5": "78741",
+      "county_fips": "48453",
+      "status": "withdrawn",
+      "approval_expiry": null,
+      "units_in_project": 200
+    }
+  ]
+}
