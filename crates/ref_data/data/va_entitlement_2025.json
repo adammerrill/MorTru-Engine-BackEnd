@@ -1,0 +1,16 @@
+{
+  "effective_date": "2025-01-01",
+  "source_citation": "38 U.S.C. 3703(a)(1)(A); 38 CFR 36.4302; VA Lenders Handbook (Pamphlet 26-7) Ch.3 & Ch.7; Blue Water Navy Vietnam Veterans Act (Pub.L. 116-23, eff. 2020-01-01); VA Maximum Guaranty Calculation circular. Statutory guaranty bands are stable; verify against current circular.",
+  "basic_entitlement_cents": 3600000,
+  "tier1_ceiling_cents": 14400000,
+  "guaranty_pct_bps": 2500,
+  "joint_nonveteran_dp_pct_bps": 1250,
+  "guaranty_bands": [
+    {"min_loan_cents": 0,         "max_loan_cents": 4500000,   "pct_bps": 5000, "flat_cents": null,    "max_cents": null,    "note": "<= $45,000: 50% of loan (38 CFR 36.4302(a)(1))"},
+    {"min_loan_cents": 4500000,   "max_loan_cents": 5625000,   "pct_bps": null, "flat_cents": 2250000, "max_cents": null,    "note": "$45,001-$56,250: flat $22,500 (a)(2)"},
+    {"min_loan_cents": 5625000,   "max_loan_cents": 14400000,  "pct_bps": 4000, "flat_cents": null,    "max_cents": 3600000, "note": "$56,251-$144,000: lesser of $36,000 or 40% of loan (a)(3)"},
+    {"min_loan_cents": 14400000,  "max_loan_cents": 999999999999, "pct_bps": 2500, "flat_cents": null, "max_cents": null, "note": "> $144,000 (full entitlement): 25% of loan, NO cap post-2020 (Blue Water Navy Act; CFR 36.4302(a)(4) $60k cap is stale pre-2020 text)"}
+  ],
+  "irrrl_guaranty_pct_bps": 2500,
+  "irrrl_note": "IRRRL (interest rate reduction refinance): VA guarantees 25% of the loan regardless of amount or remaining entitlement (38 CFR 36.4302(b))."
+}

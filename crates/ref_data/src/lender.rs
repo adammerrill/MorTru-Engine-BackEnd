@@ -39,6 +39,10 @@ pub struct LenderOverlays {
     pub max_ltv_bps_override: Option<u32>,
     /// Override maximum front-end DTI in basis points. Must be ≤ agency maximum.
     pub dti_max_bps_override: Option<u32>,
+    /// Task 4.27: lender's maximum VA loan amount in cents. None = no cap
+    /// beyond VA/appraisal. Tighten-only (reduces the achievable maximum).
+    #[serde(default)]
+    pub max_va_loan_amount_cents: Option<i64>,
     pub effective_date: NaiveDate,
 }
 

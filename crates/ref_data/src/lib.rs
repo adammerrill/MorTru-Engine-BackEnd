@@ -14,6 +14,7 @@ pub mod program_rules;
 pub mod rate_sheet;
 pub mod seller_concessions;
 pub mod store;
+pub mod va_entitlement;
 pub mod va_fee;
 pub mod versioning;
 pub mod zip_hoi;
@@ -45,6 +46,11 @@ pub use seller_concessions::{
     Occupancy as ConcessionOccupancy, SellerConcessionCap, SellerConcessionCapFile,
 };
 pub use store::{JsonFileStore, RefDataStore};
+pub use va_entitlement::{
+    compute_va_guaranty, va_county_loan_limit, CoeEntitlementCode, EntitlementStatus, GuarantyBand,
+    VaEntitlementParams, VaGuarantyInput, VaGuarantyResult,
+    VaLoanPurpose as VaEntitlementLoanPurpose,
+};
 pub use va_fee::{VaFeeInput, VaLoanPurpose, VaUse, VeteranCategory};
 pub use versioning::{DataVersionManifest, VersionId, Versioned};
 pub use zip_hoi::ZipHoiRate;

@@ -130,6 +130,7 @@ fn test_lender_overlay_never_loosens_rules() {
         min_credit_score_override: Some(500), // below agency 580
         max_ltv_bps_override: Some(10000),    // above agency max
         dti_max_bps_override: Some(9999),
+        max_va_loan_amount_cents: None,
         effective_date: NaiveDate::from_ymd_opt(2024, 1, 1).unwrap(),
     };
     let result = bad_overlay.apply(&agency);

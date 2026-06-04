@@ -42,6 +42,7 @@ mod inner {
         rate_sheet::{LlpaInput, RateSheet},
         seller_concessions::{ConcessionCapInput, ConcessionOutcome, SellerConcessionCap},
         store::{JsonFileStore, RefDataStore},
+        va_entitlement::{VaGuarantyInput, VaGuarantyResult},
         va_fee::VaFeeInput,
         versioning::{VersionId, Versioned},
         zip_hoi::ZipHoiRate,
@@ -1089,6 +1090,22 @@ mod inner {
                 proposed,
                 year,
             )
+        }
+
+        fn va_county_loan_limit(
+            &self,
+            gse_limit: Cents,
+            year: u16,
+        ) -> RefDataResult<Derived<Cents>> {
+            JsonFileStore::new(&self.data_dir).va_county_loan_limit(gse_limit, year)
+        }
+
+        fn va_guaranty(
+            &self,
+            input: &VaGuarantyInput,
+            year: u16,
+        ) -> RefDataResult<Derived<VaGuarantyResult>> {
+            JsonFileStore::new(&self.data_dir).va_guaranty(input, year)
         }
     }
 

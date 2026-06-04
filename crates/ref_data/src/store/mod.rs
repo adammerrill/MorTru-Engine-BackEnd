@@ -24,6 +24,7 @@ use crate::{
     seller_concessions::{
         ConcessionCapInput, ConcessionOutcome, SellerConcessionCap, SellerConcessionCapFile,
     },
+    va_entitlement::{VaEntitlementFile, VaGuarantyInput, VaGuarantyResult},
     va_fee::{VaFeeInput, VaFeeTable},
     versioning::{VersionId, Versioned},
     zip_hoi::ZipHoiRate,
@@ -134,6 +135,14 @@ pub trait RefDataStore: Send + Sync {
         proposed: Cents,
         year: u16,
     ) -> RefDataResult<Option<Derived<ConcessionOutcome>>>;
+
+    // ── VA loan limits / guaranty / entitlement (Task 4.27) ──
+    fn va_county_loan_limit(&self, gse_limit: Cents, year: u16) -> RefDataResult<Derived<Cents>>;
+    fn va_guaranty(
+        &self,
+        input: &VaGuarantyInput,
+        year: u16,
+    ) -> RefDataResult<Derived<VaGuarantyResult>>;
 
     // ── Lender profiles + overlays (Task 4.16) ───────────────────────────────
     fn lender_profile(&self, lender_id: &str) -> RefDataResult<Option<LenderProfile>>;
@@ -595,6 +604,36 @@ impl RefDataStore for JsonFileStore {
             self.read_versioned_json("seller_concession_caps", year)?;
         let fname = format!("seller_concession_caps_{resolved}.json");
         Ok(file.evaluate(input, basis_amount, proposed, &fname, year, resolved))
+    }
+
+    fn va_county_loan_limit(&self, gse_limit: Cents, year: u16) -> RefDataResult<Derived<Cents>> {
+        let (resolved, file): (u16, VaEntitlementFile) =
+            self.read_versioned_json("va_entitlement", year)?;
+        let fname = format!("va_entitlement_{resolved}.json");
+        Ok(crate::va_entitlement::va_county_loan_limit(
+            gse_limit,
+            &file.params,
+            &fname,
+            year,
+            resolved,
+        ))
+    }
+
+    fn va_guaranty(
+        &self,
+        input: &VaGuarantyInput,
+        year: u16,
+    ) -> RefDataResult<Derived<VaGuarantyResult>> {
+        let (resolved, file): (u16, VaEntitlementFile) =
+            self.read_versioned_json("va_entitlement", year)?;
+        let fname = format!("va_entitlement_{resolved}.json");
+        Ok(crate::va_entitlement::compute_va_guaranty(
+            input,
+            &file.params,
+            &fname,
+            year,
+            resolved,
+        ))
     }
 
     fn lender_profile(&self, lender_id: &str) -> RefDataResult<Option<LenderProfile>> {
