@@ -28,6 +28,7 @@ mod inner {
         cbsa::{CbsaDesignation, CbsaEntry},
         condo_approval::FhaCondoProject,
         conv_mi::{ConvMiCoverage, ConvMiInput, MiRateInput, UsdaGuaranteeFees},
+        dpa_catalog::{DpaEligibilityInput, DpaOutcome, DpaProgram},
         error::{RefDataError, RefDataResult},
         fha_mip::{FhaMipInput, FhaMipResult},
         geo::{
@@ -1039,6 +1040,31 @@ mod inner {
             year: u16,
         ) -> RefDataResult<Option<Derived<MccOutcome>>> {
             JsonFileStore::new(&self.data_dir).mcc_evaluate(input, year)
+        }
+
+        fn dpa_programs_for_state(
+            &self,
+            state: &str,
+            year: u16,
+        ) -> RefDataResult<Vec<Derived<DpaProgram>>> {
+            JsonFileStore::new(&self.data_dir).dpa_programs_for_state(state, year)
+        }
+
+        fn dpa_program(
+            &self,
+            program_id: &str,
+            year: u16,
+        ) -> RefDataResult<Option<Derived<DpaProgram>>> {
+            JsonFileStore::new(&self.data_dir).dpa_program(program_id, year)
+        }
+
+        fn dpa_evaluate(
+            &self,
+            program_id: &str,
+            input: &DpaEligibilityInput,
+            year: u16,
+        ) -> RefDataResult<Option<Derived<DpaOutcome>>> {
+            JsonFileStore::new(&self.data_dir).dpa_evaluate(program_id, input, year)
         }
     }
 

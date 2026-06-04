@@ -9,6 +9,7 @@ use crate::{
         ConvMiCoverage, ConvMiCoverageTable, ConvMiInput, MiMonthlyTable, MiRateInput,
         UsdaGuaranteeFees,
     },
+    dpa_catalog::{DpaCatalogFile, DpaEligibilityInput, DpaOutcome, DpaProgram},
     error::{RefDataError, RefDataResult},
     fha_mip::{FhaMipInput, FhaMipResult, FhaMipTable},
     geo::{
@@ -98,6 +99,24 @@ pub trait RefDataStore: Send + Sync {
         input: &MccEligibilityInput,
         year: u16,
     ) -> RefDataResult<Option<Derived<MccOutcome>>>;
+
+    // ── DPA program catalog (Task 4.25) ──
+    fn dpa_programs_for_state(
+        &self,
+        state: &str,
+        year: u16,
+    ) -> RefDataResult<Vec<Derived<DpaProgram>>>;
+    fn dpa_program(
+        &self,
+        program_id: &str,
+        year: u16,
+    ) -> RefDataResult<Option<Derived<DpaProgram>>>;
+    fn dpa_evaluate(
+        &self,
+        program_id: &str,
+        input: &DpaEligibilityInput,
+        year: u16,
+    ) -> RefDataResult<Option<Derived<DpaOutcome>>>;
 
     // ── Lender profiles + overlays (Task 4.16) ───────────────────────────────
     fn lender_profile(&self, lender_id: &str) -> RefDataResult<Option<LenderProfile>>;
@@ -501,6 +520,40 @@ impl RefDataStore for JsonFileStore {
             self.read_versioned_json("mcc_catalog", year)?;
         let fname = format!("mcc_catalog_{resolved}.json");
         Ok(file.evaluate(input, &fname, year, resolved))
+    }
+
+    fn dpa_programs_for_state(
+        &self,
+        state: &str,
+        year: u16,
+    ) -> RefDataResult<Vec<Derived<DpaProgram>>> {
+        let (resolved, file): (u16, DpaCatalogFile) =
+            self.read_versioned_json("dpa_catalog", year)?;
+        let fname = format!("dpa_catalog_{resolved}.json");
+        Ok(file.programs_for_state(state, &fname, year, resolved))
+    }
+
+    fn dpa_program(
+        &self,
+        program_id: &str,
+        year: u16,
+    ) -> RefDataResult<Option<Derived<DpaProgram>>> {
+        let (resolved, file): (u16, DpaCatalogFile) =
+            self.read_versioned_json("dpa_catalog", year)?;
+        let fname = format!("dpa_catalog_{resolved}.json");
+        Ok(file.program_by_id(program_id, &fname, year, resolved))
+    }
+
+    fn dpa_evaluate(
+        &self,
+        program_id: &str,
+        input: &DpaEligibilityInput,
+        year: u16,
+    ) -> RefDataResult<Option<Derived<DpaOutcome>>> {
+        let (resolved, file): (u16, DpaCatalogFile) =
+            self.read_versioned_json("dpa_catalog", year)?;
+        let fname = format!("dpa_catalog_{resolved}.json");
+        Ok(file.evaluate(program_id, input, &fname, year, resolved))
     }
 
     fn lender_profile(&self, lender_id: &str) -> RefDataResult<Option<LenderProfile>> {
