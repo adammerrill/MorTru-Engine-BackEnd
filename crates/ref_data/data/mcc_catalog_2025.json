@@ -1,0 +1,57 @@
+{
+  "effective_date": "2025-01-01",
+  "source_citation": "State HFA MCC Program Guidelines (2025) — illustrative seed values; verify against current HFA bulletins per county",
+  "programs": [
+    {
+      "program_id": "mcc_tx_tdhca",
+      "state": "TX",
+      "administering_agency": "Texas Department of Housing and Community Affairs (TDHCA)",
+      "program_name": "Texas Mortgage Credit Certificate",
+      "credit_rate_bps": 4000,
+      "annual_credit_cap_cents": 200000,
+      "fthb_required": true,
+      "veteran_fthb_exempt": true,
+      "targeted_area_fthb_exempt": true,
+      "income_limit_1_2_cents": 11000000,
+      "income_limit_3plus_cents": 12650000,
+      "income_limit_targeted_1_2_cents": 13200000,
+      "income_limit_targeted_3plus_cents": 15400000,
+      "price_limit_cents": 41700000,
+      "price_limit_targeted_cents": 51000000
+    },
+    {
+      "program_id": "mcc_ca_calhfa",
+      "state": "CA",
+      "administering_agency": "California Housing Finance Agency (CalHFA)",
+      "program_name": "CalHFA Mortgage Credit Certificate",
+      "credit_rate_bps": 2000,
+      "annual_credit_cap_cents": 0,
+      "fthb_required": true,
+      "veteran_fthb_exempt": true,
+      "targeted_area_fthb_exempt": true,
+      "income_limit_1_2_cents": 16500000,
+      "income_limit_3plus_cents": 19250000,
+      "income_limit_targeted_1_2_cents": 19800000,
+      "income_limit_targeted_3plus_cents": 23100000,
+      "price_limit_cents": 76500000,
+      "price_limit_targeted_cents": 93500000
+    },
+    {
+      "program_id": "mcc_fl_fhfc",
+      "state": "FL",
+      "administering_agency": "Florida Housing Finance Corporation (FHFC)",
+      "program_name": "Florida Housing Mortgage Credit Certificate",
+      "credit_rate_bps": 3000,
+      "annual_credit_cap_cents": 200000,
+      "fthb_required": true,
+      "veteran_fthb_exempt": true,
+      "targeted_area_fthb_exempt": true,
+      "income_limit_1_2_cents": 9500000,
+      "income_limit_3plus_cents": 10925000,
+      "income_limit_targeted_1_2_cents": 11400000,
+      "income_limit_targeted_3plus_cents": 13300000,
+      "price_limit_cents": 47100000,
+      "price_limit_targeted_cents": 57600000
+    }
+  ]
+}

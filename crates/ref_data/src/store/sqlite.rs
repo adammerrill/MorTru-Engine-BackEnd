@@ -36,6 +36,7 @@ mod inner {
         },
         hoi_rates::StateHoiRate,
         lender::{LenderOverlays, LenderProfile},
+        mcc_catalog::{MccEligibilityInput, MccOutcome, MccProgram},
         program_rules::ProgramEligibilityRules,
         rate_sheet::{LlpaInput, RateSheet},
         store::{JsonFileStore, RefDataStore},
@@ -43,6 +44,7 @@ mod inner {
         versioning::{VersionId, Versioned},
         zip_hoi::ZipHoiRate,
     };
+    use types::Derived;
 
     /// SQLite-backed reference data store using `rusqlite` (bundled SQLite).
     ///
@@ -1021,6 +1023,22 @@ mod inner {
             fha_project_id: &str,
         ) -> RefDataResult<Option<FhaCondoProject>> {
             JsonFileStore::new(&self.data_dir).fha_condo_project(fha_project_id)
+        }
+
+        fn mcc_program(
+            &self,
+            state: &str,
+            year: u16,
+        ) -> RefDataResult<Option<Derived<MccProgram>>> {
+            JsonFileStore::new(&self.data_dir).mcc_program(state, year)
+        }
+
+        fn mcc_evaluate(
+            &self,
+            input: &MccEligibilityInput,
+            year: u16,
+        ) -> RefDataResult<Option<Derived<MccOutcome>>> {
+            JsonFileStore::new(&self.data_dir).mcc_evaluate(input, year)
         }
     }
 

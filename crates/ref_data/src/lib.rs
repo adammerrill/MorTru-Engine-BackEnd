@@ -8,6 +8,7 @@ pub mod fha_mip;
 pub mod geo;
 pub mod hoi_rates;
 pub mod lender;
+pub mod mcc_catalog;
 pub mod program_rules;
 pub mod rate_sheet;
 pub mod store;
@@ -28,6 +29,9 @@ pub use geo::{
 };
 pub use hoi_rates::{StateHoiRate, NATIONAL_FALLBACK_RATE_BPS};
 pub use lender::{LenderOverlays, LenderProfile};
+pub use mcc_catalog::{
+    estimate_annual_credit, MccCatalogFile, MccEligibilityInput, MccOutcome, MccProgram,
+};
 pub use program_rules::{AllProgramRules, ProgramEligibilityRules};
 pub use rate_sheet::{LlpaInput, LlpaMatrix, RateSheet, RateSheetEntry};
 pub use store::{JsonFileStore, RefDataStore};

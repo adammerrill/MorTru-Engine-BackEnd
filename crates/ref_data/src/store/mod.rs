@@ -17,13 +17,14 @@ use crate::{
     },
     hoi_rates::StateHoiRate,
     lender::{LenderOverlays, LenderProfile, LenderProfileFile},
+    mcc_catalog::{MccCatalogFile, MccEligibilityInput, MccOutcome, MccProgram},
     program_rules::{AllProgramRules, ProgramEligibilityRules},
     rate_sheet::{LlpaInput, LlpaMatrix, RateSheet, RateSheetFile},
     va_fee::{VaFeeInput, VaFeeTable},
     versioning::{VersionId, Versioned},
     zip_hoi::ZipHoiRate,
 };
-use types::ProgramCode;
+use types::{Derived, ProgramCode};
 
 // ── RefDataStore trait ────────────────────────────────────────────────────────
 
@@ -89,6 +90,14 @@ pub trait RefDataStore: Send + Sync {
     fn mi_monthly_rate(&self, provider: &str, input: &MiRateInput, year: u16)
         -> RefDataResult<u16>;
     fn usda_guarantee_fees(&self, year: u16) -> RefDataResult<UsdaGuaranteeFees>;
+
+    // ── MCC program catalog (Task 4.24) ──
+    fn mcc_program(&self, state: &str, year: u16) -> RefDataResult<Option<Derived<MccProgram>>>;
+    fn mcc_evaluate(
+        &self,
+        input: &MccEligibilityInput,
+        year: u16,
+    ) -> RefDataResult<Option<Derived<MccOutcome>>>;
 
     // ── Lender profiles + overlays (Task 4.16) ───────────────────────────────
     fn lender_profile(&self, lender_id: &str) -> RefDataResult<Option<LenderProfile>>;
@@ -474,6 +483,24 @@ impl RefDataStore for JsonFileStore {
         let (_, fees): (u16, UsdaGuaranteeFees) =
             self.read_versioned_json("usda_guarantee_fees", year)?;
         Ok(fees)
+    }
+
+    fn mcc_program(&self, state: &str, year: u16) -> RefDataResult<Option<Derived<MccProgram>>> {
+        let (resolved, file): (u16, MccCatalogFile) =
+            self.read_versioned_json("mcc_catalog", year)?;
+        let fname = format!("mcc_catalog_{resolved}.json");
+        Ok(file.lookup(state, &fname, year, resolved))
+    }
+
+    fn mcc_evaluate(
+        &self,
+        input: &MccEligibilityInput,
+        year: u16,
+    ) -> RefDataResult<Option<Derived<MccOutcome>>> {
+        let (resolved, file): (u16, MccCatalogFile) =
+            self.read_versioned_json("mcc_catalog", year)?;
+        let fname = format!("mcc_catalog_{resolved}.json");
+        Ok(file.evaluate(input, &fname, year, resolved))
     }
 
     fn lender_profile(&self, lender_id: &str) -> RefDataResult<Option<LenderProfile>> {

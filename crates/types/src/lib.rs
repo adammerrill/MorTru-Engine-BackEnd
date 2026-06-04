@@ -59,6 +59,9 @@ mod term_months;
 mod goal_mask;
 mod scenario_key;
 
+// ââ Derivation provenance ââ
+pub mod provenance;
+
 // ── Re-exports: money & rate ──────────────────────────────────────────────────
 pub use basis_points::BasisPoints;
 pub use cents::Cents;
@@ -100,3 +103,6 @@ pub use term_months::TermMonths;
 // ── Re-exports: scenario primitives ──────────────────────────────────────────
 pub use goal_mask::GoalMask;
 pub use scenario_key::ScenarioKey;
+
+// ââ Re-exports: provenance ââ
+pub use provenance::{DerivationStep, Derived, Provenance};
