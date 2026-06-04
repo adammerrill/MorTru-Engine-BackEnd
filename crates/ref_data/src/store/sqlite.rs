@@ -40,6 +40,7 @@ mod inner {
         mcc_catalog::{MccEligibilityInput, MccOutcome, MccProgram},
         program_rules::ProgramEligibilityRules,
         rate_sheet::{LlpaInput, RateSheet},
+        seller_concessions::{ConcessionCapInput, ConcessionOutcome, SellerConcessionCap},
         store::{JsonFileStore, RefDataStore},
         va_fee::VaFeeInput,
         versioning::{VersionId, Versioned},
@@ -1065,6 +1066,29 @@ mod inner {
             year: u16,
         ) -> RefDataResult<Option<Derived<DpaOutcome>>> {
             JsonFileStore::new(&self.data_dir).dpa_evaluate(program_id, input, year)
+        }
+
+        fn seller_concession_cap(
+            &self,
+            input: &ConcessionCapInput,
+            year: u16,
+        ) -> RefDataResult<Option<Derived<SellerConcessionCap>>> {
+            JsonFileStore::new(&self.data_dir).seller_concession_cap(input, year)
+        }
+
+        fn evaluate_seller_concession(
+            &self,
+            input: &ConcessionCapInput,
+            basis_amount: Cents,
+            proposed: Cents,
+            year: u16,
+        ) -> RefDataResult<Option<Derived<ConcessionOutcome>>> {
+            JsonFileStore::new(&self.data_dir).evaluate_seller_concession(
+                input,
+                basis_amount,
+                proposed,
+                year,
+            )
         }
     }
 

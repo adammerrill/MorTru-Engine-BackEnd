@@ -21,11 +21,14 @@ use crate::{
     mcc_catalog::{MccCatalogFile, MccEligibilityInput, MccOutcome, MccProgram},
     program_rules::{AllProgramRules, ProgramEligibilityRules},
     rate_sheet::{LlpaInput, LlpaMatrix, RateSheet, RateSheetFile},
+    seller_concessions::{
+        ConcessionCapInput, ConcessionOutcome, SellerConcessionCap, SellerConcessionCapFile,
+    },
     va_fee::{VaFeeInput, VaFeeTable},
     versioning::{VersionId, Versioned},
     zip_hoi::ZipHoiRate,
 };
-use types::{Derived, ProgramCode};
+use types::{Cents, Derived, ProgramCode};
 
 // ── RefDataStore trait ────────────────────────────────────────────────────────
 
@@ -117,6 +120,20 @@ pub trait RefDataStore: Send + Sync {
         input: &DpaEligibilityInput,
         year: u16,
     ) -> RefDataResult<Option<Derived<DpaOutcome>>>;
+
+    // ── Seller concession / IPC caps (Task 4.26) ──
+    fn seller_concession_cap(
+        &self,
+        input: &ConcessionCapInput,
+        year: u16,
+    ) -> RefDataResult<Option<Derived<SellerConcessionCap>>>;
+    fn evaluate_seller_concession(
+        &self,
+        input: &ConcessionCapInput,
+        basis_amount: Cents,
+        proposed: Cents,
+        year: u16,
+    ) -> RefDataResult<Option<Derived<ConcessionOutcome>>>;
 
     // ── Lender profiles + overlays (Task 4.16) ───────────────────────────────
     fn lender_profile(&self, lender_id: &str) -> RefDataResult<Option<LenderProfile>>;
@@ -554,6 +571,30 @@ impl RefDataStore for JsonFileStore {
             self.read_versioned_json("dpa_catalog", year)?;
         let fname = format!("dpa_catalog_{resolved}.json");
         Ok(file.evaluate(program_id, input, &fname, year, resolved))
+    }
+
+    fn seller_concession_cap(
+        &self,
+        input: &ConcessionCapInput,
+        year: u16,
+    ) -> RefDataResult<Option<Derived<SellerConcessionCap>>> {
+        let (resolved, file): (u16, SellerConcessionCapFile) =
+            self.read_versioned_json("seller_concession_caps", year)?;
+        let fname = format!("seller_concession_caps_{resolved}.json");
+        Ok(file.cap(input, &fname, year, resolved))
+    }
+
+    fn evaluate_seller_concession(
+        &self,
+        input: &ConcessionCapInput,
+        basis_amount: Cents,
+        proposed: Cents,
+        year: u16,
+    ) -> RefDataResult<Option<Derived<ConcessionOutcome>>> {
+        let (resolved, file): (u16, SellerConcessionCapFile) =
+            self.read_versioned_json("seller_concession_caps", year)?;
+        let fname = format!("seller_concession_caps_{resolved}.json");
+        Ok(file.evaluate(input, basis_amount, proposed, &fname, year, resolved))
     }
 
     fn lender_profile(&self, lender_id: &str) -> RefDataResult<Option<LenderProfile>> {

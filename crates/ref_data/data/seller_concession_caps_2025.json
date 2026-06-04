@@ -1,0 +1,25 @@
+{
+  "effective_date": "2025-05-07",
+  "source_citation": "FHA HUD Hbk 4000.1 II.A.4 (6%); USDA HB-1-3555 Ch.6 (6%); VA Pamphlet 26-7 Ch.8 (4% concessions); FNMA Selling Guide B3-4.1-02 / FHLMC Guide 5501.5 tiered (per SEL-2025-03, 2025-05-07). Caps are stable agency rules; verify against current handbooks.",
+  "caps": [
+    {"program": "fha",   "occupancy": "primary",     "ltv_min_bps": 0, "ltv_max_bps": 20000, "cap_bps": 600, "basis": "sales_price", "note": "FHA: 6% of sales price toward closing costs/prepaids/discount points; owner-occupied."},
+    {"program": "usda",  "occupancy": "primary",     "ltv_min_bps": 0, "ltv_max_bps": 20000, "cap_bps": 600, "basis": "sales_price", "note": "USDA Guaranteed: 6% of sales price; owner-occupied primary only."},
+    {"program": "va",    "occupancy": "primary",     "ltv_min_bps": 0, "ltv_max_bps": 20000, "cap_bps": 400, "basis": "reasonable_value", "note": "VA: 4% of reasonable value applies to SELLER CONCESSIONS only (prepaids, funding fee, excess points, debt payoff). Normal buyer closing costs paid by seller are not counted and are unlimited."},
+
+    {"program": "fnma",  "occupancy": "primary",     "ltv_min_bps": 0,    "ltv_max_bps": 7500,  "cap_bps": 900, "basis": "lesser_of_price_or_value", "note": "FNMA B3-4.1-02: primary/second home, LTV <=75%."},
+    {"program": "fnma",  "occupancy": "primary",     "ltv_min_bps": 7500, "ltv_max_bps": 9000,  "cap_bps": 600, "basis": "lesser_of_price_or_value", "note": "FNMA B3-4.1-02: primary/second home, LTV 75.01-90%."},
+    {"program": "fnma",  "occupancy": "primary",     "ltv_min_bps": 9000, "ltv_max_bps": 20000, "cap_bps": 300, "basis": "lesser_of_price_or_value", "note": "FNMA B3-4.1-02: primary/second home, LTV >90%."},
+    {"program": "fnma",  "occupancy": "second_home", "ltv_min_bps": 0,    "ltv_max_bps": 7500,  "cap_bps": 900, "basis": "lesser_of_price_or_value", "note": "FNMA B3-4.1-02: second home, LTV <=75%."},
+    {"program": "fnma",  "occupancy": "second_home", "ltv_min_bps": 7500, "ltv_max_bps": 9000,  "cap_bps": 600, "basis": "lesser_of_price_or_value", "note": "FNMA B3-4.1-02: second home, LTV 75.01-90%."},
+    {"program": "fnma",  "occupancy": "second_home", "ltv_min_bps": 9000, "ltv_max_bps": 20000, "cap_bps": 300, "basis": "lesser_of_price_or_value", "note": "FNMA B3-4.1-02: second home, LTV >90%."},
+    {"program": "fnma",  "occupancy": "investment",  "ltv_min_bps": 0,    "ltv_max_bps": 20000, "cap_bps": 200, "basis": "lesser_of_price_or_value", "note": "FNMA B3-4.1-02: investment property, 2% any LTV."},
+
+    {"program": "fhlmc", "occupancy": "primary",     "ltv_min_bps": 0,    "ltv_max_bps": 7500,  "cap_bps": 900, "basis": "lesser_of_price_or_value", "note": "FHLMC 5501.5: primary/second home, LTV <=75%."},
+    {"program": "fhlmc", "occupancy": "primary",     "ltv_min_bps": 7500, "ltv_max_bps": 9000,  "cap_bps": 600, "basis": "lesser_of_price_or_value", "note": "FHLMC 5501.5: primary/second home, LTV 75.01-90%."},
+    {"program": "fhlmc", "occupancy": "primary",     "ltv_min_bps": 9000, "ltv_max_bps": 20000, "cap_bps": 300, "basis": "lesser_of_price_or_value", "note": "FHLMC 5501.5: primary/second home, LTV >90%."},
+    {"program": "fhlmc", "occupancy": "second_home", "ltv_min_bps": 0,    "ltv_max_bps": 7500,  "cap_bps": 900, "basis": "lesser_of_price_or_value", "note": "FHLMC 5501.5: second home, LTV <=75%."},
+    {"program": "fhlmc", "occupancy": "second_home", "ltv_min_bps": 7500, "ltv_max_bps": 9000,  "cap_bps": 600, "basis": "lesser_of_price_or_value", "note": "FHLMC 5501.5: second home, LTV 75.01-90%."},
+    {"program": "fhlmc", "occupancy": "second_home", "ltv_min_bps": 9000, "ltv_max_bps": 20000, "cap_bps": 300, "basis": "lesser_of_price_or_value", "note": "FHLMC 5501.5: second home, LTV >90%."},
+    {"program": "fhlmc", "occupancy": "investment",  "ltv_min_bps": 0,    "ltv_max_bps": 20000, "cap_bps": 200, "basis": "lesser_of_price_or_value", "note": "FHLMC 5501.5: investment property, 2% any LTV."}
+  ]
+}

@@ -12,6 +12,7 @@ pub mod lender;
 pub mod mcc_catalog;
 pub mod program_rules;
 pub mod rate_sheet;
+pub mod seller_concessions;
 pub mod store;
 pub mod va_fee;
 pub mod versioning;
@@ -39,6 +40,10 @@ pub use mcc_catalog::{
 };
 pub use program_rules::{AllProgramRules, ProgramEligibilityRules};
 pub use rate_sheet::{LlpaInput, LlpaMatrix, RateSheet, RateSheetEntry};
+pub use seller_concessions::{
+    gnma_inherits_program, CapBasis, ConcessionCapInput, ConcessionOutcome,
+    Occupancy as ConcessionOccupancy, SellerConcessionCap, SellerConcessionCapFile,
+};
 pub use store::{JsonFileStore, RefDataStore};
 pub use va_fee::{VaFeeInput, VaLoanPurpose, VaUse, VeteranCategory};
 pub use versioning::{DataVersionManifest, VersionId, Versioned};
