@@ -1,6 +1,6 @@
 [package]
 name             = "solver"
-description      = "Circular pricing solver and TRID-compliant fee worksheet."
+description      = "Goal scoring, iterative pricing solver, and Pareto ranking."
 version.workspace      = true
 edition.workspace      = true
 authors.workspace      = true
@@ -13,6 +13,4 @@ publish.workspace      = true
 workspace = true
 
 [dependencies]
-# Stub: dependencies are introduced as Epic 13 tasks land.
-
-[dev-dependencies]
+types = { workspace = true }
