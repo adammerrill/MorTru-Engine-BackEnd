@@ -22,3 +22,7 @@
 .env
 .env.local
 secrets/
+
+# local context/surface packs
+mortru-context-*
+mortru-surface-*
