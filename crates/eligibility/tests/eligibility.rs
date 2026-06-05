@@ -67,14 +67,14 @@ impl EligibilityData for FakeStore {
             }
         })
     }
-    fn gse_loan_limits(&self, _f: &str, year: u16) -> RefDataResult<Versioned<GseLoanLimits>> {
+    fn gse_loan_limits(&self, _f: &str, _year: u16) -> RefDataResult<Versioned<GseLoanLimits>> {
         Ok(Versioned {
             data: self.gse.clone(),
             version_id: VersionId::new("gse", nd()),
             effective_date: nd(),
         })
     }
-    fn fha_loan_limits(&self, _f: &str, year: u16) -> RefDataResult<Versioned<FhaLoanLimits>> {
+    fn fha_loan_limits(&self, _f: &str, _year: u16) -> RefDataResult<Versioned<FhaLoanLimits>> {
         Ok(Versioned {
             data: self.fha_lim.clone(),
             version_id: VersionId::new("fha", nd()),
