@@ -13,6 +13,5 @@ publish.workspace      = true
 workspace = true
 
 [dependencies]
-# Stub: dependencies are introduced as Epic 14 tasks land.
-
-[dev-dependencies]
+types        = { workspace = true }
+rust_decimal = { workspace = true }
