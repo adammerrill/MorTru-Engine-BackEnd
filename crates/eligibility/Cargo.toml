@@ -13,6 +13,8 @@ publish.workspace      = true
 workspace = true
 
 [dependencies]
-# Stub: dependencies are introduced as Epic 8-9 tasks land.
+types    = { workspace = true }
+ref_data = { workspace = true }
 
 [dev-dependencies]
+chrono = { workspace = true }

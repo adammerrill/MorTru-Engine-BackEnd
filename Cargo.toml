@@ -66,6 +66,7 @@ toml                = "0.8"
 cargo_metadata      = "0.18"
 
 # Workspace-internal crates referenced by other workspace crates
+ref_data      = { path = "crates/ref_data" }
 types         = { path = "crates/types" }
 mismo         = { path = "crates/mismo" }
 reso          = { path = "crates/reso" }
