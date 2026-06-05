@@ -1,6 +1,6 @@
 [package]
 name             = "scenarios"
-description      = "Scenario enumeration, full month-granular term expansion, and pruning pipeline."
+description      = "Scenario enumeration, term expansion, and pruning pipeline."
 version.workspace      = true
 edition.workspace      = true
 authors.workspace      = true
@@ -13,6 +13,4 @@ publish.workspace      = true
 workspace = true
 
 [dependencies]
-# Stub: dependencies are introduced as Epic 11-12 tasks land.
-
-[dev-dependencies]
+types = { workspace = true }
