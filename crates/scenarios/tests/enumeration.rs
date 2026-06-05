@@ -49,12 +49,14 @@ fn out_of_range_term_has_no_product() {
 fn conv_expands_every_month_96_to_360() {
     let scenarios = enumerate_program(ProgramCode::Conventional);
     // 96..=360 inclusive = 265 distinct terms (conforming/standard/no-MI baseline).
-    let terms: std::collections::BTreeSet<u16> =
-        scenarios.iter().map(|s| s.term.0).collect();
+    let terms: std::collections::BTreeSet<u16> = scenarios.iter().map(|s| s.term.0).collect();
     assert_eq!(terms.len(), 265, "expected every month 96..=360");
     assert!(terms.contains(&96) && terms.contains(&360));
     // A non-boundary term must be present (proves granularity, not just bands).
-    assert!(terms.contains(&217), "non-boundary month 217 must enumerate");
+    assert!(
+        terms.contains(&217),
+        "non-boundary month 217 must enumerate"
+    );
 }
 
 #[test]
