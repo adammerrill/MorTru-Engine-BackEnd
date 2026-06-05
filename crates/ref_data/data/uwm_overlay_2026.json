@@ -1,0 +1,62 @@
+{
+  "lender_id": "uwm",
+  "source_citation": "United Wholesale Mortgage Conventional Rate Sheet \u2014 Conv Adjustments (effective 2024-10-25)",
+  "effective_date": "2024-10-25",
+  "max_net_pricing_bps": -400,
+  "high_balance_max_net_pricing_bps": -300,
+  "refi_incentive_bps": -75,
+  "loan_amount_bands": [
+    {
+      "max": 15000000,
+      "bps": -60
+    },
+    {
+      "min": 15000001,
+      "max": 30000000,
+      "bps": -40
+    },
+    {
+      "min": 30000001,
+      "max": 45000000,
+      "bps": -25
+    },
+    {
+      "min": 45000001,
+      "max": 60000000,
+      "bps": -15
+    },
+    {
+      "min": 60000001,
+      "max": 100000000,
+      "bps": -10
+    },
+    {
+      "min": 100000001,
+      "bps": 0
+    }
+  ],
+  "state_adjustments_bps": {
+    "NY": -44,
+    "TX": -14,
+    "FL": 0
+  },
+  "affordable_cap_bps": 0,
+  "max_ltv_rules": [
+    {
+      "attribute": "investment_property",
+      "max_ltv": 80.0
+    },
+    {
+      "attribute": "second_home",
+      "max_ltv": 90.0
+    },
+    {
+      "attribute": "cash_out_refi",
+      "max_ltv": 89.99
+    },
+    {
+      "attribute": "high_balance_cash_out",
+      "max_ltv": 80.0
+    }
+  ]
+}

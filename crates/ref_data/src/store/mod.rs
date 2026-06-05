@@ -18,6 +18,7 @@ use crate::{
     },
     hoi_rates::StateHoiRate,
     lender::{LenderOverlays, LenderProfile, LenderProfileFile},
+    llpa::{GseAgency, Ineligible, LenderOverlayFile, LlpaDatasetFile, LlpaPricing, LlpaScenario},
     mcc_catalog::{MccCatalogFile, MccEligibilityInput, MccOutcome, MccProgram},
     program_rules::{AllProgramRules, ProgramEligibilityRules},
     rate_sheet::{LlpaInput, LlpaMatrix, RateSheet, RateSheetFile},
@@ -143,6 +144,15 @@ pub trait RefDataStore: Send + Sync {
         input: &VaGuarantyInput,
         year: u16,
     ) -> RefDataResult<Derived<VaGuarantyResult>>;
+
+    // ── GSE LLPA pricing (Epic 4.5.1 / Task 4.29) ──
+    fn llpa_price(
+        &self,
+        agency: GseAgency,
+        scenario: &LlpaScenario,
+        lender_id: Option<&str>,
+        year: u16,
+    ) -> RefDataResult<Result<Derived<LlpaPricing>, Ineligible>>;
 
     // ── Lender profiles + overlays (Task 4.16) ───────────────────────────────
     fn lender_profile(&self, lender_id: &str) -> RefDataResult<Option<LenderProfile>>;
@@ -633,6 +643,35 @@ impl RefDataStore for JsonFileStore {
             &fname,
             year,
             resolved,
+        ))
+    }
+
+    fn llpa_price(
+        &self,
+        agency: GseAgency,
+        scenario: &LlpaScenario,
+        lender_id: Option<&str>,
+        year: u16,
+    ) -> RefDataResult<Result<Derived<LlpaPricing>, Ineligible>> {
+        let gse_name = agency.dataset();
+        let (gres, gse): (u16, LlpaDatasetFile) = self.read_versioned_json(gse_name, year)?;
+        let gfile = format!("{gse_name}_{gres}.json");
+        let overlay_owned = match lender_id {
+            Some(id) => {
+                let (ores, ov): (u16, LenderOverlayFile) =
+                    self.read_versioned_json(&format!("{id}_overlay"), year)?;
+                Some((format!("{id}_overlay_{ores}.json"), ov))
+            }
+            None => None,
+        };
+        let overlay_ref = overlay_owned.as_ref().map(|(f, o)| (f.as_str(), o));
+        Ok(crate::llpa::price(
+            &gse,
+            &gfile,
+            overlay_ref,
+            scenario,
+            year,
+            gres,
         ))
     }
 

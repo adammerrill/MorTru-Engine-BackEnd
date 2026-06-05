@@ -37,6 +37,7 @@ mod inner {
         },
         hoi_rates::StateHoiRate,
         lender::{LenderOverlays, LenderProfile},
+        llpa::{GseAgency, Ineligible, LlpaPricing, LlpaScenario},
         mcc_catalog::{MccEligibilityInput, MccOutcome, MccProgram},
         program_rules::ProgramEligibilityRules,
         rate_sheet::{LlpaInput, RateSheet},
@@ -1106,6 +1107,16 @@ mod inner {
             year: u16,
         ) -> RefDataResult<Derived<VaGuarantyResult>> {
             JsonFileStore::new(&self.data_dir).va_guaranty(input, year)
+        }
+
+        fn llpa_price(
+            &self,
+            agency: GseAgency,
+            scenario: &LlpaScenario,
+            lender_id: Option<&str>,
+            year: u16,
+        ) -> RefDataResult<Result<Derived<LlpaPricing>, Ineligible>> {
+            JsonFileStore::new(&self.data_dir).llpa_price(agency, scenario, lender_id, year)
         }
     }
 
