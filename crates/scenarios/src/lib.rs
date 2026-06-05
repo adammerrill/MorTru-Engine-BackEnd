@@ -1,5 +1,3 @@
-//! Epic 11 — scenario enumeration with month-granular term expansion.
-//!
 //! Produces the scenario universe the funnel counts and the solver scores.
 //! The critical task (T11.4) is **month-granular term expansion**: every term
 //! from 96–360 within each program's band, not just the band boundaries —
@@ -15,9 +13,9 @@
 //! `LoanProduct` variants already encode (program, band), so a (program, term)
 //! pair maps to exactly one `LoanProduct`.
 
-use types::{
-    BalanceType, LoanProduct, ProgramCode, TermBand, TermMonths, Tier,
-};
+pub mod pruning;
+pub use pruning::*;
+use types::{BalanceType, LoanProduct, ProgramCode, TermBand, TermMonths, Tier};
 
 /// One enumerated scenario: the unit eligibility judges, the solver prices.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
