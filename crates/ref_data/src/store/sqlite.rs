@@ -28,6 +28,7 @@ mod inner {
         cbsa::{CbsaDesignation, CbsaEntry},
         condo_approval::FhaCondoProject,
         conv_mi::{ConvMiCoverage, ConvMiInput, MiRateInput, UsdaGuaranteeFees},
+        conv_pmi::{MiCompany, MiRateQuote, MiScenario, MiUnavailable},
         dpa_catalog::{DpaEligibilityInput, DpaOutcome, DpaProgram},
         error::{RefDataError, RefDataResult},
         fha_mip::{FhaMipInput, FhaMipResult},
@@ -1117,6 +1118,15 @@ mod inner {
             year: u16,
         ) -> RefDataResult<Result<Derived<LlpaPricing>, Ineligible>> {
             JsonFileStore::new(&self.data_dir).llpa_price(agency, scenario, lender_id, year)
+        }
+
+        fn mi_rate_quote(
+            &self,
+            company: MiCompany,
+            scenario: &MiScenario,
+            year: u16,
+        ) -> RefDataResult<Result<Derived<MiRateQuote>, MiUnavailable>> {
+            JsonFileStore::new(&self.data_dir).mi_rate_quote(company, scenario, year)
         }
     }
 

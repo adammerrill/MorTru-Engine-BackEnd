@@ -9,6 +9,7 @@ use crate::{
         ConvMiCoverage, ConvMiCoverageTable, ConvMiInput, MiMonthlyTable, MiRateInput,
         UsdaGuaranteeFees,
     },
+    conv_pmi::{MiCardFile, MiCompany, MiRateQuote, MiScenario, MiUnavailable},
     dpa_catalog::{DpaCatalogFile, DpaEligibilityInput, DpaOutcome, DpaProgram},
     error::{RefDataError, RefDataResult},
     fha_mip::{FhaMipInput, FhaMipResult, FhaMipTable},
@@ -153,6 +154,14 @@ pub trait RefDataStore: Send + Sync {
         lender_id: Option<&str>,
         year: u16,
     ) -> RefDataResult<Result<Derived<LlpaPricing>, Ineligible>>;
+
+    // ── Conventional PMI rate quote (Epic 4.5.2) ──
+    fn mi_rate_quote(
+        &self,
+        company: MiCompany,
+        scenario: &MiScenario,
+        year: u16,
+    ) -> RefDataResult<Result<Derived<MiRateQuote>, MiUnavailable>>;
 
     // ── Lender profiles + overlays (Task 4.16) ───────────────────────────────
     fn lender_profile(&self, lender_id: &str) -> RefDataResult<Option<LenderProfile>>;
@@ -673,6 +682,18 @@ impl RefDataStore for JsonFileStore {
             year,
             gres,
         ))
+    }
+
+    fn mi_rate_quote(
+        &self,
+        company: MiCompany,
+        scenario: &MiScenario,
+        year: u16,
+    ) -> RefDataResult<Result<Derived<MiRateQuote>, MiUnavailable>> {
+        let stem = company.dataset();
+        let (res, card): (u16, MiCardFile) = self.read_versioned_json(stem, year)?;
+        let file = format!("{stem}_{res}.json");
+        Ok(crate::conv_pmi::quote(&card, &file, scenario, year, res))
     }
 
     fn lender_profile(&self, lender_id: &str) -> RefDataResult<Option<LenderProfile>> {

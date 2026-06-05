@@ -3,6 +3,7 @@
 pub mod cbsa;
 pub mod condo_approval;
 pub mod conv_mi;
+pub mod conv_pmi;
 pub mod dpa_catalog;
 pub mod error;
 pub mod fha_mip;
@@ -24,6 +25,10 @@ pub use cbsa::{CbsaDesignation, CbsaEntry};
 pub use condo_approval::{CondoApprovalStatus, FhaCondoProject};
 pub use conv_mi::{
     ConvMiCoverage, ConvMiInput, ConvMiProgram, MiMonthlyTable, MiRateInput, UsdaGuaranteeFees,
+};
+pub use conv_pmi::{
+    DtiTier, MiAdjustment, MiCardFile, MiCompany, MiOccupancy, MiPlan, MiPropertyType, MiPurpose,
+    MiRateQuote, MiScenario, MiUnavailable, NonFixedMethod, Refundability,
 };
 pub use dpa_catalog::{
     estimate_dpa_amount, DpaAmountBasis, DpaAssistanceType, DpaCatalogFile, DpaCountyLimit,
