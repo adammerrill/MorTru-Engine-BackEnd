@@ -1,0 +1,21 @@
+[package]
+name             = "funnel"
+description      = "Borrower-wizard → engine contract and progressive eligibility funnel."
+version.workspace      = true
+edition.workspace      = true
+authors.workspace      = true
+license.workspace      = true
+repository.workspace   = true
+rust-version.workspace = true
+publish.workspace      = true
+
+[lints]
+workspace = true
+
+[dependencies]
+types = { path = "../types" }
+serde = { workspace = true }
+serde_json = { workspace = true }
+
+[dev-dependencies]
+serde_json = { workspace = true }
