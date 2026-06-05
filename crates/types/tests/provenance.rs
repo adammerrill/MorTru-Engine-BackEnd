@@ -73,8 +73,7 @@ fn derived_map_transforms_value_preserving_trail() {
 
 #[test]
 fn explain_includes_source_and_derivation_when_fallback() {
-    let d = Derived::new(99u32, sample_provenance(2030, 2025))
-        .with_step("check", "in", "out");
+    let d = Derived::new(99u32, sample_provenance(2030, 2025)).with_step("check", "in", "out");
     let text = d.explain();
     assert!(text.contains("Source:"), "explain shows source: {text}");
     assert!(text.contains("mcc_catalog"));

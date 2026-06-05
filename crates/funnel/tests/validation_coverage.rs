@@ -59,9 +59,12 @@ fn per_borrower_negative_income_detected() {
         ..Default::default()
     };
     p.borrowers.push(borrower(vec![score(700)], -1));
-    assert!(validate(&p)
-        .iter()
-        .any(|e| matches!(e, WizardError::NegativeAmount { field: "annual_income" })));
+    assert!(validate(&p).iter().any(|e| matches!(
+        e,
+        WizardError::NegativeAmount {
+            field: "annual_income"
+        }
+    )));
 }
 
 #[test]
@@ -121,15 +124,24 @@ fn negative_purchase_price_and_commission_detected() {
         ..Default::default()
     };
     let errs = validate(&p);
-    assert!(errs
-        .iter()
-        .any(|e| matches!(e, WizardError::NegativeAmount { field: "purchase_price" })));
-    assert!(errs
-        .iter()
-        .any(|e| matches!(e, WizardError::NegativeAmount { field: "buyer_agent_commission" })));
-    assert!(errs
-        .iter()
-        .any(|e| matches!(e, WizardError::NegativeAmount { field: "upfront_cash_budget" })));
+    assert!(errs.iter().any(|e| matches!(
+        e,
+        WizardError::NegativeAmount {
+            field: "purchase_price"
+        }
+    )));
+    assert!(errs.iter().any(|e| matches!(
+        e,
+        WizardError::NegativeAmount {
+            field: "buyer_agent_commission"
+        }
+    )));
+    assert!(errs.iter().any(|e| matches!(
+        e,
+        WizardError::NegativeAmount {
+            field: "upfront_cash_budget"
+        }
+    )));
 }
 
 #[test]
