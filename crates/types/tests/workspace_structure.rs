@@ -40,6 +40,7 @@ const EXPECTED_CRATES: &[&str] = &[
     "ml",
     "orchestrator",
     "api",
+    "funnel",
 ];
 
 #[test]

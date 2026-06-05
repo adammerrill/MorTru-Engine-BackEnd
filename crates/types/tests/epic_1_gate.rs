@@ -99,11 +99,12 @@ mod task_1_1 {
         "ml",
         "orchestrator",
         "api",
+        "funnel",
         "ref_data",
     ];
 
     #[test]
-    fn t1_1_all_13_crates_are_workspace_members() {
+    fn t1_1_all_15_crates_are_workspace_members() {
         let meta = MetadataCommand::new()
             .exec()
             .expect("cargo metadata must succeed");
@@ -123,8 +124,8 @@ mod task_1_1 {
         }
         assert_eq!(
             member_names.len(),
-            14,
-            "expected exactly 14 workspace members, found {}; \
+            15,
+            "expected exactly 15 workspace members, found {}; \
              members: {member_names:?}",
             member_names.len()
         );
