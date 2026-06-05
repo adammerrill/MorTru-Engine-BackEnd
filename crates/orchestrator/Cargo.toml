@@ -1,6 +1,6 @@
 [package]
 name             = "orchestrator"
-description      = "Pipeline coordination: enrich -> enumerate -> prune -> solve -> amortize -> rank."
+description      = "Composition layer: real ScenarioPricer + analysis counts."
 version.workspace      = true
 edition.workspace      = true
 authors.workspace      = true
@@ -13,6 +13,11 @@ publish.workspace      = true
 workspace = true
 
 [dependencies]
-# Stub: dependencies are introduced as Epic 15 tasks land.
+types     = { workspace = true }
+scenarios = { workspace = true }
+amort     = { workspace = true }
+solver    = { workspace = true }
+ref_data  = { workspace = true }
 
 [dev-dependencies]
+ref_data  = { workspace = true }
