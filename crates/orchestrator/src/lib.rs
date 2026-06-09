@@ -14,6 +14,9 @@
 //! "conv_30yr_fixed") + a lock period. P1 uses a fixed default lock; later
 //! slices thread the borrower's chosen lock through.
 
+/// Cash-to-close fee worksheet (Epic 17 / P4).
+pub mod worksheet;
+
 use amort::{horizon_cost, monthly_payment, schedule};
 use ref_data::{
     ConvMiCoverage, ConvMiInput, ConvMiProgram, FhaMipInput, GseAgency, Ineligible, LlpaOccupancy,
