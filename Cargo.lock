@@ -38,6 +38,10 @@ dependencies = [
 [[package]]
 name = "amort"
 version = "0.1.0"
+dependencies = [
+ "rust_decimal",
+ "types",
+]
 
 [[package]]
 name = "android_system_properties"
@@ -382,6 +386,11 @@ checksum = "48c757948c5ede0e46177b7add2e67155f70e33c07fea8284df6576da70b3719"
 [[package]]
 name = "eligibility"
 version = "0.1.0"
+dependencies = [
+ "chrono",
+ "ref_data",
+ "types",
+]
 
 [[package]]
 name = "enrich"
@@ -696,6 +705,13 @@ checksum = "d6790f58c7ff633d8771f42965289203411a5e5c68388703c06e14f24770b41e"
 [[package]]
 name = "orchestrator"
 version = "0.1.0"
+dependencies = [
+ "amort",
+ "ref_data",
+ "scenarios",
+ "solver",
+ "types",
+]
 
 [[package]]
 name = "pin-project-lite"
@@ -1070,6 +1086,9 @@ dependencies = [
 [[package]]
 name = "scenarios"
 version = "0.1.0"
+dependencies = [
+ "types",
+]
 
 [[package]]
 name = "seahash"
@@ -1175,6 +1194,9 @@ dependencies = [
 [[package]]
 name = "solver"
 version = "0.1.0"
+dependencies = [
+ "types",
+]
 
 [[package]]
 name = "syn"

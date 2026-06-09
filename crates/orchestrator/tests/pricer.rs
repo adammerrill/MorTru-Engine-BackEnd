@@ -2,8 +2,10 @@
 
 use orchestrator::*;
 use ref_data::{
-    GseAgency, Ineligible, LlpaOccupancy, LlpaPricing, LlpaPropertyType, LlpaPurpose, LlpaScenario,
-    PriceAdjustment, RateSheet, RateSheetEntry, RefDataError, RefDataResult,
+    ConvMiCoverage, ConvMiInput, FhaMipInput, FhaMipResult, GseAgency, Ineligible, LlpaOccupancy,
+    LlpaPricing, LlpaPropertyType, LlpaPurpose, LlpaScenario, MiCompany, MiPlan, MiRateQuote,
+    MiScenario, MiUnavailable, MipDuration, PriceAdjustment, RateSheet, RateSheetEntry,
+    RefDataError, RefDataResult, UsdaGuaranteeFees, VaFeeInput,
 };
 use scenarios::Scenario;
 use solver::ScenarioPricer;
@@ -25,6 +27,10 @@ struct FakeStore {
     sheet: RateSheet,
     llpa_total_bps: i32,
     llpa_ineligible: bool,
+    mi_net_milli_pct: i32,
+    fha: (u16, u16),
+    va_fee_bps: u32,
+    usda: (u32, u32),
 }
 impl RateSheetStore for FakeStore {
     fn rate_sheet(&self, _lender: &str) -> Result<Option<RateSheet>, RefDataError> {
@@ -60,6 +66,50 @@ impl LlpaStore for FakeStore {
     }
 }
 
+impl MiStore for FakeStore {
+    fn conv_mi_coverage(&self, _i: &ConvMiInput, _y: u16) -> RefDataResult<ConvMiCoverage> {
+        Ok(ConvMiCoverage {
+            standard_pct: 25,
+            minimum_pct: 25,
+            llpa_with_minimum: false,
+        })
+    }
+    fn mi_rate_quote(
+        &self,
+        company: MiCompany,
+        _s: &MiScenario,
+        _y: u16,
+    ) -> RefDataResult<Result<types::Derived<MiRateQuote>, MiUnavailable>> {
+        let q = MiRateQuote {
+            company,
+            plan: MiPlan::MonthlyBpmi,
+            base_milli_pct: self.mi_net_milli_pct,
+            adjustments: vec![],
+            net_milli_pct: self.mi_net_milli_pct,
+            floored: false,
+        };
+        Ok(Ok(types::Derived::new(q, test_prov())))
+    }
+    fn fha_mip(&self, _i: &FhaMipInput, _y: u16) -> RefDataResult<FhaMipResult> {
+        Ok(FhaMipResult {
+            ufmip_bps: self.fha.0,
+            annual_mip_bps: self.fha.1,
+            duration: MipDuration::LoanTerm,
+        })
+    }
+    fn va_funding_fee(&self, _i: &VaFeeInput, _y: u16) -> RefDataResult<u32> {
+        Ok(self.va_fee_bps)
+    }
+    fn usda_guarantee_fees(&self, _y: u16) -> RefDataResult<UsdaGuaranteeFees> {
+        Ok(UsdaGuaranteeFees {
+            upfront_fee_bps: self.usda.0,
+            annual_fee_bps: self.usda.1,
+            effective_date: "2026".into(),
+            fiscal_year: 2026,
+        })
+    }
+}
+
 fn store(llpa_bps: i32, ineligible: bool) -> FakeStore {
     FakeStore {
         sheet: RateSheet {
@@ -78,10 +128,26 @@ fn store(llpa_bps: i32, ineligible: bool) -> FakeStore {
                     par_rate_bps: 5750,
                     price_at_par: 0.0,
                 },
+                RateSheetEntry {
+                    product: "va_30yr_fixed".into(),
+                    lock_days: 30,
+                    par_rate_bps: 5625,
+                    price_at_par: 0.0,
+                },
+                RateSheetEntry {
+                    product: "usda_30yr_fixed".into(),
+                    lock_days: 30,
+                    par_rate_bps: 5875,
+                    price_at_par: 0.0,
+                },
             ],
         },
         llpa_total_bps: llpa_bps,
         llpa_ineligible: ineligible,
+        mi_net_milli_pct: 0,
+        fha: (0, 0),
+        va_fee_bps: 0,
+        usda: (0, 0),
     }
 }
 
@@ -207,4 +273,91 @@ fn llpa_scales_with_balance() {
     let large_pts = large.cash_to_close.0 - Cents::from_dollars(100_000).0;
     assert_eq!(small_pts, Cents::from_dollars(2_000).0);
     assert_eq!(large_pts, Cents::from_dollars(4_000).0);
+}
+
+// ── P3 MI tests ──────────────────────────────────────────────────────────────
+
+fn store_full() -> FakeStore {
+    let mut s = store(0, false);
+    s.mi_net_milli_pct = 580; // 0.58% annual conv PMI
+    s.fha = (175, 55); // 1.75% UFMIP, 0.55% annual MIP
+    s.va_fee_bps = 215; // 2.15% funding fee
+    s.usda = (100, 35); // 1.00% upfront, 0.35% annual
+    s
+}
+
+fn scen(program: ProgramCode, product: LoanProduct) -> Scenario {
+    Scenario {
+        program,
+        product,
+        term: TermMonths(360),
+        balance_type: BalanceType::Conforming,
+        tier: Tier::Standard,
+        mi_option: 0,
+    }
+}
+
+#[test]
+fn conv_no_pmi_at_or_below_80_ltv() {
+    let s = store_full();
+    let p = pricer(
+        &s,
+        scen(ProgramCode::Conventional, LoanProduct::FixedConv21To30),
+    );
+    let pt = p.price_at(Cents::from_dollars(400_000)).unwrap(); // 80%
+    assert_eq!(pt.mi, Cents::ZERO);
+}
+
+#[test]
+fn conv_pmi_above_80_ltv_adds_monthly() {
+    let s = store_full();
+    let p = pricer(
+        &s,
+        scen(ProgramCode::Conventional, LoanProduct::FixedConv21To30),
+    );
+    let pt = p.price_at(Cents::from_dollars(450_000)).unwrap(); // 90%
+    assert!(pt.mi.0 > 0);
+    // ~ 450_000_00 * 580 / 100_000 / 12 = $217.50/mo
+    assert!((pt.mi.0 - 21_750).abs() < 50);
+}
+
+#[test]
+fn fha_has_upfront_and_monthly_mip() {
+    let s = store_full();
+    let p = pricer(&s, scen(ProgramCode::Fha, LoanProduct::FixedFha16To30));
+    let pt = p.price_at(Cents::from_dollars(450_000)).unwrap();
+    assert!(pt.mi.0 > 0);
+    // CTC includes $50k down + $7,875 UFMIP
+    assert!(pt.cash_to_close.0 >= Cents::from_dollars(57_875).0 - 100);
+}
+
+#[test]
+fn va_has_upfront_fee_no_monthly() {
+    let s = store_full();
+    let p = pricer(&s, scen(ProgramCode::Va, LoanProduct::FixedVa16To30));
+    let pt = p.price_at(Cents::from_dollars(450_000)).unwrap();
+    // 2.15% of $450k = $9,675 upfront, no monthly
+    assert!((pt.mi.0 - Cents::from_dollars(9_675).0).abs() < 100);
+}
+
+#[test]
+fn usda_has_upfront_and_annual() {
+    let s = store_full();
+    let p = pricer(&s, scen(ProgramCode::Usda, LoanProduct::FixedUsda30));
+    let pt = p.price_at(Cents::from_dollars(450_000)).unwrap();
+    assert!(pt.mi.0 > 0);
+    assert!(pt.cash_to_close.0 >= Cents::from_dollars(54_500).0 - 100); // down + 1% upfront
+}
+
+#[test]
+fn fha_mi_raises_payment() {
+    let s = store_full();
+    let with_mi = pricer(&s, scen(ProgramCode::Fha, LoanProduct::FixedFha16To30))
+        .price_at(Cents::from_dollars(450_000))
+        .unwrap();
+    let s0 = store(0, false);
+    let no_mi = pricer(&s0, scen(ProgramCode::Fha, LoanProduct::FixedFha16To30))
+        .price_at(Cents::from_dollars(450_000))
+        .unwrap();
+    assert!(with_mi.monthly_payment.0 > no_mi.monthly_payment.0);
 }
